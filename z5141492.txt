@@ -1,0 +1,12 @@
+Week 1
+
+Group formed. We created the trello & github repository for our group. This week, we encountered a minor problem where one of our group members switched into a different lab. After further deliberation we also decided to change our project to project 5. 
+
+
+Week 2
+
+We finally had a new group member, Slava, and begin discussing Epics for our project. We decided to use mainly Python & Flask for our backend, and React JS for our frontend. We planned to have standups every Monday, Wednesday and Saturday with Wednesday being our face-to-face meeting and Monday & Saturday being online meetings.
+
+This week, I did more research on the various databases available for the stock market and the APIs we can use. I made a Yahoo Finance account and build a portfolio with it, to identify areas for improvement and things we can do differently for our project.
+
+For the next week, our focus is finishing our proposal and building a basic MVP for week 4.
