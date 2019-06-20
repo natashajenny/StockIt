@@ -1,0 +1,60 @@
+Week 1
+Wednesday
+The group is formed. We decided to go with Project 2.
+I am chosen as the Scrum Master.
+I joined the Trello board and group under webcms.
+
+Thursday
+One guy left the group. We need to find another person and possibly another topic.
+
+Week 2
+Monday
+I created the GitHub classroom repository and tailored Trello lists to be ready for 
+the project sprints.
+
+Wednesday
+-I pushed the readme file.
+-We decided on Project 5 and found a new member.
+-We brainstormed some Epic Stories that we want to work on in the next 8 weeks.
+-I will be working on Frontend and possibly help Backend if needed.
+-We decided on using Python for Backend and React for Frontend.
+
+Friday
+-I researched on the existing financial softwares and their drawbacks.
+-I added Epic stories on Autobuy/Autosell and Multiple Portfolio.
+-I added user stories based on the first Epic that we decided to work on for 
+the first sprint.
+-We moved the Standup permanently to Saturday.
+
+Sunday
+-I reorganised Trello and added the Details list to include the other information 
+that relates to the project.
+-I revised the template of the proposal based on the examples and marking criteria.
+
+Week 3 
+Monday
+-Along with Ian, I designed the user interface. We decided on using material-ui.
+-We decided to work on the Portfolio and Metrics (possibly) pages for Week 4 demo.
+-I divided up the proposal workload into 4 parts that each person can choose from.
+-During standup, we decided on which part of the proposal to work on and gave update
+on the setups.
+-I will be working on the Epics.
+
+Tuesday
+-I finished the Epic Stories section in the proposal. 
+
+Wednesday
+-During standup, we went through the proposal to see what is left to be done.
+-We talked more about the specific frameworks that we will use in the project.
+-We decided on the Epic Stories that we will work on in this project.
+-I took over the Portfolio page development from Ian.
+
+Thursday
+-I refactored the styling sections to make the code look cleaner.
+-I added the drawer under the menu bar.
+-I added router for each navigation link in the drawer.
+
+
+
+
+
