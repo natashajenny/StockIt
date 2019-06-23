@@ -35,9 +35,9 @@ class User(Base):
 class Portfolio(Base):
     __tablename__ = 'portfolios'
     portfolio_id = Column('portfolio_id', Integer, primary_key=True)
-    user_id = Column('user_id', Integer, ForeignKey("User.user_id"), nullable=False)
+    user_id = Column('user_id', Integer, ForeignKey("users.user_id"), nullable=False)
     title = Column('title', String, nullable=False)
     description = Column('description', String)
     net_gain = Column('net_gain', Numeric)
-    created_on = Column('created_on', Timestamp
+    created_on = Column('created_on', Timestamp)
     deleted_on = Column('deleted_on', Timestamp)
