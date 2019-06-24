@@ -62,7 +62,7 @@ export function SimpleTable() {
               <TableCell align="right">{row.High}</TableCell>
               <TableCell align="right">{row.Low}</TableCell>
               <TableCell align="right">{row.Mkt_Cap}</TableCell>
-              <TableCell align="right">{row.Year}</TableCell>
+            //  <TableCell align="right">{row.Year}</TableCell>
             </TableRow>
           ))}
         </TableBody>

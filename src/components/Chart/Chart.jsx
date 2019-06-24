@@ -1,3 +1,4 @@
+
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -24,7 +25,7 @@ import { OHLCTooltip } from "react-stockcharts/lib/tooltip";
 import { fitWidth } from "react-stockcharts/lib/helper";
 import { last } from "react-stockcharts/lib/utils";
 
- export class CandleStickChartForDiscontinuousIntraDay extends React.Component {
+class CandleStickChartForDiscontinuousIntraDay extends React.Component {
 	render() {
 		const { type, data: initialData, width, ratio } = this.props;
 
@@ -113,4 +114,4 @@ CandleStickChartForDiscontinuousIntraDay.defaultProps = {
 };
 CandleStickChartForDiscontinuousIntraDay = fitWidth(CandleStickChartForDiscontinuousIntraDay);
 
-export const Graph =  CandleStickChartForDiscontinuousIntraDay;
+export default CandleStickChartForDiscontinuousIntraDay;
