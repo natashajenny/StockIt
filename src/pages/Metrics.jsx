@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { NavBar } from '../components';
-import { Table } from '../components';
+import { SimpleTable } from '../components/Table/Table.jsx';
 
 
 export class Metrics extends React.Component {
@@ -10,7 +10,7 @@ export class Metrics extends React.Component {
             <div>
                 <NavBar />
                 <h1> Metrics  </h1>
-                <Table />
+                <SimpleTable />
             </div>
         );
     }
