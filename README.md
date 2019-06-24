@@ -1,6 +1,6 @@
-##Stock portfolio management system
+## Stock portfolio management system
 
-###Frontend
+### Frontend
 1. yarn install
 2. yarn build
 3. yarn start
