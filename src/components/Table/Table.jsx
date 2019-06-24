@@ -38,10 +38,11 @@ export function SimpleTable() {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
+            <TableCell></TableCell>
             <TableCell>Code </TableCell>
             <TableCell align="right">Company</TableCell>
             <TableCell align="right">Price&nbsp;($)</TableCell>
-            <TableCell align="right">Change&nbsp;(%)</TableCell>
+            <TableCell align="left">Change&nbsp;(%)</TableCell>
             <TableCell align="right">High&nbsp;</TableCell>
             <TableCell align="right">Low&nbsp;</TableCell>
             <TableCell align="right">Volume&nbsp;</TableCell>
@@ -62,7 +63,7 @@ export function SimpleTable() {
               <TableCell align="right">{row.High}</TableCell>
               <TableCell align="right">{row.Low}</TableCell>
               <TableCell align="right">{row.Mkt_Cap}</TableCell>
-            //  <TableCell align="right">{row.Year}</TableCell>
+             <TableCell align="right">{row.Year}</TableCell>
             </TableRow>
           ))}
         </TableBody>
