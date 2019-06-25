@@ -10,18 +10,14 @@ USER  = 'comp3900'
 PASS  = 'comp9900'
 HOST  = 'portfolio.c6khp9ert7ew.us-east-1.rds.amazonaws.com'
 DBASE = 'portfolio'
-TEST  = False
-
-if TEST:
-    try:
-        eng = create_engine('postgresql://%s:%s@%s/%s' % (USER, PASS, HOST, DBASE), echo=TEST)
-        con = eng.connect()
-        meta = MetaData()
-        con.close()
-    except:
-        print('Ooops...')
+TEST  = True
 
 Base = declarative_base()
+
+def start_engine(user=USER, pw=PASS, host=HOST, dbase=DBASE):
+    connect_string = 'postgresql://%s:%s@%s/%s' % (user, pw, host, dbase)
+    engine = create_engine(connect_string, echo=TEST)
+    return engine
 
 class Singleton(object):
     def __init__(self, decorated):
@@ -40,7 +36,7 @@ class Db(object):
     engine = None
     session = None
     def __init__(self):
-        self.engine = create_engine('postgresql://%s:%s@%s/%s' % (USER, PASS, HOST, DBASE), echo=TEST)
+        self.engine = start_engine()
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
     def instance(self, *args, **kwargs):
