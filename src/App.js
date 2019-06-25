@@ -17,9 +17,9 @@ function App () {
         <Route path='/Settings' component={Settings} />
         <Route path='/Tutorial' component={Tutorial} />
         <Route path='/Watchlist' component={Watchlist} />
-      </Router>    
+      </Router>
     </div>
-  );  
+  );
 }
 
 export default App;

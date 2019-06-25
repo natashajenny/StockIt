@@ -8,7 +8,8 @@ export class Profile extends React.Component {
         <div>
             <NavBar />
             <h1> Profile </h1>
+            <NavBar />
         </div>
-        );  
+        );
     }
 }
