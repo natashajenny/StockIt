@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
+import { Checkbox, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
@@ -7,7 +7,6 @@ import { styles } from './styles';
 function createData(Code, Company, Price, Chg, High, Low, Vol, Mkt_Cap, Year) {
   return { Code, Company, Price, Chg, High, Low, Vol, Mkt_Cap, Year };
 }
-//A2M	The a2 Milk Company	$13.22	-0.32	-2.36%	$13.48	$13.16	3,716,440	$9,715,342,266	+17.62%
 const rows = [
   createData('A2M','The a2 Milk Company', '13.22', '-0.32', '13.48' , '13.16', '3,716,440', '9,715,342,266', 17.62),
   createData('ABC', 'Adelaide Brighton', '13.22', '-0.32', '13.48' , '13.16', '3,716,440', '9,715,342,266', 17.62),
