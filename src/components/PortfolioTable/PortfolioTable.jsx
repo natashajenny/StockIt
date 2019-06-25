@@ -47,6 +47,7 @@ class PurePortFolioTable extends React.Component {
                 <TableCell align="right">{row.Chg}</TableCell>
                 <TableCell align="right">{row.High}</TableCell>
                 <TableCell align="right">{row.Low}</TableCell>
+                <TableCell align="right">{row.Vol}</TableCell>
                 <TableCell align="right">{row.Mkt_Cap}</TableCell>
                <TableCell align="right">{row.Year}</TableCell>
               </TableRow>
