@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { render } from 'react-dom';
-import Chart from './Chart';
+import Chart from './CandleStickChart';
 import { getData } from "./utils"
 
 import { TypeChooser } from "react-stockcharts/lib/helper";
 
- class ChartComponent extends React.Component {
+export class PerformanceChart extends React.Component {
 	componentDidMount() {
 		getData().then(data => {
 			this.setState({ data })
@@ -23,10 +22,3 @@ import { TypeChooser } from "react-stockcharts/lib/helper";
 		)
 	}
 }
-
-render(
-	<ChartComponent />,
-	document.getElementById("root")
-);
-
-export default ChartComponent;
