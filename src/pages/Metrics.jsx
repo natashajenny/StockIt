@@ -11,7 +11,6 @@ export class Metrics extends React.Component {
                 <NavBar />
                 <h1> Metrics  </h1>
                 <Chart />
-                <SimpleTable/>
             </div>
         );
     }
