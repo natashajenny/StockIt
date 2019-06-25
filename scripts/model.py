@@ -4,13 +4,13 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, ForeignKey, MetaData
 from sqlalchemy import Date, DateTime, Float, Integer, Numeric, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import backref, relationship, sessionmaker
 
 USER  = 'comp3900'
 PASS  = 'comp9900'
 HOST  = 'portfolio.c6khp9ert7ew.us-east-1.rds.amazonaws.com'
 DBASE = 'portfolio'
-TEST  = True
+TEST  = False
 
 Base = declarative_base()
 
@@ -129,7 +129,7 @@ class PerformanceLog(Model, Base):
     gearing = Column('gearing', Float)
 
 class PortfolioLog(Model, Base):
-    __tablename__ = 'portfolio_log'
+    __tablename__ = 'portfolio_logs'
     datetime = Column('datetime', DateTime(timezone=True), primary_key=True)
     portfolio_id = Column('portfolio_id', Integer, ForeignKey("portfolios.portfolio_id"),
                            primary_key=True)
@@ -152,6 +152,7 @@ class StockLog(Model, Base):
     per = Column('per', Float)
     rank = Column('rank', Integer)
     cap = Column('cap', Numeric)
+    company = relationship('Company', backref='stock_logs')
   
 class Watchlist(Model, Base):
     __tablename__ = 'watchlists'

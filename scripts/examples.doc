@@ -1,0 +1,62 @@
+>>> from model import Company
+    
+    # Docs: https://docs.sqlalchemy.org/en/13/orm/index.html
+
+    # Add a new company object/record
+>>> company = Company(code='XYZ')
+>>> company.save()
+
+    # Find a company object/record by primary key
+>>> company = Company().query().get('XYZ')
+
+    # Print company object
+>>> print(company)
+    <model.Company object at 0x7fa224ca7320>
+
+    # Print company 'code' field
+>>> print(company.code)
+    ABC
+
+    # Update company 'name' field
+>>> company.name = 'XYZ Co Inc'
+>>> company.update()
+
+    # Delete company object/record
+>>> company.delete()
+
+    # Get all stock logs of a company
+>>> company = Company().query().get('ABC')
+>>> company.stock_logs
+    
+    # It produces a list of stock_log objects/records
+    # linked to the company 
+>>> len(company.stock_logs)
+    4961
+
+    # Print a stock log object/record
+>>> stock_log = company.stock_logs[0]
+>>> print(stock_log)
+    <model.StockLog object at 0x7fdb59141ba8>
+
+    # Print stock log's company 'code'
+>>> print(stock_log.company.code)
+    ABC
+
+    # Find all companies with names like '%Group%'
+>>> company = Company().query().filter(Company.name.like('%Group%')).all()
+    
+    # Produces a list of companies matching the filter
+>>> len(companies)
+    21
+
+    # Same thing order by 'code'
+>>> companies = Company().query().filter(Company.name.like('%Group%')).order_by(Company.name).all()
+>>> print(companies[0].code)
+    ANZ Banking Group Limited
+>>> print(companies[-1].code)
+    Woolworths Group Limited
+
+    # Get a scalar instead (first found record)
+>>> company = Company().query().filter(Company.name.like('%Group%')).first()
+>>> print(company.code)
+    ANZ
