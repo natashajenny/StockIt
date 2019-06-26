@@ -9,3 +9,22 @@ get_report('ABC')
 
 # col
 # cyb
+# dlx
+# lnk
+# mpl
+
+# nec
+# ora
+# rwc
+# scg
+# s32
+
+# ski
+# sun
+# a2m
+# sgr
+# twe
+
+# urw
+# vcx
+# xro
