@@ -1,0 +1,28 @@
+﻿z5124648
+
+week 1-3 
+Worked on setting up the front end frame works, react, nom file manager the packages. 
+
+Work allocated : 
+
+stock performance chart, (Done)
+    • candlestick chart which supports zooming panning mouse hover to reveal current price 
+      
+      
+stock table (Done)
+    • Stock table with all the stock information, ability to add (next sprint) 
+site navigation bar  (Done)
+    • Navigation bar at the top of the page 
+
+
+ 
+
+Work in progreess: 
+    1. .Currently working on alphavantage to import and connect their stock data through our api and link it up
+    2. Improving UI and color scheme 
+    3. Api calls to our data base to have real time stock updates
+    4. add stock to stock list feature 
+    5. User profile and login options 
+    6. Database to store the login options (may need help from backend to set this up) 
+
+
