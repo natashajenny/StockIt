@@ -14,6 +14,8 @@ stock table (Done)
     • Stock table with all the stock information, ability to add (next sprint) 
 site navigation bar  (Done)
     • Navigation bar at the top of the page 
+site color scheme
+ui and color scheme 
 
 
  
