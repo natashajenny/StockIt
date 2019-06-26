@@ -1,8 +1,9 @@
 ﻿z5124648
 
-week 1-3 
+week 1 
 Worked on setting up the front end frame works, react, nom file manager the packages. 
 
+week 2 -3
 Work allocated : 
 
 stock performance chart, (Done)
