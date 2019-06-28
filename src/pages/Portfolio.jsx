@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { Refresh, Add } from '@material-ui/icons';
 
 import { NavBar, PortfolioTable } from '../components';
 import { styles } from './styles';
@@ -40,7 +41,14 @@ export class PurePortfolio extends React.Component {
               <option value='Portfolio 2'>Portfolio 2</option>
               <option value='Portfolio 3'>Portfolio 3</option>
             </Select>
-            <Button variant='contained' color='secondary' className={classes.newPortfolioButton}>
+            <Button variant='contained' color='primary' className={classes.refreshButton}>
+              <Refresh />
+            </Button>
+            <Button variant='contained' color='primary' className={classes.addStockButton}>
+              <Add />
+              Add New Stock
+            </Button>
+            <Button variant='contained' color='secondary'>
               Create New Portfolio
             </Button>
           </div>
