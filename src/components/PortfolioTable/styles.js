@@ -9,4 +9,7 @@ export const styles = createStyles(theme => ({
     table: {
         minWidth: 650,
     },
+    row: {
+        padding: '0px',
+    },
 }));

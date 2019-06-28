@@ -6,11 +6,14 @@ export const styles = createStyles(theme => ({
         marginRight: theme.spacing(10),
         marginLeft: theme.spacing(10),
     },
-    newPortfolioButton: {
-        align: 'right',
+    refreshButton: {
+        marginLeft: '10px',
+    },
+    addStockButton: {
+        marginLeft: 'auto',
+        marginRight: '10px',
     },
     portfolioSubheading: {
         display: 'flex',
-        justifyContent: 'space-between',
     },
 }));
