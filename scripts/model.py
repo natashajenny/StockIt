@@ -1,5 +1,5 @@
+import secrets
 from datetime import datetime
-#from secrets import token_bytes
 from sqlalchemy import create_engine
 from sqlalchemy import Column, ForeignKey, MetaData
 from sqlalchemy import Date, DateTime, Float, Integer, Numeric, String
@@ -66,7 +66,7 @@ class User(Model, Base):
     user_id = Column('user_id', Integer, primary_key=True)
     login = Column('login', String, nullable=False)
     password = Column('password', String, nullable=False)
-    salt = Column('salt', String, nullable=False)
+    salt = Column('salt', String, nullable=False, default=secrets.token_bytes(16))
     name = Column('name', String)
     dob = Column('dob', Date)
     gender = Column('gender', String(1))
