@@ -1,0 +1,58 @@
+{
+    "success": true,
+    "payload": {
+        "portfolioID": "12345",
+        "stocks": [
+            {
+                "Code": "A2M",
+                "BoughtPrice": "13.22",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "Code": "ABC",
+                "BoughtPrice": "13.22",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "Code": "AGL",
+                "BoughtPrice": "13.22",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "Code": "ANZ",
+                "BoughtPrice": "13.22",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "Code": "BHP",
+                "BoughtPrice": "13.22",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            }
+        ]
+    }
+}

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Divider, Drawer, List, ListItem, ListItemText, 
-    Typography, Link } from '@material-ui/core';
+    ListItemIcon, Typography, Link } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { ExitToApp } from '@material-ui/icons';
 
 import { styles } from './styles';
 import history from '../../history';
@@ -49,7 +50,10 @@ class PureResponsiveDrawer extends React.Component {
                         <ListItemText primary = 'About Us' />
                     </ListItem>
                     <ListItem button key = 'Logout'>
-                        <ListItemText primary = 'Logout' />
+                        <ListItemIcon><ExitToApp color = 'error' /></ListItemIcon>
+                        <Typography color = 'error'>
+                            <ListItemText primary = 'Logout' disableTypography />
+                        </Typography>
                     </ListItem>
                 </List>
             </Drawer>

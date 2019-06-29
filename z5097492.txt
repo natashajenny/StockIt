@@ -37,8 +37,9 @@ Monday
 -We decided to work on the Portfolio and Metrics (possibly) pages for Week 4 demo.
 -I divided up the proposal workload into 4 parts that each person can choose from.
 -During standup, we decided on which part of the proposal to work on and gave update
-on the setups.
--I will be working on the Epics.
+on the setups. 
+-I will be working on the Epics, Jenny will be working on the background and prediction, 
+Slava will be working on the diagrams while Ian will continue setting up Frontend.
 
 Tuesday
 -I finished the Epic Stories section in the proposal. 
@@ -54,7 +55,21 @@ Thursday
 -I added the drawer under the menu bar.
 -I added router for each navigation link in the drawer.
 
+Friday
+-I proofread the proposal and submitted it.
 
+Saturday
+-We discussed what needs to be done for the Week 4 demo.
+-Slava will setup the database and aws based on the model that we have.
+-Ian will work on the table and graph.
+-Jenny will be working on the API.
+-I will help Ian and Jenny to display the data fetched in the UI.
 
-
+Week 4
+Tuesday
+-I fixed inconsistency from Ian's PR.
+-I added dropdown and buttons on Portfolio page.
+-The UI design is still not that professional yet. I might want to use 
+material-table instead of the normal table. I will perhaps ask the tutor
+on the UI.
 

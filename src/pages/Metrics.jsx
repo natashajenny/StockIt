@@ -1,14 +1,22 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
-import { NavBar } from '../components';
+import { NavBar, PerformanceChart } from '../components';
+import { styles } from './styles';
 
-export class Metrics extends React.Component {
+export class PureMetrics extends React.Component {
     render() {
+        const { classes } = this.props;
         return (
             <div>
                 <NavBar />
-                <h1> Metrics </h1>
+                <div className = {classes.root}>
+                    <h1> Metrics </h1>
+                    <PerformanceChart />
+                </div>
             </div>
-        );  
+        );
     }
 }
+
+export const Metrics = withStyles(styles)(PureMetrics);

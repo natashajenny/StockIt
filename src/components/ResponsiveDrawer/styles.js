@@ -26,4 +26,7 @@ export const styles = createStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  logout: {
+    font:'red',
+  },
 }));
