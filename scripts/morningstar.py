@@ -1,10 +1,31 @@
 import pandas as pd
 
 def get_report(code):
-    df = pd.read_excel('../data/financial/abc.xlsx', sheet_name=None)
-    print(df)
+    df_list = pd.read_excel('../data/financial/%s.xlsx' % code.lower(), sheet_name=None)
+    df = pd.concat([df_list['Profit Loss'],
+    			    df_list['Balance Sheet'],
+    			    df_list['Cash Flow'],
+    			    df_list['Per Share Statisticts'],
+    			    # df_list['Sundry Analysis'],
+    			    df_list['Ratio Analysis'],
+    			    df_list['Asset Base Analysis']])
 
-get_report('ABC')
+    print(df)
+    
+get_report('CBA')
+
+# Profit Loss
+# Balance Sheet
+# Cash Flow
+# Per Share Statisticts
+# Revenue Expense
+# Sundry Analysis
+# Growth Rates
+# Ratio Analysis
+# Asset Base Analysis
+
+
+
 
 
 # col
