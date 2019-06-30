@@ -115,7 +115,7 @@ class NewsLog(Model, Base):
 
 class PerformanceLog(Model, Base):
     __tablename__ = 'performance_logs'
-    year = Column('date', Date, primary_key=True)
+    date = Column('date', Date, primary_key=True)
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
     revenue = Column('revenue', Numeric)
     expenses = Column('expenses', Numeric)
@@ -140,6 +140,7 @@ class PerformanceLog(Model, Base):
     total_debt = Column('total_debt', Numeric)
     invested_capital = Column('invested_capital', Numeric)
     working_capital = Column('working_capital', Numeric)
+    gross_investment = Column('gross_investment', Numeric)
     noplat = Column('noplat', Numeric)
     profit_margin = Column('profit_margin', Numeric)
     ebit_margin = Column('ebit_margin', Numeric)
@@ -154,14 +155,14 @@ class PerformanceLog(Model, Base):
     asset_turnover = Column('asset_turnover', Numeric)
     ppe_turnover = Column('ppe_turnover', Numeric)
     depreciation_ppe = Column('depreciation_ppe', Numeric)
-    deperciation_revenue = Column('deperciation_revenue', Numeric)
+    depreciation_revenue = Column('depreciation_revenue', Numeric)
     wkg_capital_revenue = Column('wkg_capital_revenue', Numeric)
     wkg_capital_turnover = Column('wkg_capital_turnover', Numeric)
     financial_leverage = Column('financial_leverage', Numeric)
     gross_gearing = Column('gross_gearing', Numeric)
     net_gearing = Column('net_gearing', Numeric)
     interest_cover = Column('interest_cover', Numeric)
-    currect_ratio = Column('currect_ratio', Numeric)
+    current_ratio = Column('current_ratio', Numeric)
     quick_ratio = Column('quick_ratio', Numeric)
     gross_debt_cf = Column('gross_debt_cf', Numeric)
     net_debt_cf = Column('net_debt_cf', Numeric)
@@ -169,8 +170,8 @@ class PerformanceLog(Model, Base):
     bv_ps = Column('bv_ps', Numeric)
     cash_ps = Column('cash_ps', Numeric)
     days_inventory = Column('days_inventory', Numeric)
-    days_receivable = Column('days_receivable', Numeric)
-    days_payable = Column('days_payable', Numeric)
+    days_receivables = Column('days_receivables', Numeric)
+    days_payables = Column('days_payables', Numeric)
     cf_ps = Column('cf_ps', Numeric)
     sales_ps = Column('sales_ps', Numeric)
     share_price = Column('share_price', Numeric)
@@ -199,6 +200,13 @@ class PerformanceLog(Model, Base):
     interest_margin = Column('interest_margin', Numeric)
     spread = Column('spread', Numeric)
     non_interest_total = Column('non_interest_total', Numeric)
+    abnormals = Column('abnormals', Numeric)
+    pretax_profit = Column('pretax_profit', Numeric)
+    claims_ratio = Column('claims_ratio', Numeric)
+    expense_ratio = Column('expense_ratio', Numeric)
+    profitability = Column('profitability', Numeric)
+    solvency = Column('solvency', Numeric)
+    company = relationship('Company', backref='performance_logs')
 
 class PortfolioLog(Model, Base):
     __tablename__ = 'portfolio_logs'
