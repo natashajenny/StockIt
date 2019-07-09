@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
 
-from ..scripts import functions 
+from ..scripts.functions import *
 
 app = Flask(__name__)
 CORS(app)

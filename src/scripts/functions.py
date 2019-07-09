@@ -1,8 +1,7 @@
 import datetime
 
-from model import Company, NewsLog, Portfolio, PortfolioLog, StockLog, User, Watchlist
+from .model import *
 from sqlalchemy import and_, between
-
 
 ## User
 
