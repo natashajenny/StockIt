@@ -25,7 +25,7 @@ class PureDeleteModal extends React.Component {
                   Yes
                 </Typography>
               </Button>
-              <Button color='secondary' cariant='contained'>
+              <Button color='secondary' variant='contained'>
                 <Typography variant='button'>
                   No
                 </Typography>
