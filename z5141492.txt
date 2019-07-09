@@ -10,3 +10,14 @@ We finally had a new group member, Slava, and begin discussing Epics for our pro
 This week, I did more research on the various databases available for the stock market and the APIs we can use. I made a Yahoo Finance account and build a portfolio with it, to identify areas for improvement and things we can do differently for our project.
 
 For the next week, our focus is finishing our proposal and building a basic MVP for week 4.
+
+
+Week 3 - 4
+
+I wrote python functions to interact with the postgresql database. The functions include user and their portfolio related functions, functions for company, portfolio and stock logs, creating and updating users' portfolios, news log related functions and functions for watchlist alerts.
+
+
+Week 5
+
+For this week I tried to use Flask Marshmallow to jsonify SQLAlchemy objects from the above functions. I encountered some problems doing this and trying to resolve it now.
+
