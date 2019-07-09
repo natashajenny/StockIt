@@ -6,25 +6,27 @@ from flask_json import FlaskJSON, json_response
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
-# import scripts/functions.py file
+
+from ..scripts import functions 
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 CORS(app)
 json = FlaskJSON(app)
 
-# ma = Marshmallow(app)
+ma = Marshmallow(app)
 
-# class CompanySchema(ma.ModelSchema):
-#     class Meta:
-#         model = Company
-#         # Company from model.py
+class UserSchema(ma.ModelSchema):
+    class Meta:
+        model = User
 
 
 @app.route("/user", methods=["GET"])
 # @login_required
 def index():
-    return json_response(value = 'all users')
+    user = functions.create_user('user1', '1234', 'userOne', '13-11-96', 'F', 'email', 'phone')
+    user_schema = UserSchema()
+    output = user_schema.dump(user).data
+    return jsonify({'user' : output})
 
 
 @app.route("/user/<int:user_id>/portfolio", methods=["GET"])
@@ -32,12 +34,3 @@ def index():
 def create(user_id):
     buf = 'user ' + str(user_id) + ' portfolio'
     return json_response(value = buf)
-
-
-# @app.route('/')
-# def index():
-#     # result has sqlalchemy objects from an all() query
-#     result = get_companies()
-#     c_schema = StockSchema(many=True)
-#     output = c_schema.dump(result).data
-#     return jsonify({'company' : output})

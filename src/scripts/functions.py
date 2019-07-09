@@ -1,4 +1,4 @@
-from model import *
+from . import model
 from sqlalchemy import and_, between
 import datetime
 
@@ -8,7 +8,7 @@ import datetime
 def create_user(login, password, name, dob, gender, email, phone):
     user = User(login=login, password=password, name=name, dob=dob, gender=gender, email=email, phone=phone, balance=0)
     user.save()
-    return user.user_id
+    return user
 
 def delete_user(user_id):
     user = User().query().get(user_id)
