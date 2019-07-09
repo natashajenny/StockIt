@@ -73,3 +73,21 @@ Tuesday
 material-table instead of the normal table. I will perhaps ask the tutor
 on the UI.
 
+Friday
+-Added Delete Modal for Portfolio table
+-Redesign the portfolio table
+-Added theming into app
+-Added mock data for portfolio table
+-Added endpoints and APIClient for flask and fetching API from Frontend
+
+Week 5
+-Went through the architecture of API with Jenny and Ian so that they can continue it
+-Slava completed the prototype of stock prediction with top 20 ASX companies.
+-We discussed whether we want to incorporate companies' financial report data into
+the prediction or just use the normal LSTM.
+-We decided to incorporate the companies' data into it.
+-Assisted Jenny and Ian with working on endpoints and APIClient 
+
+Week 6
+-Fixed a small typo in DeleteModal.
+-Helped Jenny and Ian with bugs.
