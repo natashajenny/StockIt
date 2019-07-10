@@ -7,7 +7,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Container from '@material-ui/core/Container';
 
 // import coin from './coin.jpg'; 
-import profits from './profits.jpg';
+import profits from './profits1.jpg';
 
 // import { styles } from './styles';
 
@@ -37,7 +37,7 @@ export const useStyles = makeStyles(theme => ({
     const classes = useStyles;
   return (
     <div className={classes.root}>
-    <Container maxWidth="sm">
+    <Container maxWidth="xs">
       <Paper className={classes.paper} alignContent="center">
         <Grid container  direction="row" spacing={3} alignItems="center"  >
           <Grid item>
@@ -49,18 +49,18 @@ export const useStyles = makeStyles(theme => ({
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs alignContent="center">
                 <Typography gutterBottom variant="subtitle1">
-                  (ASX)
+                          (ASX)
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  High / Low
+                         High / Low
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  SELL
+                           SELL
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                  Remove
+                   Remove
                 </Typography>
               </Grid>
             </Grid>
