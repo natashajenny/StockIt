@@ -1,0 +1,29 @@
+Week 01
+=======
+N/A
+
+Week 02
+=======
+Group formed
+'Stock Portfolio' topic chosen
+Research on the subject
+
+Week 03
+=======
+Database design add ERD
+Neural Network blueprint
+System architecture design
+Setting up AWS server and PostreSQL instance
+Investigating MorningStar and alphvantage
+Working on proposal chapters
+
+Week 04
+=======
+Finilizing ORM interface
+Importing data from alphavatange
+Researching machine learning approaches
+
+Week 05
+=======
+Importing data from MorningStar
+Building a test LSTM model
