@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
-
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
                 <TextField
                 id="standard-with-placeholder"
                 label="Username"
-                type="password"
                 placeholder="Username"
                 className={classes.textField}
                 margin="normal"
@@ -50,6 +49,10 @@ const useStyles = makeStyles(theme => ({
                 autoComplete="current-password"
                 margin="normal"
                 /> 
+                
+      <Button color="primary" className={classes.button}>
+        Submit
+      </Button>
         </form>
       </Container>
     );

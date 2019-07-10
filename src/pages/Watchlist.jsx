@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import { NavBar, WatchItems, WatchGrid } from '../components';
+import { NavBar, WatchItems, WatchGrid,PortfolioTable } from '../components';
 import { styles } from './styles';
 
 export class PureWatchlist extends React.Component {
@@ -12,13 +12,13 @@ export class PureWatchlist extends React.Component {
             <NavBar />
             <h1> Watchlist </h1>
             <WatchGrid />
-            <WatchItems />
-            <WatchItems />
-            <WatchItems />
-            <WatchItems />
-            <WatchItems />
+            <PortfolioTable />
             <div className = {classes.root}>
-               
+            <WatchItems />
+            <WatchItems />
+            <WatchItems />
+            <WatchItems />
+            <WatchItems />
             </div>
         </div>
         );  
