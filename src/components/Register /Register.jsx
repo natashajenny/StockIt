@@ -22,25 +22,33 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
- function TextFields() {
-    const classes = useStyles();
+ export class UserRegister extends React.Component {
+   
 
   
     // const handleChange = name => event => {
     //   setValues({ ...values, [name]: event.target.value });
     // };
     // width="48" height="48"
+    render(){
+        const { classes } = this.props;
     return (
     <Container maxWidth='xs'>
     <h1 align="Center" color='primary' > User Profile </h1>
         <form className={classes.container} noValidate autoComplete="off">
                 <TextField
-                id="userID"
+                id="userInput"
                 label="Username"
                 placeholder="Username"
                 className={classes.textField}
                 margin="normal"
                 />
+                <TextField
+                id="-emailInput"
+                label="Email"
+                className={classes.textField}
+                margin="normal"
+                /> 
                 <TextField
                 id="standard-password-input"
                 label="Password"
@@ -57,5 +65,6 @@ const useStyles = makeStyles(theme => ({
       </Container>
     );
   }
+}
 
-  export const Login = TextFields;
+export const Register = UserRegister;

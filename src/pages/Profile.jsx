@@ -2,10 +2,11 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
 
-import { NavBar,  Login } from '../components';
+import { NavBar,  Login, Register } from '../components';
 import { styles } from './styles';
 
 export class PureProfile extends React.Component {
+ 
     render() {
         const { classes } = this.props;
         return (
@@ -13,6 +14,7 @@ export class PureProfile extends React.Component {
             <NavBar />
             <div className = {classes.root}>
                 <Login />
+                <Register />
             </div>
         </div>
         );
