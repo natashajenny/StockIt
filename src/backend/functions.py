@@ -1,13 +1,13 @@
 import datetime
-
-from .model import *
+from model import *
 from sqlalchemy import and_, between
+from sqlalchemy.sql import exists
 
 ## User
 
 # Create and save a new user
-def create_user(login, password, name, dob, gender, email, phone):
-    user = User(login=login, password=password, name=name, dob=dob, gender=gender, email=email, phone=phone, balance=0)
+def create_user(login, password, name, gender, email, phone):
+    user = User(login=login, password=password, name=name, gender=gender, email=email, phone=phone, balance=0)
     user.save()
     return user
 
@@ -22,6 +22,16 @@ def find_user(user_id):
 def get_portfolios(user_id):
     portfolios = Portfolio().query().filter(user_id==user_id)
     return portfolios.all()
+
+
+# check if user is registered, allows them to login
+def validate_login(login, password):
+    db = Db.instance()
+    user = db.session.query(exists().where(and_(User.login == login, User.password == password))).scalar()
+    if user is True:
+        return User().query().filter(login == login).all()
+    else:
+        return None
 
 
 ## Company
@@ -40,7 +50,7 @@ def get_companies():
     return companies.all()
 
 # Search companies with names like %keyword%
-def get_companies(keyword):
+def get_companies_like(keyword):
     companies = Company().query().filter(Company.name.like('%keyword%'))
     return companies.all()
 
@@ -55,7 +65,7 @@ def get_stock_log(date, code):
 ## Portfolio
 
 def create_portfolio(user_id, title, description):
-    portfolio = Portfolio(user_id=user_id, title=title, description=description, created_on=datetime.datetime.now())
+    portfolio = Portfolio(user_id=user_id, title=title, description=description, created_on=datetime.now())
     portfolio.save()
     return portfolio.portfolio_id
 
@@ -133,3 +143,14 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.update()
+
+
+## Functions for testing
+
+def get_all_users():
+    users = User().query()
+    return users.all()
+
+def get_all_portfolios():
+    p = Portfolio().query()
+    return p.all()

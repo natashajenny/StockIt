@@ -5,6 +5,7 @@ from sqlalchemy import Column, ForeignKey, MetaData
 from sqlalchemy import Date, DateTime, Float, Integer, Numeric, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, sessionmaker
+from flask_login import UserMixin
 
 USER  = 'comp3900'
 PASS  = 'comp9900'
@@ -61,7 +62,7 @@ class Model():
         db = Db.instance()
         return db.session.query(self.__class__)
 
-class User(Model, Base):
+class User(Model, Base, UserMixin):
     __tablename__ = 'users'
     user_id = Column('user_id', Integer, primary_key=True)
     login = Column('login', String, nullable=False)
@@ -72,7 +73,10 @@ class User(Model, Base):
     gender = Column('gender', String(1))
     email = Column('email', String)
     phone = Column('phone', String)
-    balance = Column('balance', Numeric)
+    balance = Column('balance', Float)
+
+    def get_id(self):
+        return self.user_id
 
 class Portfolio(Model, Base):
     __tablename__ = 'portfolios'
