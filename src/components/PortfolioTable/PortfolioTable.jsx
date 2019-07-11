@@ -1,5 +1,6 @@
 import React from 'react';
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
+import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, 
+    Paper } from '@material-ui/core';
 import { Edit, Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -8,17 +9,23 @@ import portfolio_data from '../../mock/portfolio_data.json';
 import { DeleteModal } from '../forms';
 
 class PurePortfolioTable extends React.Component {
-  handleRowEditClick = (event) => {
+  handleRowEditClick = (row) => {
     //TODO: make quantity editable
   }
-
-  openDeleteModal = (event) => {
+  openDeleteModal = (row) => {
     this.setState({
       isDeleteModalOpen: true,
+      selectedStock: row,
     })
-    console.log(event);
+    console.log(row);
   }
-
+  delete = () => {
+    //TODO: apiclient delete param: stock key
+    this.setState({
+      isDeleteModalOpen: false,
+      selectedStock: null,
+    })
+  }
   closeDeleteModal = () => {
     this.setState({
       isDeleteModalOpen: false,
@@ -29,7 +36,7 @@ class PurePortfolioTable extends React.Component {
     super(props);
     this.state = {
       isDeleteModalOpen: false,
-      selectedStock: '',
+      selectedStock: null,
     }
   }
   render() {
@@ -53,10 +60,10 @@ class PurePortfolioTable extends React.Component {
               </TableHead>
             <TableBody>
               {portfolio_data.payload.stocks.map(row => (
-                <TableRow key={row.name}>
+                <TableRow key={row.StockID}>
                   <TableCell className={classes.row}>
-                    <IconButton onClick={this.handleRowEditClick}><Edit /></IconButton> 
-                    <IconButton onClick= {this.openDeleteModal}><Delete /></IconButton>
+                    <IconButton onClick={ () => this.handleRowEditClick(row)}><Edit /></IconButton> 
+                    <IconButton onClick={ () => this.openDeleteModal(row)}><Delete /></IconButton>
                   </TableCell>
                   <TableCell align="center">{row.Code}</TableCell>
                   <TableCell align="center">{row.BoughtPrice}</TableCell>
@@ -71,7 +78,10 @@ class PurePortfolioTable extends React.Component {
             </TableBody>
           </Table>
         </Paper>
-        {this.state.isDeleteModalOpen && <DeleteModal onClose = {this.closeDeleteModal}/>}
+        {this.state.isDeleteModalOpen && <DeleteModal 
+            onClose = {this.closeDeleteModal} 
+            name = {this.state.selectedStock.Code}
+            onDelete = {this.delete}/>}
       </React.Fragment>
     );
   }
