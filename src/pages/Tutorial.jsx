@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import { NavBar } from '../components';
+// import { NavBar } from '../components';
 import { styles } from './styles';
 
 export class PureTutorial extends React.Component {
@@ -9,7 +9,7 @@ export class PureTutorial extends React.Component {
         const { classes } = this.props;
         return (
         <div>
-            <NavBar />
+            {/* <NavBar /> */}
             <div className = {classes.root}>
                 <h1> Tutorial </h1>
             </div>

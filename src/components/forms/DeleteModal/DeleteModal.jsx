@@ -7,7 +7,7 @@ import { styles } from './styles';
 
 class PureDeleteModal extends React.Component {
   render() {
-    const { onClose, classes } = this.props;
+    const { onClose, onDelete, name, classes } = this.props;
     return (
       <React.Fragment>
         <div className={classes.darkBackdrop} onClick={onClose}/>
@@ -17,10 +17,10 @@ class PureDeleteModal extends React.Component {
               <Close />
             </IconButton>
             <Typography variant='h6'>
-              Are you sure you want to delete [NAME]?
+              Are you sure you want to delete {name}?
             </Typography>
             <div className = {classes.buttons}>
-              <Button color='primary' variant='contained'>
+              <Button color='primary' variant='contained' onClick={onDelete}>
                 <Typography variant='button'>
                   Yes
                 </Typography>

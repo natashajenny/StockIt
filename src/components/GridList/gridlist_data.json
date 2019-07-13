@@ -1,0 +1,37 @@
+        
+{
+    "stocks": [
+        {
+            "Symbol": "A2M",
+            "LastPrice($)": "2.31", 
+            "Chg": "0.32",
+            "Chg(%)": "2.4"
+      
+        },
+        {
+            "Symbol": "CBA",
+            "LastPrice($)": "0.32", 
+            "Chg": "0.32",
+            "Chg(%)": "2.4"
+        },
+        {
+            "Symbol": "ANZ",
+            "LastPrice($)": "1.17", 
+            "Chg": "0.32",
+            "Chg(%)": "2.4"
+        },
+        {
+            "Symbol": "BNP",
+            "LastPrice($)": "2.49", 
+            "Chg": "0.32",
+            "Chg(%)": "2.4"
+        },
+        {
+            "Symbol": "BPP",
+            "LastPrice($)": "3.58", 
+            "Chg": "0.32",
+            "Chg(%)": "2.4"
+        }
+    ]
+
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ul {
+    background-color: white;
+    color: black;
+}
+ul.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+li {
+    float: left;
+}
+li.navlist a {
+    display: block;
+    color: white;
+    font-family: verdana;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li.navlist a:hover {
+    background-color: #f4e542;
+    color: black;
+}
+h1 {
+    font-size: 40px;
+    font-family: arial;
+}
+h2 {
+    font-size: 30px;
+    font-family: arial;
+}
+p {
+    font-size: 20px;
+    font-family: arial;
+}
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+input[type=text], select {
+    font-size: 20px;
+    font-family: arial;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+input[type=password], select {
+    font-size: 20px;
+    font-family: arial;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+input[type=submit] {
+    font-size: 20px;
+    font-family: arial;
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+textarea {
+    width: 100%;
+}
+div.form {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: justify;
+}
+body {
+    font-family: arial;
+}
+button {
+    background-color: #f4e542;
+    border: none;
+    color: black;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+</style>
+  <h1>Scrubs Stock Portfolio Management</h1>
+</head>
+<body>
+
+<div>
+{% if current_user.is_anonymous %}
+<ul class = "navbar">
+  <li class = "navlist"><a href="{{ url_for('login')}}">Login</a></li>
+  <li class = "navlist"><a href="{{ url_for('register') }}">Register</a></li>
+</ul>
+{% else %}
+<ul class = "navbar">
+  <li class = "navlist"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+  <li class = "navlist"><a href="{{ url_for('portfolio') }}">Portfolio</a></li>
+  <li class = "navlist"><a href="{{ url_for('watchlist') }}">Watchlist</a></li>
+  <li class = "navlist"><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+{% endif %}
+</div>
+<br>
+{% block body %}{% endblock %}
+</body>
+</html>

@@ -13,7 +13,7 @@ class APIClient {
 }
 
 getUsers() {
-    return this.perform('get', '/user');
+    return this.perform('post', '/register');
 }
 
 getPortfolios(userID) {

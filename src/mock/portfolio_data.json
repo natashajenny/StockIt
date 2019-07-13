@@ -4,8 +4,9 @@
         "portfolioID": "12345",
         "stocks": [
             {
+                "StockID": "1",
                 "Code": "A2M",
-                "BoughtPrice": "13.22",
+                "BoughtPrice": "21.22",
                 "CurPrice": "13.22",
                 "Chg": "-0.32",
                 "High": "13.48",
@@ -14,8 +15,9 @@
                 "Quantity": "50"
             },
             {
+                "StockID": "2",
                 "Code": "ABC",
-                "BoughtPrice": "13.22",
+                "BoughtPrice": "43.22",
                 "CurPrice": "13.22",
                 "Chg": "-0.32",
                 "High": "13.48",
@@ -24,8 +26,9 @@
                 "Quantity": "50"
             },
             {
+                "StockID": "3",
                 "Code": "AGL",
-                "BoughtPrice": "13.22",
+                "BoughtPrice": "34.22",
                 "CurPrice": "13.22",
                 "Chg": "-0.32",
                 "High": "13.48",
@@ -34,8 +37,9 @@
                 "Quantity": "50"
             },
             {
+                "StockID": "4",
                 "Code": "ANZ",
-                "BoughtPrice": "13.22",
+                "BoughtPrice": "73.22",
                 "CurPrice": "13.22",
                 "Chg": "-0.32",
                 "High": "13.48",
@@ -44,13 +48,14 @@
                 "Quantity": "50"
             },
             {
+                "StockID": "5",
                 "Code": "BHP",
-                "BoughtPrice": "13.22",
+                "BoughtPrice": "8.22",
                 "CurPrice": "13.22",
                 "Chg": "-0.32",
-                "High": "13.48",
+                "High": "33.48",
                 "Low": "13.16",
-                "Return": "17.62",
+                "Return": "14.22",
                 "Quantity": "50"
             }
         ]

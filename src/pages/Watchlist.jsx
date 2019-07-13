@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import { NavBar } from '../components';
+import { WatchItems,PortfolioTable } from '../components';
 import { styles } from './styles';
 
 export class PureWatchlist extends React.Component {
@@ -9,9 +9,12 @@ export class PureWatchlist extends React.Component {
         const { classes } = this.props;
         return (
         <div>
-            <NavBar />
+            {/* <NavBar /> */}
+            <h1> Watchlist </h1>
+            <PortfolioTable />
             <div className = {classes.root}>
-                <h1> Watchlist </h1>
+                <WatchItems />
+                <WatchItems />
             </div>
         </div>
         );  
