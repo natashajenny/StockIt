@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, InputBase, Badge, 
-  MenuItem, Menu } from '@material-ui/core';
+  MenuItem, Menu, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -8,9 +8,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { withStyles } from '@material-ui/core/styles';
 
-
 import { styles } from './styles';
-import { ResponsiveDrawer } from '../';
+import { ResponsiveDrawer, RegisterModal, LoginModal } from '../';
+import { UserAuth } from '../../UserAuth';
+import history from '../../history';
 
 class PureNavBar extends React.Component {
   constructor(props) {
@@ -21,13 +22,14 @@ class PureNavBar extends React.Component {
       isMenuOpen: false,
       isMobileDrawerOpen: false,
       isMobileMenuOpen: false,
+      isLoginOpen: false,
+      isRegisterOpen: false,
     };
   }
   handleProfileMenuOpen = (event) => {
     this.setState({
       anchorEl: event.currentTarget,
     })
-    console.log(this.state.anchorEl);
   }
   handleMobileMenuClose = () => {
     this.setState({
@@ -49,11 +51,27 @@ class PureNavBar extends React.Component {
     this.setState({
       isMobileDrawerOpen: !this.state.isMobileDrawerOpen,
     })
-    console.log(this.state.isMobileDrawerOpen);
+  }
+  openLoginModal = () => {
+    this.setState({ isLoginOpen: true });
+  }
+
+  closeLoginModal = () => {
+      this.setState({ isLoginOpen: false });
+  }
+
+  openRegisterModal = () => {
+      this.setState({ isRegisterOpen: true });
+  }
+
+  closeRegisterModal = () => {
+      this.setState({ isRegisterOpen: false });
   }
   render() {
     const menuId = 'primary-search-account-menu';
     const { classes } = this.props;
+    const { logIn, isLoggedIn } = this.context;
+    const { isLoginOpen, isRegisterOpen } = this.state;
     const renderMenu = (
       <Menu
         anchorEl={this.state.anchorEl}
@@ -102,74 +120,97 @@ class PureNavBar extends React.Component {
     );
   
     return (
-      <div className={classes.grow}>
-        <AppBar position="static" className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleDrawerToggle}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
-              Logo
-            </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'Search' }}
+          <div className={classes.grow}>
+            <AppBar position="static" className={classes.appBar}>
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="Open drawer"
+                  onClick={this.handleDrawerToggle}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Button onClick={history.push('/Portfolio')}>
+                  <Typography className={classes.title} variant="button" noWrap>
+                    Stock It                    
+                  </Typography>
+                </Button>
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    placeholder="Search…"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'Search' }}
+                  />
+                </div>
+                <div className={classes.grow} />
+                  {isLoggedIn ?
+                    <div>
+                      <div className={classes.sectionDesktop}>
+                        <IconButton aria-label="notifications" color="inherit">
+                          <Badge badgeContent={17} color="secondary">
+                            <NotificationsIcon />
+                          </Badge>
+                        </IconButton>
+                        <IconButton
+                          edge="end"
+                          aria-label="Account of current user"
+                          aria-controls={menuId}
+                          aria-haspopup="true"
+                          onClick={this.handleProfileMenuOpen}
+                          color="inherit"
+                        >
+                          <AccountCircle />
+                        </IconButton>
+                      </div>
+                      <div className={classes.sectionMobile}>
+                        <IconButton
+                          aria-label="Show more"
+                          aria-controls={mobileMenuId}
+                          aria-haspopup="true"
+                          onClick={this.handleMobileMenuOpen}
+                          color="inherit"
+                        >
+                          <MoreIcon />
+                        </IconButton>
+                      </div>
+                    </div>
+                    :
+                    <div>
+                      <Button onClick={this.openRegisterModal}>
+                        <Typography className={classes.title} variant="button" noWrap>
+                          Register
+                        </Typography>
+                      </Button>
+                      <Button onClick={this.openLoginModal}>
+                        <Typography className={classes.title} variant="button" noWrap>
+                          Login
+                        </Typography>
+                      </Button>
+                    </div>
+                  }
+                </Toolbar>
+              </AppBar>
+              {renderMobileMenu}
+              {renderMenu}
+              <ResponsiveDrawer 
+                handleDrawerToggle = {this.handleDrawerToggle}
+                mobileOpen = {this.state.isMobileDrawerOpen} 
               />
+              {isLoginOpen && <LoginModal onClose={this.closeLoginModal} onSubmit={logIn} />}
+              {isRegisterOpen && <RegisterModal onClose={this.closeRegisterModal}/>}
             </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <IconButton aria-label="notifications" color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                edge="end"
-                aria-label="Account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label="Show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={this.handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-        <ResponsiveDrawer 
-          handleDrawerToggle = {this.handleDrawerToggle}
-          mobileOpen = {this.state.isMobileDrawerOpen} 
-        />
-      </div>
     );
   }  
 }
+
+PureNavBar.contextType = UserAuth;
 
 export const NavBar = withStyles(styles)(PureNavBar);

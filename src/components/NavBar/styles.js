@@ -12,6 +12,7 @@ export const styles = createStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             display: 'block',
         },
+        color: 'white',
     },
     search: {
         position: 'relative',

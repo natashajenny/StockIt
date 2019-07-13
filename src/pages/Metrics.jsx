@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import { NavBar, PerformanceChart } from '../components';
+import { PerformanceChart } from '../components';
 import { styles } from './styles';
 
 export class PureMetrics extends React.Component {
@@ -9,7 +9,7 @@ export class PureMetrics extends React.Component {
         const { classes } = this.props;
         return (
             <div>
-                <NavBar />
+                {/* <NavBar /> */}
                 <div className = {classes.root}>
                     <h1> Metrics </h1>
                     <PerformanceChart />

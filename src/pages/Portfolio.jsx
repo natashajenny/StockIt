@@ -3,7 +3,7 @@ import { Button, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Refresh, Add } from '@material-ui/icons';
 
-import { NavBar, PortfolioTable } from '../components';
+import { PortfolioTable } from '../components';
 import { styles } from './styles';
 
 export class PurePortfolio extends React.Component {
@@ -24,7 +24,7 @@ export class PurePortfolio extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <NavBar />
+        {/* <NavBar /> */}
         <div className = {classes.root}>
           <h1> Portfolio </h1>
           <div className = {classes.portfolioSubheading}>

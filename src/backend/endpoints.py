@@ -40,6 +40,7 @@ def welcome():
 @app.route('/register', methods=['POST', 'GET'])
 # @login_required
 def register():
+    print('haha')
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
