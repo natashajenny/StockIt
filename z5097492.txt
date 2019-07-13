@@ -89,5 +89,13 @@ the prediction or just use the normal LSTM.
 -Assisted Jenny and Ian with working on endpoints and APIClient 
 
 Week 6
+Wednesday
 -Fixed a small typo in DeleteModal.
 -Helped Jenny and Ian with bugs.
+
+Friday
+-Added Login Modal and Register Modal
+
+Saturday
+-Added user context
+
