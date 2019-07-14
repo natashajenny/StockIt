@@ -3,8 +3,9 @@ import { Button, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Refresh, Add } from '@material-ui/icons';
 
-import { PortfolioTable } from '../components';
 import { styles } from './styles';
+import { newsGrid } from '../components/NewsGrid/NewsGrid';
+import { PortfolioTable } from '../components/PortfolioTable';
 
 export class PurePortfolio extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ export class PurePortfolio extends React.Component {
         {/* <NavBar /> */}
         <div className = {classes.root}>
           <h1> Portfolio </h1>
+          {newsGrid()}
           <div className = {classes.portfolioSubheading}>
             <Select
               native
@@ -60,3 +62,4 @@ export class PurePortfolio extends React.Component {
 }
 
 export const Portfolio = withStyles(styles)(PurePortfolio);
+
