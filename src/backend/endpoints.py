@@ -40,7 +40,12 @@ def welcome():
 @app.route('/register', methods=['POST', 'GET'])
 # @login_required
 def register():
-    print('haha')
+    print('form req')
+    data = request.form
+    # print(data)
+    # requestJson = request.get_json(force=True)
+    # print(requestJson)
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']

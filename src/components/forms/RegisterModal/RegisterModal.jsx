@@ -6,6 +6,7 @@ import { Close } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
+import APIClient from '../../../api/apiClient.js';
 
 export class UserRegister extends React.Component {  
     constructor(props) {
@@ -34,6 +35,14 @@ export class UserRegister extends React.Component {
             payment: { label: 'Payment Method' },
         };
     }
+
+    handleSubmit = (formData) => {
+        this.apiClient = new APIClient();
+        this.apiClient.registerUser(formData).then((user) => {
+            console.log(user)
+        })
+    }
+
     render() {
         const { classes, onClose } = this.props;
         const { formData } = this.state;
@@ -63,15 +72,13 @@ export class UserRegister extends React.Component {
                                 autoComplete={formConfig[fieldName].autoComplete}
                                 />
                         ))}
-                        <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'>
+                        <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'
+                                onClick={() => this.handleSubmit(this.state.formData)}>
                             <Typography className={classes.loginText} variant='button'>
                                 Register
                             </Typography>
                         </Button>
                     </Paper>
-                    {/* <Button color="primary" className={classes.button}>
-                        Submit
-                    </Button> */}
                 </form>
             </React.Fragment>
         );

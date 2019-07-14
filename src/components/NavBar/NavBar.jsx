@@ -132,7 +132,7 @@ class PureNavBar extends React.Component {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Button onClick={history.push('/Portfolio')}>
+                <Button onClick={() => history.push('/Portfolio')}>
                   <Typography className={classes.title} variant="button" noWrap>
                     Stock It                    
                   </Typography>

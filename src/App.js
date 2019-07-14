@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Router } from 'react-router-dom';
+import { Route, Router, Redirect } from 'react-router-dom';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import './App.css';
@@ -40,7 +40,9 @@ class App extends React.Component {
           <MuiThemeProvider theme={theme}>
             <NavBar />
             <Router history={history}>
-              <Route exact path='/' component={Home} />
+              {this.state.isLoggedIn && <Redirect from='/' to='/Portfolio' />}
+              {!this.state.isLoggedIn && <Redirect from='/' to='/Home' />}
+              <Route path='/Home' component={Home} />
               <Route path='/Portfolio' component={Portfolio} />
               <Route path='/Metrics' component={Metrics} />
               <Route path='/AboutUs' component={AboutUs} />
