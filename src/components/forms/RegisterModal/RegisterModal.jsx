@@ -20,7 +20,7 @@ export class UserRegister extends React.Component {
                 password: emptyData,
                 confirmPassword: emptyData,
                 address: emptyData,
-                payment: emptyData,
+                phone: emptyData,
             },
         };
         this.passwordRef = React.createRef();
@@ -32,19 +32,19 @@ export class UserRegister extends React.Component {
             password: { label: 'Password', type: 'password', onBlur: this.handlePasswordBlur, ref: this.passwordRef },
             confirmPassword: { label: 'Confirm Password', type: 'password', onBlur: this.handleConfirmPasswordBlur, ref: this.confirmPasswordRef },
             address: { label: 'Address', autoComplete: 'address-line1' },
-            payment: { label: 'Payment Method' },
+            phone: { label: 'Phone Number' },
         };
     }
 
-    handleSubmit = (formData) => {
+    handleSubmit = (formData, onSubmit, onClose) => {
         this.apiClient = new APIClient();
-        this.apiClient.registerUser(formData).then((user) => {
-            console.log(user)
-        })
+        this.apiClient.registerUser(formData).then((data) => {
+            onSubmit(data.user.user_id)
+        }).then(onClose())
     }
 
     render() {
-        const { classes, onClose } = this.props;
+        const { classes, onClose, onSubmit } = this.props;
         const { formData } = this.state;
         const { formConfig } = this;
         console.log(this.state.formData);
@@ -52,11 +52,11 @@ export class UserRegister extends React.Component {
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>
                 <form className={classes.container} noValidate autoComplete="off">
-                <Paper className={classes.modal}>
+                    <Paper className={classes.modal}>
                         <IconButton className={classes.closeButton} onClick={onClose}>
                             <Close />
                         </IconButton>
-                        { Object.keys(formConfig).map((fieldName: FormFieldNames, i) => (
+                        { Object.keys(formConfig).map((fieldName, i) => (
                             <TextField
                                 required
                                 key={i}
@@ -73,7 +73,7 @@ export class UserRegister extends React.Component {
                                 />
                         ))}
                         <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'
-                                onClick={() => this.handleSubmit(this.state.formData)}>
+                                onClick={() => this.handleSubmit(this.state.formData, onSubmit, onClose)}>
                             <Typography className={classes.loginText} variant='button'>
                                 Register
                             </Typography>
@@ -90,13 +90,13 @@ export class UserRegister extends React.Component {
         ConfirmPasswordField.oninput = this.validateConfirmPassword;
     }
 
-    passwordsMatch = (password: string, confirmPassword: string) => {
+    passwordsMatch = (password, confirmPassword) => {
         return password === confirmPassword
             ? true
             : false;
     }
 
-    isStrongPassword = (password: string) => {
+    isStrongPassword = (password) => {
         if (password.length > 8
             && password.match(/[A-Z]/)
             && password.match(/[a-z]/)
@@ -152,7 +152,7 @@ export class UserRegister extends React.Component {
         }});
     }
 
-    handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange = (e) => {
         const { formData } = this.state;
         this.setState({
             formData: {

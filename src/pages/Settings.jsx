@@ -8,12 +8,9 @@ export class PureSettings extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-        <div>
-            {/* <NavBar /> */}
             <div className = {classes.root}>
                 <h1> Settings </h1>
             </div>
-        </div>
         );  
     }
 }

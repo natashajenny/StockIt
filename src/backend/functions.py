@@ -6,8 +6,8 @@ from sqlalchemy.sql import exists
 ## User
 
 # Create and save a new user
-def create_user(login, password, name, gender, email, phone):
-    user = User(login=login, password=password, name=name, gender=gender, email=email, phone=phone, balance=0)
+def create_user(login, password, name, email, phone):
+    user = User(login=login, password=password, name=name, email=email, phone=phone, balance=0)
     user.save()
     return user
 

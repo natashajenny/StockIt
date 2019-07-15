@@ -6,7 +6,7 @@ import { ExitToApp, AccountCircle } from '@material-ui/icons';
 
 import { styles } from './styles';
 import history from '../../history';
-import { UserAuth } from '../../UserAuth';
+import { UserContext } from '../../UserContext';
 
 class PureResponsiveDrawer extends React.Component {
     handleClick = (key) => {
@@ -80,6 +80,6 @@ class PureResponsiveDrawer extends React.Component {
     }
 };
 
-PureResponsiveDrawer.contextType = UserAuth;
+PureResponsiveDrawer.contextType = UserContext;
 
 export const ResponsiveDrawer = withStyles(styles)(PureResponsiveDrawer);

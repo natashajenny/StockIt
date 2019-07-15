@@ -1,9 +1,7 @@
-# from .middlewares import login_required
-from flask import Flask, json, g, request, jsonify, render_template, redirect, url_for
+import json
+from flask import Flask, g, request, jsonify, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_json import FlaskJSON, json_response
-# from app.kudo.service import Service as Kudo
-# from app.kudo.schema import GithubRepoSchema
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
@@ -11,7 +9,6 @@ from functions import *
 
 app = Flask(__name__)
 CORS(app)
-json = FlaskJSON(app)
 ma = Marshmallow(app)
 
 login_manager = LoginManager()
@@ -40,24 +37,19 @@ def welcome():
 @app.route('/register', methods=['POST', 'GET'])
 # @login_required
 def register():
-    print('form req')
-    data = request.form
-    # print(data)
-    # requestJson = request.get_json(force=True)
-    # print(requestJson)
-
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['name']
-        gender = request.form['gender']
-        email = request.form['email']
-        phone = request.form['phone']
+        data = list(request.form.to_dict().keys())[0]
+        data_dict = json.loads(data)
+        username = data_dict['username']['data']
+        password = data_dict['password']['data']
+        name = data_dict['name']['data']
+        email = data_dict['email']['data']
+        phone = data_dict['phone']['data']
     
-        user = create_user(username, password, name, gender, email, phone)
+        user = create_user(username, password, name, email, phone)
         user_schema = UserSchema()
         output = user_schema.dump(user).data
-
+        print(output)
         # returns json object of registered User
         return jsonify({'user': output})
     else :
@@ -66,15 +58,22 @@ def register():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        data = list(request.form.to_dict().keys())[0]
+        data_dict = json.loads(data)
+        username = data_dict['username']['data']
+        password = data_dict['password']['data']
         user = validate_login(username, password)
 
         if user is False:
+            print('user is false')
             return redirect(url_for('welcome'))
         else:
-            login_user(user[0])
-            return render_template('home.html')
+            user_schema = UserSchema()
+            output = user_schema.dump(user[0]).data
+            # returns json object of registered User
+            print(output)
+            return jsonify({'user': output})
+            # return render_template('home.html')
     return render_template('login.html')
 
 # this is just for testing

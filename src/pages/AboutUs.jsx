@@ -8,11 +8,8 @@ export class PureAboutUs extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div>
-                {/* <NavBar /> */}
-                <div className = {classes.root}>
-                    <h1> About Us </h1>
-                </div>
+            <div className = {classes.root}>
+                <h1> About Us </h1>
             </div>
         );  
     }

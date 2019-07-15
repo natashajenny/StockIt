@@ -11,7 +11,6 @@ export class PureProfile extends React.Component {
         return (
             <div className = {classes.root}>
                 <h1> Profile </h1>
-                {/* <NavBar /> */}
             </div>
         );
     }

@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
 import { ResponsiveDrawer, RegisterModal, LoginModal } from '../';
-import { UserAuth } from '../../UserAuth';
+import { UserContext } from '../../UserContext';
 import history from '../../history';
 
 class PureNavBar extends React.Component {
@@ -205,12 +205,12 @@ class PureNavBar extends React.Component {
                 mobileOpen = {this.state.isMobileDrawerOpen} 
               />
               {isLoginOpen && <LoginModal onClose={this.closeLoginModal} onSubmit={logIn} />}
-              {isRegisterOpen && <RegisterModal onClose={this.closeRegisterModal}/>}
+              {isRegisterOpen && <RegisterModal onClose={this.closeRegisterModal} onSubmit={logIn}/>}
             </div>
     );
   }  
 }
 
-PureNavBar.contextType = UserAuth;
+PureNavBar.contextType = UserContext;
 
 export const NavBar = withStyles(styles)(PureNavBar);

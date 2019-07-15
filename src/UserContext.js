@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-export const UserAuth = React.createContext({
+export const UserContext = React.createContext({
+    userId: -1,
     isLoggedId: false,
     logIn: () => {},
 });
