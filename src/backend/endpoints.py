@@ -34,6 +34,12 @@ class PortfolioSchema(ma.ModelSchema):
 def welcome():
     return render_template('welcome.html')
 
+# manually delete users
+@app.route('/delete/<int:user_id>', methods=['DELETE'])
+def delete(user_id):
+    delete_user(user_id)
+    return render_template('welcome.html')
+
 @app.route('/register', methods=['POST', 'GET'])
 # @login_required
 def register():
@@ -64,12 +70,12 @@ def login():
         password = data_dict['password']['data']
         user = validate_login(username, password)
 
-        if user is False:
+        if user is None:
             print('user is false')
             return redirect(url_for('welcome'))
         else:
             user_schema = UserSchema()
-            output = user_schema.dump(user[0]).data
+            output = user_schema.dump(user).data
             # returns json object of registered User
             print(output)
             return jsonify({'user': output})
@@ -83,13 +89,6 @@ def allusers():
     user_schema = UserSchema(many=True)
     output = user_schema.dump(users).data
     return jsonify({'all users' : output})
-
-
-# @app.route('/user/<int:user_id>/portfolio', methods=['GET'])
-# # @login_required
-# def create(user_id):
-#     buf = 'user ' + str(user_id) + ' portfolio'
-#     return json_response(value = buf)
 
 
 @app.route('/dashboard')

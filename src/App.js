@@ -22,16 +22,16 @@ const theme = createMuiTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.logIn = (userId) => {
+    this.logIn = (user) => {
       this.setState({
         isLoggedIn: true,
-        userId: userId,
+        user: user,
       })
     }
     this.state = {
       isLoggedIn: false,
       logIn: this.logIn,
-      userId: -1,
+      user: null,
     }
   }
 
@@ -42,8 +42,15 @@ class App extends React.Component {
           <MuiThemeProvider theme={theme}>
             <NavBar />
             <Router history={history}>
-              {this.state.isLoggedIn && <Redirect from='/' to='/Portfolio' />}
-              {!this.state.isLoggedIn && <Redirect from='/' to='/Home' />}
+              {!this.state.isLoggedIn && 
+                <div>
+                  <Redirect from='/Portfolio' to='/Home' />
+                  <Redirect from='/Metrics' to='/Home' />
+                  <Redirect from='/Profile' to='/Home' />
+                  <Redirect from='/Watchlist' to='/Home' />
+                </div>
+              }
+              <Redirect from='/' to='/Home' />
               <Route path='/Home' component={Home} />
               <Route path='/Portfolio' component={Portfolio} />
               <Route path='/Metrics' component={Metrics} />

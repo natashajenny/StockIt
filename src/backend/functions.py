@@ -12,6 +12,7 @@ def create_user(login, password, name, email, phone):
     return user
 
 def delete_user(user_id):
+    print(user_id)
     user = User().query().get(user_id)
     user.delete()
 
@@ -27,11 +28,11 @@ def get_portfolios(user_id):
 # check if user is registered, allows them to login
 def validate_login(login, password):
     db = Db.instance()
-    user = db.session.query(exists().where(and_(User.login == login, User.password == password))).scalar()
-    if user is True:
-        return User().query().filter(login == login).all()
-    else:
+    user = db.session.query(User).filter(and_(User.login == login, User.password == password)).all()
+    if not user:
         return None
+    else:
+        return user[0]
 
 
 ## Company

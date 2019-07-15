@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, InputBase, Badge, 
+import { AppBar, Toolbar, IconButton, Typography, Badge, 
   MenuItem, Menu, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
-import { ResponsiveDrawer, RegisterModal, LoginModal } from '../';
+import { SearchBar, ResponsiveDrawer, RegisterModal, LoginModal } from '../';
 import { UserContext } from '../../UserContext';
 import history from '../../history';
 
@@ -27,9 +26,7 @@ class PureNavBar extends React.Component {
     };
   }
   handleProfileMenuOpen = (event) => {
-    this.setState({
-      anchorEl: event.currentTarget,
-    })
+    history.push('/Profile')
   }
   handleMobileMenuClose = () => {
     this.setState({
@@ -132,24 +129,12 @@ class PureNavBar extends React.Component {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Button onClick={() => history.push('/Portfolio')}>
+                <Button onClick={() => history.push('/Home')}>
                   <Typography className={classes.title} variant="button" noWrap>
                     Stock It                    
                   </Typography>
                 </Button>
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
-                  </div>
-                  <InputBase
-                    placeholder="Search…"
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'Search' }}
-                  />
-                </div>
+                { isLoggedIn && <SearchBar /> }
                 <div className={classes.grow} />
                   {isLoggedIn ?
                     <div>

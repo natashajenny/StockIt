@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
 import APIClient from '../../../api/apiClient.js';
+import history from '../../../history';
 
 export class UserRegister extends React.Component {  
     constructor(props) {
@@ -39,8 +40,8 @@ export class UserRegister extends React.Component {
     handleSubmit = (formData, onSubmit, onClose) => {
         this.apiClient = new APIClient();
         this.apiClient.registerUser(formData).then((data) => {
-            onSubmit(data.user.user_id)
-        }).then(onClose())
+            onSubmit(data.user)
+        }).then(history.push('/Home')).then(onClose())
     }
 
     render() {

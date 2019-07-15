@@ -1,7 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-// import { NavBar } from '../components';
 import { styles } from './styles';
 
 export class PureSettings extends React.Component {

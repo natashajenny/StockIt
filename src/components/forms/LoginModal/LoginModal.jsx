@@ -5,6 +5,7 @@ import { Close } from '@material-ui/icons';
 
 import { styles } from './styles';
 import APIClient from '../../../api/apiClient.js';
+import history from '../../../history';
 
 class PureLoginModal extends React.Component {
   constructor(props) {
@@ -38,8 +39,8 @@ class PureLoginModal extends React.Component {
   handleSubmit = (formData, onSubmit, onClose) => {
     this.apiClient = new APIClient();
     this.apiClient.loginUser(formData).then((data) => {
-      onSubmit(data.user.user_id)
-    }).then(onClose())
+      onSubmit(data.user)
+    }).then(history.push('/Home')).then(onClose())
   }
 
   render() {
