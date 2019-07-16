@@ -6,12 +6,13 @@ from sqlalchemy.sql import exists
 ## User
 
 # Create and save a new user
-def create_user(login, password, name, gender, email, phone):
-    user = User(login=login, password=password, name=name, gender=gender, email=email, phone=phone, balance=0)
+def create_user(login, password, name, email, phone):
+    user = User(login=login, password=password, name=name, email=email, phone=phone, balance=0)
     user.save()
     return user
 
 def delete_user(user_id):
+    print(user_id)
     user = User().query().get(user_id)
     user.delete()
 
@@ -27,11 +28,11 @@ def get_portfolios(user_id):
 # check if user is registered, allows them to login
 def validate_login(login, password):
     db = Db.instance()
-    user = db.session.query(exists().where(and_(User.login == login, User.password == password))).scalar()
-    if user is True:
-        return User().query().filter(login == login).all()
-    else:
+    user = db.session.query(User).filter(and_(User.login == login, User.password == password)).all()
+    if not user:
         return None
+    else:
+        return user[0]
 
 
 ## Company

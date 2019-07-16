@@ -9,7 +9,6 @@ export class PureWatchlist extends React.Component {
         const { classes } = this.props;
         return (
         <div>
-            {/* <NavBar /> */}
             <h1> Watchlist </h1>
             <PortfolioTable />
             <div className = {classes.root}>

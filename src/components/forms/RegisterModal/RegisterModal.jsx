@@ -6,6 +6,8 @@ import { Close } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
+import APIClient from '../../../api/apiClient.js';
+import history from '../../../history';
 
 export class UserRegister extends React.Component {  
     constructor(props) {
@@ -19,7 +21,7 @@ export class UserRegister extends React.Component {
                 password: emptyData,
                 confirmPassword: emptyData,
                 address: emptyData,
-                payment: emptyData,
+                phone: emptyData,
             },
         };
         this.passwordRef = React.createRef();
@@ -31,11 +33,19 @@ export class UserRegister extends React.Component {
             password: { label: 'Password', type: 'password', onBlur: this.handlePasswordBlur, ref: this.passwordRef },
             confirmPassword: { label: 'Confirm Password', type: 'password', onBlur: this.handleConfirmPasswordBlur, ref: this.confirmPasswordRef },
             address: { label: 'Address', autoComplete: 'address-line1' },
-            payment: { label: 'Payment Method' },
+            phone: { label: 'Phone Number' },
         };
     }
+
+    handleSubmit = (formData, onSubmit, onClose) => {
+        this.apiClient = new APIClient();
+        this.apiClient.registerUser(formData).then((data) => {
+            onSubmit(data.user)
+        }).then(history.push('/Home')).then(onClose())
+    }
+
     render() {
-        const { classes, onClose } = this.props;
+        const { classes, onClose, onSubmit } = this.props;
         const { formData } = this.state;
         const { formConfig } = this;
         console.log(this.state.formData);
@@ -43,11 +53,11 @@ export class UserRegister extends React.Component {
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>
                 <form className={classes.container} noValidate autoComplete="off">
-                <Paper className={classes.modal}>
+                    <Paper className={classes.modal}>
                         <IconButton className={classes.closeButton} onClick={onClose}>
                             <Close />
                         </IconButton>
-                        { Object.keys(formConfig).map((fieldName: FormFieldNames, i) => (
+                        { Object.keys(formConfig).map((fieldName, i) => (
                             <TextField
                                 required
                                 key={i}
@@ -63,15 +73,13 @@ export class UserRegister extends React.Component {
                                 autoComplete={formConfig[fieldName].autoComplete}
                                 />
                         ))}
-                        <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'>
+                        <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'
+                                onClick={() => this.handleSubmit(this.state.formData, onSubmit, onClose)}>
                             <Typography className={classes.loginText} variant='button'>
                                 Register
                             </Typography>
                         </Button>
                     </Paper>
-                    {/* <Button color="primary" className={classes.button}>
-                        Submit
-                    </Button> */}
                 </form>
             </React.Fragment>
         );
@@ -83,13 +91,13 @@ export class UserRegister extends React.Component {
         ConfirmPasswordField.oninput = this.validateConfirmPassword;
     }
 
-    passwordsMatch = (password: string, confirmPassword: string) => {
+    passwordsMatch = (password, confirmPassword) => {
         return password === confirmPassword
             ? true
             : false;
     }
 
-    isStrongPassword = (password: string) => {
+    isStrongPassword = (password) => {
         if (password.length > 8
             && password.match(/[A-Z]/)
             && password.match(/[a-z]/)
@@ -145,7 +153,7 @@ export class UserRegister extends React.Component {
         }});
     }
 
-    handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange = (e) => {
         const { formData } = this.state;
         this.setState({
             formData: {
