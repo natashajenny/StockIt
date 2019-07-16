@@ -3,7 +3,7 @@ import { Route, Router, Redirect } from 'react-router-dom';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import './App.css';
-import { UserAuth } from './UserAuth';
+import { UserContext } from './UserContext';
 import history from './history';
 import { Home, Portfolio, Metrics, AboutUs, Profile, Settings, Tutorial, Watchlist } from './pages';
 import { NavBar } from './components';
@@ -22,26 +22,35 @@ const theme = createMuiTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.logIn = () => {
+    this.logIn = (user) => {
       this.setState({
-        isLoggedIn: true
+        isLoggedIn: true,
+        user: user,
       })
     }
     this.state = {
       isLoggedIn: false,
       logIn: this.logIn,
+      user: null,
     }
   }
 
   render() {
     return (
       <div>
-        <UserAuth.Provider value = {this.state}>
+        <UserContext.Provider value = {this.state}>
           <MuiThemeProvider theme={theme}>
             <NavBar />
             <Router history={history}>
-              {this.state.isLoggedIn && <Redirect from='/' to='/Portfolio' />}
-              {!this.state.isLoggedIn && <Redirect from='/' to='/Home' />}
+              {!this.state.isLoggedIn && 
+                <div>
+                  <Redirect from='/Portfolio' to='/Home' />
+                  <Redirect from='/Metrics' to='/Home' />
+                  <Redirect from='/Profile' to='/Home' />
+                  <Redirect from='/Watchlist' to='/Home' />
+                </div>
+              }
+              <Redirect from='/' to='/Home' />
               <Route path='/Home' component={Home} />
               <Route path='/Portfolio' component={Portfolio} />
               <Route path='/Metrics' component={Metrics} />
@@ -52,7 +61,7 @@ class App extends React.Component {
               <Route path='/Watchlist' component={Watchlist} />
             </Router>
           </MuiThemeProvider>
-        </UserAuth.Provider>
+        </UserContext.Provider>
       </div>
     );  
   }

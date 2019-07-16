@@ -1,7 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-// import { NavBar } from '../components';
 import { styles } from './styles';
 
 export class PureProfile extends React.Component {
@@ -11,7 +10,6 @@ export class PureProfile extends React.Component {
         return (
             <div className = {classes.root}>
                 <h1> Profile </h1>
-                {/* <NavBar /> */}
             </div>
         );
     }

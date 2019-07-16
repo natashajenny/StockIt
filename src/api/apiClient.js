@@ -8,19 +8,14 @@ const client = axios.create({
 });
 
 class APIClient {
-    // getParams (obj) {
-    //     const params = new URLSearchParams();
-    //     const keys = Object.keys(obj);
-    //     for(let k of keys){
-    //         params.append(k, obj[k]);
-    //     }
-    //     return params;
-    // }
-    
     registerUser(user) {
         return this.perform('post', '/register', user);
     }
     
+    loginUser(user) {
+        return this.perform('post', '/login', user);
+    }
+
     getPortfolios(userID) {
         return this.perform('get', `/user/${userID}/portfolio`)
     }

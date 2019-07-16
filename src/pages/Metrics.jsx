@@ -8,12 +8,9 @@ export class PureMetrics extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <div>
-                {/* <NavBar /> */}
-                <div className = {classes.root}>
-                    <h1> Metrics </h1>
-                    <PerformanceChart />
-                </div>
+            <div className = {classes.root}>
+                <h1> Metrics </h1>
+                <PerformanceChart />
             </div>
         );
     }
