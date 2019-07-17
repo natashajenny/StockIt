@@ -3,15 +3,18 @@ import { Button, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Refresh, Add } from '@material-ui/icons';
 
-import { PortfolioTable } from '../components';
+import { PortfolioTable, CreatePortfolioModal } from '../components';
 import { styles } from './styles';
 import { UserContext } from '../UserContext';
+import APIClient from '../api/apiClient.js';
 
 export class PurePortfolio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      portfolioName: 'Default'
+      portfolioName: '',
+      portfolios: null,
+      openCreatePortfolioModal: false,
     }
   }
 
@@ -21,8 +24,45 @@ export class PurePortfolio extends React.Component {
     });
     /*TODO: Change the portfolio table data*/
   }
+
+  handleCreatePortfolioClick = () => {
+    this.setState({
+      openCreatePortfolioModal: true,
+    })
+  }
+
+  closeCreatePortfolioModal = () => {
+    this.setState({
+      openCreatePortfolioModal: false,
+    })
+  }
+
+  handleSubmitPorfolio = (formData) => {
+    this.apiClient.addPortfolio(this.context.user.user_id, formData).then(
+      (data) => {
+        console.log(data)
+        this.setState({
+          portfolios: data.portfolios
+        })
+      }
+    ).then(
+      this.closeCreatePortfolioModal()
+    )
+  }
+
+  componentDidMount = () => {
+    this.apiClient = new APIClient();
+    this.context.user && this.apiClient.getPortfolios(this.context.user.user_id)
+      .then((data) => {
+        this.setState({
+          portfolios: data.portfolios
+        })
+      })
+  }
+
   render() {
     const { classes } = this.props;
+    const { portfolios } = this.state;
     return (
       <div className = {classes.root}>
         <h1> Portfolio </h1>
@@ -35,23 +75,28 @@ export class PurePortfolio extends React.Component {
               name: 'portfolioName',
             }}
           >
-            <option value='Default'>Default</option>
-            <option value='Portfolio 1'>Portfolio 1</option>
-            <option value='Portfolio 2'>Portfolio 2</option>
-            <option value='Portfolio 3'>Portfolio 3</option>
+            {portfolios && portfolios.map(portfolio => 
+              <option key={portfolio.portfolio_id} value={portfolio.title}>
+                {portfolio.title}
+              </option>
+            )}
           </Select>
-          <Button variant='contained' color='primary' className={classes.refreshButton}>
+          <Button variant='contained' color='primary' 
+                className={classes.refreshButton}>
             <Refresh />
           </Button>
           <Button variant='contained' color='primary' className={classes.addStockButton}>
             <Add />
             Add New Stock
           </Button>
-          <Button variant='contained' color='secondary'>
+          <Button variant='contained' color='secondary' onClick={this.handleCreatePortfolioClick}>
             Create New Portfolio
           </Button>
         </div>
         <PortfolioTable />
+        {this.state.openCreatePortfolioModal && 
+            <CreatePortfolioModal onClose={this.closeCreatePortfolioModal}
+            onSubmit={this.handleSubmitPorfolio} />}
       </div>
     );
   }

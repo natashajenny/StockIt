@@ -20,6 +20,8 @@ export const styles = createStyles(theme => ({
     },
     portfolioSubheading: {
         display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
     },
     home: {
         paddingTop: '20vh',
@@ -45,5 +47,8 @@ export const styles = createStyles(theme => ({
         textAlign: 'center',
         paddingTop: '20px',
         paddingBottom: '20px',
+    },
+    homePaper: {
+        margin: '10px',
     },
 }));
