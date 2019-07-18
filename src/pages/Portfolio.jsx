@@ -5,7 +5,7 @@ import { Refresh, Add } from '@material-ui/icons';
 
 import { PortfolioTable, CreatePortfolioModal } from '../components';
 import { styles } from './styles';
-import { PortfolioTable } from '../components/PortfolioTable';
+
 import { UserContext } from '../UserContext';
 import APIClient from '../api/apiClient.js';
 
