@@ -6,3 +6,4 @@ export * from './Settings';
 export * from './Tutorial';
 export * from './Watchlist';
 export * from './Home';
+export * from './Stocks';

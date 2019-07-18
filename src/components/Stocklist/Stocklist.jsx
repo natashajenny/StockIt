@@ -1,12 +1,10 @@
 import React from 'react';
 import {  Table, TableCell, TableHead, TableRow, 
     Paper } from '@material-ui/core';
-// import { Edit, Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import { styles } from './styles';
 import { DeleteModal } from '../forms';
-
+import {StockDrawer} from '../StockDrawer/StockDrawer';
 class StockTable extends React.Component {
   handleRowEditClick = (row) => {
     //TODO: make quantity editable
@@ -64,9 +62,10 @@ class StockTable extends React.Component {
                     <TableCell align="center">Bought Price&nbsp;($)</TableCell>
                     <TableCell align="center">Quantity&nbsp;</TableCell>
                     <TableCell> 
-                        <Button  onClick={this.handleAddStock} variant="contained" color="primary" className={classes.button}>
+                        {/* <Button  onClick={this.handleAddStock} variant="contained" color="primary" className={classes.button}>
                             Add Stock
-                        </Button>
+                        </Button> */}
+                        <StockDrawer/>
                     </TableCell>
                 </TableRow>
               </TableHead>
