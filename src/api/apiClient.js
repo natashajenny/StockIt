@@ -23,6 +23,10 @@ class APIClient {
     addPortfolio(userId, portfolio) {
         return this.perform('post', `/user/${userId}/portfolio`, portfolio)
     }
+
+    getStocks() {
+        return this.perform('get', '/company')
+    }
     
     async perform (method, resource, data) {
         return client({

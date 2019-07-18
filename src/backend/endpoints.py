@@ -88,7 +88,7 @@ def allusers():
     users = get_all_users()
     user_schema = UserSchema(many=True)
     output = user_schema.dump(users).data
-    return jsonify({'all users' : output})
+    return jsonify({'users' : output})
 
 
 @app.route('/company', methods=['GET'])
@@ -96,7 +96,7 @@ def allcomnames():
     stocks = get_com_name()
     company_schema = CompanySchema(many=True)
     output = company_schema.dump(stocks).data
-    return jsonify({'all stocks' : output})
+    return jsonify({'stocks' : output})
 
 @app.route('/dashboard')
 def dashboard():

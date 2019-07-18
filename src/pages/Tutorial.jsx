@@ -4,7 +4,7 @@ import {newsGrid} from '../components/NewsGrid/NewsGrid';
 import {Stocklist} from '../components/Stocklist/Stocklist';
 // import {StockDrawer} from '../components/StockDrawer/StockDrawer';
 import { styles } from './styles';
-
+import APIClient from '../api/apiClient.js';
 
 export class PureTutorial extends React.Component {
 
@@ -15,16 +15,16 @@ export class PureTutorial extends React.Component {
           isLoaded: false,
         }
       }
-      componentDidMount(){
-        fetch('http://127.0.0.1:4000/company')
-          .then(res => res.json())
-          .then(json =>{
+    componentDidMount(){
+        this.apiClient = new APIClient();
+        this.apiClient.getStocks()
+            .then(json =>{
                 this.setState({
                     isLoaded: true,
-                    items: json,
+                    items: json.stocks,
                 })
-          });
-      }
+            });
+    }
 
     render() {
         var { isLoaded, items } = this.state;
