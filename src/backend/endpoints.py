@@ -91,6 +91,13 @@ def allusers():
     return jsonify({'all users' : output})
 
 
+@app.route('/company', methods=['GET'])
+def allcomnames():
+    stocks = get_com_name()
+    company_schema = CompanySchema(many=True)
+    output = company_schema.dump(stocks).data
+    return jsonify({'all stocks' : output})
+
 @app.route('/dashboard')
 def dashboard():
     pass

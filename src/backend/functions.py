@@ -50,6 +50,11 @@ def get_companies():
     companies = Company().query().order_by(Company.name)
     return companies.all()
 
+# Get all companies names
+def get_com_name():
+    companies = Company().query().with_entities(Company.code).order_by(Company.code)
+    return companies.all()
+
 # Search companies with names like %keyword%
 def get_companies_like(keyword):
     companies = Company().query().filter(Company.name.like('%keyword%'))
@@ -155,3 +160,4 @@ def get_all_users():
 def get_all_portfolios():
     p = Portfolio().query()
     return p.all()
+
