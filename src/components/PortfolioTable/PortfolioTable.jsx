@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, 
-    Paper } from '@material-ui/core';
-import { Edit, Delete } from '@material-ui/icons';
+    Paper, Input } from '@material-ui/core';
+import { Check, Close, Edit, Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
@@ -9,8 +9,37 @@ import portfolio_data from '../../mock/portfolio_data.json';
 import { DeleteModal } from '../forms';
 
 class PurePortfolioTable extends React.Component {
+  
+  handleSubmitChange = () => {
+    //TODO: apiClient update db with data from selectedStock
+    this.setState({
+      isEditable: false,
+      selectedRow: null,
+    })
+  }
+
+  handleCancelChange = () => {
+    this.setState({
+      isEditable: false,
+      selectedRow: null,
+    })
+  }
+
+  handleInputChange = (e, label) => {
+    const value = e.target.value;
+    this.setState( prevState => ({
+      selectedStock: {
+        ...prevState.selectedStock, 
+        [label]: value,
+      }
+    }))
+  }
+  
   handleRowEditClick = (row) => {
-    //TODO: make quantity editable
+    this.setState({
+      selectedStock: row,
+      isEditable: true,
+    })
   }
   openDeleteModal = (row) => {
     this.setState({
@@ -37,10 +66,12 @@ class PurePortfolioTable extends React.Component {
     this.state = {
       isDeleteModalOpen: false,
       selectedStock: null,
+      isEditable: false,
     }
   }
   render() {
     const { classes } = this.props;
+    const { isEditable, selectedStock } = this.state;
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -62,17 +93,44 @@ class PurePortfolioTable extends React.Component {
               {portfolio_data.payload.stocks.map(row => (
                 <TableRow key={row.StockID}>
                   <TableCell className={classes.row}>
-                    <IconButton onClick={ () => this.handleRowEditClick(row)}><Edit /></IconButton> 
-                    <IconButton onClick={ () => this.openDeleteModal(row)}><Delete /></IconButton>
+                    {isEditable && row.StockID === selectedStock.StockID ? 
+                      <div>
+                        <IconButton onClick={this.handleSubmitChange}><Check /></IconButton>
+                        <IconButton onClick={this.handleCancelChange}><Close /></IconButton>
+                      </div>
+                    :
+                      <div>
+                        <IconButton onClick={ () => this.handleRowEditClick(row)}><Edit /></IconButton> 
+                        <IconButton onClick={ () => this.openDeleteModal(row)}><Delete /></IconButton>
+                      </div>
+                    }
                   </TableCell>
                   <TableCell align="center">{row.Code}</TableCell>
-                  <TableCell align="center">{row.BoughtPrice}</TableCell>
+                  <TableCell align="center">
+                    { isEditable && row.StockID === selectedStock.StockID ? 
+                      <Input
+                        defaultValue={row.BoughtPrice} 
+                        onChange={(e) => this.handleInputChange(e,'BoughtPrice')}
+                      />
+                    :
+                      row.BoughtPrice
+                    }
+                  </TableCell>
                   <TableCell align="center">{row.CurPrice}</TableCell>
                   <TableCell align="center">{row.Chg}</TableCell>
                   <TableCell align="center">{row.High}</TableCell>
                   <TableCell align="center">{row.Low}</TableCell>
                   <TableCell align="center">{row.Return}</TableCell>
-                  <TableCell align="center">{row.Quantity}</TableCell>
+                  <TableCell align="center">
+                    { isEditable && row.StockID === selectedStock.StockID ? 
+                      <Input
+                        defaultValue={row.Quantity} 
+                        onChange={(e) => this.handleInputChange(e,'Quantity')}
+                      />
+                    :
+                      row.Quantity
+                    }
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

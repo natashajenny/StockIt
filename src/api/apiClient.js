@@ -16,8 +16,12 @@ class APIClient {
         return this.perform('post', '/login', user);
     }
 
-    getPortfolios(userID) {
-        return this.perform('get', `/user/${userID}/portfolio`)
+    getPortfolios(userId) {
+        return this.perform('get', `/user/${userId}/portfolio`)
+    }
+
+    addPortfolio(userId, portfolio) {
+        return this.perform('post', `/user/${userId}/portfolio`, portfolio)
     }
     
     async perform (method, resource, data) {

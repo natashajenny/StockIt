@@ -92,36 +92,42 @@ def allusers():
 
 
 @app.route('/dashboard')
-@login_required
 def dashboard():
     pass
 
-@app.route('/portfolio', methods=['GET','POST'])
-@login_required
-def portfolio():
+@app.route('/user/<int:user_id>/portfolio', methods=['GET','POST'])
+def portfolio(user_id):
     if request.method == 'POST':
-        title = request.form['title']
-        desc = request.form['description']
+        data = list(request.form.to_dict().keys())[0]
+        data_dict = json.loads(data)
+        title = data_dict['title']['data']
+        desc = data_dict['description']['data']
 
-        p = create_portfolio(current_user.user_id, title, desc)   
-        portfolios = get_portfolios(current_user.user_id)
+        p = create_portfolio(user_id, title, desc)   
+        portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
-        return render_template('portfolio.html', portfolios=output)
-
+        print(output)
+        return jsonify({'portfolios': output})
     else :
-        portfolios = get_portfolios(current_user.user_id)
+        portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
-        return render_template('portfolio.html', portfolios=output)
+        return jsonify({'portfolios': output})
+
+@app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
+def stock(user_id, portfolio_id):
+    if request.method == 'POST':
+        print(user_id, portfolio_id)
+        return jsonify({'stocks': 'all_stocks'})
+    else:
+        return jsonify({'stocks': 'all_stocks'})
 
 @app.route('/watchlist')
-@login_required
 def watchlist():
     pass
 
 @app.route('/logout')
-@login_required
 def logout():
     logout_user()
     return redirect(url_for('welcome'))
