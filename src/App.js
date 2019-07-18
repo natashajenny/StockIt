@@ -28,9 +28,16 @@ class App extends React.Component {
         user: user,
       })
     }
+    this.logOut = () => {
+      this.setState({
+        isLoggedIn: false,
+        user: null,
+      })
+    }
     this.state = {
       isLoggedIn: false,
       logIn: this.logIn,
+      logOut: this.logOut,
       user: null,
     }
   }

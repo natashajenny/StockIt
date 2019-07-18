@@ -13,9 +13,15 @@ class PureResponsiveDrawer extends React.Component {
         this.props.handleDrawerToggle();
         history.push(`/${key}`);
     }
+
+    handleLogOut = (logOut) => {
+        this.props.handleDrawerToggle();
+        logOut()
+    }
+    
     render() {
         const { classes, mobileOpen, handleDrawerToggle } = this.props;
-        const { isLoggedIn } = this.context;
+        const { isLoggedIn, logOut } = this.context;
         return (
             <Drawer 
                 className={classes.drawer} 
@@ -66,7 +72,7 @@ class PureResponsiveDrawer extends React.Component {
                     <div>
                         <Divider />
                         <List>
-                            <ListItem button key = 'Logout'>
+                            <ListItem button key = 'Logout' onClick={() => this.handleLogOut(logOut)}>
                                 <ListItemIcon><ExitToApp color = 'error' /></ListItemIcon>
                                 <Typography color = 'error'>
                                     <ListItemText primary = 'Logout' disableTypography />
