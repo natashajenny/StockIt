@@ -5,11 +5,13 @@ from flask_json import FlaskJSON, json_response
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
+# from marshmallow import Schema, fields
 from functions import *
 
 app = Flask(__name__)
 CORS(app)
 ma = Marshmallow(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -21,13 +23,25 @@ class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
 
-class CompanySchema(ma.ModelSchema):
-    class Meta:
-        model = Company
-
 class PortfolioSchema(ma.ModelSchema):
     class Meta:
         model = Portfolio
+
+class CompanySchema(ma.ModelSchema):
+    # pl = fields.Nested(PerformanceLogSchema)
+    class Meta:
+        model = Company
+
+
+class PerformanceLogSchema(ma.ModelSchema):
+    class Meta:
+        model = PerformanceLog
+
+class PortfolioLogSchema(ma.ModelSchema):
+    class Meta:
+        model = PortfolioLog
+
+
 
 
 @app.route('/')
@@ -82,21 +96,13 @@ def login():
             # return render_template('home.html')
     return render_template('login.html')
 
-# this is just for testing
-@app.route('/allusers', methods=['GET'])
-def allusers():
-    users = get_all_users()
-    user_schema = UserSchema(many=True)
-    output = user_schema.dump(users).data
-    return jsonify({'users' : output})
 
-
-@app.route('/company', methods=['GET'])
-def allcomnames():
-    stocks = get_com_name()
-    company_schema = CompanySchema(many=True)
-    output = company_schema.dump(stocks).data
-    return jsonify({'stocks' : output})
+@app.route('/companies', methods=['GET'])
+def all_companies():
+    comps = get_summary()
+    pl_schema = PerformanceLogSchema(many=True)
+    output = pl_schema.dumps(comps).data
+    return jsonify({'stocks': output})
 
 @app.route('/dashboard')
 def dashboard():
@@ -124,11 +130,23 @@ def portfolio(user_id):
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
 def stock(user_id, portfolio_id):
+    # add stock to portfolio
     if request.method == 'POST':
-        print(user_id, portfolio_id)
-        return jsonify({'stocks': 'all_stocks'})
+        data = list(request.form.to_dict().keys())[0]
+        data_dict = json.loads(data)
+        code = data_dict['code']['data']
+        num = data_dict['number']['data']
+        save_log(portfolio_id, code, num)
+    # get existing stocks    
     else:
-        return jsonify({'stocks': 'all_stocks'})
+        logs = get_logs(portfolio_id)
+        log_schema = PerformanceLogSchema(many=True)
+        output = log_schema.dump(logs).data
+        return jsonify({'portfolio_stocks': output})
+
+@app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/delete/<string:code>', methods=['DELETE'])        
+def delete_stock(portfolio_id, code):
+    delete_log(portfolio_id, code)
 
 @app.route('/watchlist')
 def watchlist():
@@ -143,5 +161,20 @@ def logout():
 def load_user(user_id):
     return find_user(user_id)
 
+# this is just for testing
 
+@app.route('/allusers', methods=['GET'])
+def all_users():
+    users = get_all_users()
+    user_schema = UserSchema(many=True)
+    output = user_schema.dump(users).data
+    return jsonify({'users' : output})
+
+
+# @app.route('/allports', methods=['GET'])
+# def all_ports():
+#     ports = get_portfolios(16)
+#     portfolio_schema = PortfolioSchema(many=True)
+#     output = portfolio_schema.dump(ports).data
+#     return jsonify({'portfolios' : output})
 
