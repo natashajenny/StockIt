@@ -5,7 +5,6 @@ from flask_json import FlaskJSON, json_response
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
-# from marshmallow import Schema, fields
 from functions import *
 
 app = Flask(__name__)
@@ -28,7 +27,6 @@ class PortfolioSchema(ma.ModelSchema):
         model = Portfolio
 
 class CompanySchema(ma.ModelSchema):
-    # pl = fields.Nested(PerformanceLogSchema)
     class Meta:
         model = Company
 
