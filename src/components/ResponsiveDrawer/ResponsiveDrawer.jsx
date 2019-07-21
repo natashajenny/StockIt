@@ -53,6 +53,9 @@ class PureResponsiveDrawer extends React.Component {
                             <ListItem button key = 'Metrics' onClick ={() => this.handleClick(`Metrics`)}>
                                 <ListItemText primary = 'Metrics' />
                             </ListItem>
+                            <ListItem button key = 'Stocks' onClick ={() => this.handleClick(`Stocks`)}>
+                                <ListItemText primary = 'Stocks' />
+                            </ListItem>
                         </List>
                         <Divider />
                     </div>

@@ -95,12 +95,19 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/companies', methods=['GET'])
+@app.route('/company', methods=['GET'])
 def all_companies():
     comps = get_summary()
     pl_schema = PerformanceLogSchema(many=True)
-    output = pl_schema.dumps(comps).data
+    output = pl_schema.dump(comps).data
     return jsonify({'stocks': output})
+
+# @app.route('/company', methods=['GET'])
+# def allcomnames():
+#         stocks = get_com_name()
+#         pl_schema = PerformanceLogSchema(many=True)
+#         output = pl_schema.dump(stocks).data
+#         return jsonify({'stocks': output})
 
 @app.route('/dashboard')
 def dashboard():

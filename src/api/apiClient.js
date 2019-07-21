@@ -28,6 +28,11 @@ class APIClient {
         return this.perform('get', '/company')
     }
     
+    // getCompanies() {
+    //     return this.perform('get', '/companies')
+    // }
+    
+    
     async perform (method, resource, data) {
         return client({
             method,

@@ -5,7 +5,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import './App.css';
 import { UserContext } from './UserContext';
 import history from './history';
-import { Home, Portfolio, Metrics, AboutUs, Profile, Settings, Tutorial, Watchlist } from './pages';
+import { Home, Portfolio, Metrics, AboutUs, Profile, Settings, Tutorial, Watchlist, Stocks } from './pages';
 import { NavBar } from './components';
 
 const theme = createMuiTheme({
@@ -66,6 +66,7 @@ class App extends React.Component {
               <Route path='/Settings' component={Settings} />
               <Route path='/Tutorial' component={Tutorial} />
               <Route path='/Watchlist' component={Watchlist} />
+              <Route path='/Stocks' component={Stocks} />
             </Router>
           </MuiThemeProvider>
         </UserContext.Provider>
