@@ -37,7 +37,7 @@ export class PureStocks extends React.Component {
 
       } else{
         console.log(isLoaded);
-        // console.log(items);
+        console.log(items);
         const { classes } = this.props;
         return (
             <div className = {classes.root}>
@@ -50,14 +50,7 @@ export class PureStocks extends React.Component {
                         <li key={item.company}>
                             Code:{item.company}
                         </li>
-                    ))}
-                    {/* {items.map(function(item,index){
-                        <li key={index}> 
-                            Code:{item.code}
-                        </li>
-                    })}; */}
-          
-                   
+                    ))}            
                 </ul>
                 {/* console.log(items); */}
             </div>
@@ -67,3 +60,34 @@ export class PureStocks extends React.Component {
 }
 
 export const Stocks = withStyles(styles)(PureStocks);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "asset_turnover": 0.7845, 
+//       "assets": 2078100000.0, 
+//       "company": "ABC", 
+//       "eps": 28.4, 
+//       "expenses": -1287600000.0, 
+//       "gross_dividend": 40.0, 
+//       "interest_cover": 18.8125, 
+//       "inventory_turnover": 9.2415, 
+//       "liabilities": 832500000.0, 
+//       "net_gearing": 0.341, 
+//       "profit": 256500000.0, 
+//       "profit_margin": 0.1161, 
+//       "revenue": 1645900000.0, 
+//       "roa": 0.0967, 
+//       "roe": 0.1522, 
+//       "year": "2018-12-31"

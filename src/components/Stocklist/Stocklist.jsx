@@ -1,11 +1,43 @@
 import React from 'react';
 import {  Table, TableCell, TableHead, TableRow, 
-    Paper } from '@material-ui/core';
+    Paper, 
+    TableBody} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { styles } from './styles';
 import { DeleteModal } from '../forms';
 import {StockDrawer} from '../StockDrawer/StockDrawer';
+import APIClient from '../../api/apiClient.js';
 class StockTable extends React.Component {
+  // constructor(props){
+  //   super(props);
+  //   this.state = {
+  //     items: [],
+  //     isLoaded: false,
+  //   }
+  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDeleteModalOpen: false,
+      selectedStock: null,
+      isDrawerOpen: false,
+      items: [],
+      isLoaded: false,
+    }
+  }
+
+  componentDidMount(){
+    this.apiClient = new APIClient();
+    this.apiClient.getStocks()
+        .then(json =>{
+            this.setState({
+                isLoaded: true,
+                items: json.stocks,
+            })
+            
+        });
+}
+
   handleRowEditClick = (row) => {
     //TODO: make quantity editable
   }
@@ -29,14 +61,7 @@ class StockTable extends React.Component {
     })
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDeleteModalOpen: false,
-      selectedStock: null,
-      isDrawerOpen: false,
-    }
-  }
+ 
 
     handleAddStock = (e) =>{
     // e.preventDefault();
@@ -48,8 +73,22 @@ class StockTable extends React.Component {
       isDrawerOpen: !this.state.isDrawerOpen,
     })
   }
+
+  getStockInfo(stock){
+
+  }
   
   render() {
+    
+    var { isLoaded, items } = this.state;
+    if(!isLoaded){
+      console.log(isLoaded);
+      console.log(items);
+      return <div>Loading....</div>
+
+    } else {
+      console.log(isLoaded);
+      console.log(items);
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -57,10 +96,13 @@ class StockTable extends React.Component {
           <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                    <TableCell align="center">Name</TableCell>
-                    <TableCell align="center">Code</TableCell>
-                    <TableCell align="center">Bought Price&nbsp;($)</TableCell>
-                    <TableCell align="center">Quantity&nbsp;</TableCell>
+                    <TableCell  align="center">Company</TableCell>
+                    <TableCell align="center">eps</TableCell>
+                    <TableCell align="center">gross_dividend</TableCell>
+                    <TableCell align="center">profit_margin</TableCell>
+                    <TableCell align="center">roa</TableCell>
+                    <TableCell align="center">roe</TableCell>
+                    <TableCell align="center">assets</TableCell>      
                     <TableCell> 
                         {/* <Button  onClick={this.handleAddStock} variant="contained" color="primary" className={classes.button}>
                             Add Stock
@@ -69,6 +111,20 @@ class StockTable extends React.Component {
                     </TableCell>
                 </TableRow>
               </TableHead>
+              <TableBody>
+              {items.map(item => (
+                <TableRow key={item.company}>
+                  <TableCell key={item.company} align="center">{item.company}</TableCell>
+                  <TableCell align="center">{item.eps}</TableCell>
+                  <TableCell align="center">{item.gross_dividend}</TableCell>
+                  <TableCell align="center">{item.profit_margin}</TableCell>
+                  <TableCell align="center">{item.roa}</TableCell>
+                  <TableCell align="center">{item.roe}</TableCell>
+                  <TableCell align="center">{item.assets}</TableCell>
+                </TableRow>
+              ))}
+
+              </TableBody>
             {/* <TableBody>
               {portfolio_data.payload.stocks.map(row => (
                 <TableRow key={row.StockID}>
@@ -95,6 +151,7 @@ class StockTable extends React.Component {
             onDelete = {this.delete}/>}
       </React.Fragment>
     );
+    }
   }
 }
 
