@@ -8,3 +8,4 @@ export * from './NewsGrid';
 export * from './SearchBar';
 export * from './Stocklist';
 export * from './StockDrawer';
+export * from './SearchAutoFill';

@@ -8,6 +8,7 @@ import APIClient from '../api/apiClient.js';
 
 export class PureStocks extends React.Component {
 
+ 
     constructor(props){
         super(props);
         this.state = {
@@ -23,36 +24,23 @@ export class PureStocks extends React.Component {
                     isLoaded: true,
                     items: json.stocks,
                 })
-                
             });
     }
 
     render() {
         var { isLoaded, items } = this.state;
-
+        // {newsGrid()}
     if(!isLoaded){
-        console.log(isLoaded);
-        console.log(items);
         return <div>Loading....</div>
-
       } else{
+        newsGrid()
         console.log(isLoaded);
         console.log(items);
         const { classes } = this.props;
         return (
             <div className = {classes.root}>
                 <h1> Tutorial </h1>
-                {newsGrid()}
-                <Stocklist />
-                    <ul> 
-                    {console.log(items)}
-                    {items.map(item => (
-                        <li key={item.company}>
-                            Code:{item.company}
-                        </li>
-                    ))}            
-                </ul>
-                {/* console.log(items); */}
+                <Stocklist  items={items}/>
             </div>
         );  
     }

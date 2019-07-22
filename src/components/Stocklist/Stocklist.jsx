@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { styles } from './styles';
 import { DeleteModal } from '../forms';
 import {StockDrawer} from '../StockDrawer/StockDrawer';
-import APIClient from '../../api/apiClient.js';
+// import APIClient from '../../api/apiClient.js';
 class StockTable extends React.Component {
   // constructor(props){
   //   super(props);
@@ -22,21 +22,21 @@ class StockTable extends React.Component {
       selectedStock: null,
       isDrawerOpen: false,
       items: [],
-      isLoaded: false,
+      // isLoaded: false,
     }
   }
 
-  componentDidMount(){
-    this.apiClient = new APIClient();
-    this.apiClient.getStocks()
-        .then(json =>{
-            this.setState({
-                isLoaded: true,
-                items: json.stocks,
-            })
+//   componentDidMount(){
+//     this.apiClient = new APIClient();
+//     this.apiClient.getStocks()
+//         .then(json =>{
+//             this.setState({
+//                 isLoaded: true,
+//                 items: json.stocks,
+//             })
             
-        });
-}
+//         });
+// }
 
   handleRowEditClick = (row) => {
     //TODO: make quantity editable
@@ -80,14 +80,15 @@ class StockTable extends React.Component {
   
   render() {
     
-    var { isLoaded, items } = this.state;
-    if(!isLoaded){
-      console.log(isLoaded);
+    // var { isLoaded, items } = this.state;
+     var items = this.props.items;
+    // if(!isLoaded){
+      // console.log(isLoaded);
       console.log(items);
-      return <div>Loading....</div>
+      // return <div>Loading....</div>
 
-    } else {
-      console.log(isLoaded);
+    // } else {
+      // console.log(isLoaded);
       console.log(items);
     const { classes } = this.props;
     return (
@@ -151,7 +152,7 @@ class StockTable extends React.Component {
             onDelete = {this.delete}/>}
       </React.Fragment>
     );
-    }
+    // }
   }
 }
 
