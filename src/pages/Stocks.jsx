@@ -39,7 +39,8 @@ export class PureStocks extends React.Component {
         const { classes } = this.props;
         return (
             <div className = {classes.root}>
-                <h1> Tutorial </h1>
+                <h1> Stocks </h1>
+                {newsGrid()}
                 <Stocklist  items={items}/>
             </div>
         );  
