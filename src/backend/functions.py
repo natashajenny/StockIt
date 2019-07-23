@@ -64,9 +64,12 @@ def get_companies_like(keyword):
 
 ## Stock Log
 
-def get_stock_log(date, code):
-    log = StockLog().query().filter(and_(StockLog.code==code, StockLog.date==date)).all()
-    return log.all()
+def get_stock_price(date, code):
+#     print(date.date())
+    # this is hardcoded for now
+    d = datetime(2019, 4, 24).date()
+    log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
+    return log.closing
 
 ## Performance Log
 
@@ -97,18 +100,17 @@ def find_portfolio(portfolio_id):
 
 def get_logs(portfolio_id):
     db = Db.instance()
-
     subq = db.session.query(StockLog.code, func.max(StockLog.date).label('recentdate')).group_by(StockLog.code).subquery('t2')
-
     q = db.session.query(StockLog).\
         join(PortfolioLog, StockLog.code == PortfolioLog.code).\
         join(subq, StockLog.date == subq.c.recentdate).\
         filter(PortfolioLog.portfolio_id==portfolio_id)
-
     return q.all()
-#     for l in q.all():
-#         print(l.__dict__)
 
+
+def get_log_date(portfolio_id, code):
+    d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return d.datetime
 
 def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
@@ -148,9 +150,9 @@ def create_wl(user_id, code):
 
 def get_wl(user_id):
     wl = Watchlist().query().filter(Watchlist.user_id==user_id)
-    for l in wl.all():
-        print(l.__dict__)
-#     return wl.all()
+#     for l in wl.all():
+#         print(l.__dict__)
+    return wl.all()
 
 def delete_wl(user_id, code):
     p = Watchlist().query().filter(and_(Watchlist.user_id == user_id, Watchlist.code == code)).scalar()

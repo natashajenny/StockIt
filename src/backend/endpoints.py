@@ -160,6 +160,9 @@ def stock(user_id, portfolio_id):
         logs = get_logs(portfolio_id)
         log_schema = StockLogSchema(many=True)
         output = log_schema.dump(logs).data
+        for data in output:
+            date_bought = get_log_date(portfolio_id, data['company'])
+            data['bought_price'] = get_stock_price(date_bought, data['company'])
         return jsonify({'portfolio_stocks': output})
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/update/<string:code>', methods=['POST'])
