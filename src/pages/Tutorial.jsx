@@ -1,11 +1,11 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import {newsGrid} from '../components/NewsGrid/NewsGrid';
-import {Stocklist} from '../components/Stocklist/Stocklist';
+// import {newsGrid} from '../components/NewsGrid/NewsGrid';
+// import {Stocklist} from '../components/Stocklist/Stocklist';
 // import {StockDrawer} from '../components/StockDrawer/StockDrawer';
 import { styles } from './styles';
-import APIClient from '../api/apiClient.js';
-import { SearchAutoFill } from '../components/SearchAutoFill/SearchAutoFill';
+// import APIClient from '../api/apiClient.js';
+
 
  class PureTutorial extends React.Component {
 
@@ -35,10 +35,10 @@ import { SearchAutoFill } from '../components/SearchAutoFill/SearchAutoFill';
     //   } else{
 
         return (
-            <div>
-            {/* <div className = {classes.root}> */}
+       
+            <div >
                 <h1> Tutorial </h1>
-              
+                {/* <Stocklist  items={items}/> */}
             </div>
         );  
     // }
