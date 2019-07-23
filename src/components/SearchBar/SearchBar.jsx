@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { InputBase } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-
+// import { SearchAutoFill } from '../SearchAutoFill/SearchAutoFill';
 import { styles } from './styles';
 
 class PureSearchBar extends React.Component {
@@ -21,6 +21,7 @@ class PureSearchBar extends React.Component {
                     }}
                     inputProps={{ 'aria-label': 'Search' }}
                 />
+                {/* <SearchAutoFill/> */}
             </div>
         )
     }
