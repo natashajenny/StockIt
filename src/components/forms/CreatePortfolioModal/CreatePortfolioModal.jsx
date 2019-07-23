@@ -42,7 +42,7 @@ class PureCreatePortfolioModal extends React.Component {
         return (
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>
-                <form>
+                <form onSubmit={(e) => onSubmit(e, formData)}>
                     <Paper className={classes.modal}>
                         <IconButton className={classes.closeButton} onClick={onClose}>
                             <Close />
@@ -71,8 +71,7 @@ class PureCreatePortfolioModal extends React.Component {
                                     Cancel
                                 </Typography>
                             </Button>
-                            <Button color='primary' variant='contained' 
-                                onClick={() => onSubmit(formData)}>
+                            <Button type='submit' color='primary' variant='contained'>
                                 <Typography variant='button'>
                                     Submit
                                 </Typography>

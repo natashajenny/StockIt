@@ -37,7 +37,8 @@ export class UserRegister extends React.Component {
         };
     }
 
-    handleSubmit = (formData, onSubmit, onClose) => {
+    handleSubmit = (e, formData, onSubmit, onClose) => {
+        e.preventDefault();
         this.apiClient = new APIClient();
         this.apiClient.registerUser(formData).then((data) => {
             onSubmit(data.user)
@@ -52,7 +53,8 @@ export class UserRegister extends React.Component {
         return (
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>
-                <form className={classes.container} noValidate autoComplete="off">
+                <form className={classes.container} noValidate autoComplete="off" 
+                    onSubmit={(e) => this.handleSubmit(e, formData, onSubmit, onClose)}>
                     <Paper className={classes.modal}>
                         <IconButton className={classes.closeButton} onClick={onClose}>
                             <Close />
@@ -73,8 +75,7 @@ export class UserRegister extends React.Component {
                                 autoComplete={formConfig[fieldName].autoComplete}
                                 />
                         ))}
-                        <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'
-                                onClick={() => this.handleSubmit(this.state.formData, onSubmit, onClose)}>
+                        <Button type='submit' className={classes.loginButton} color='secondary' variant='contained'>
                             <Typography className={classes.loginText} variant='button'>
                                 Register
                             </Typography>

@@ -24,7 +24,7 @@ export class PureHome extends React.Component {
                             Welcome Back, {user.name}
                         </Typography>
                         <div className = {classes.userHome}>
-                            <Paper className = {classes.homePaper}>
+                            <Paper>
                                 <div className = {classes.panel}>
                                     <TableChart fontSize='large'/>
                                     <Typography variant='caption' className={classes.title}>

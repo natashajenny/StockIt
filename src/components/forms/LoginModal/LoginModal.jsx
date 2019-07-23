@@ -36,11 +36,12 @@ class PureLoginModal extends React.Component {
     });
   }
 
-  handleSubmit = (formData, onSubmit, onClose) => {
+  handleSubmit = (e, formData, onSubmit, onClose) => {
+    e.preventDefault();
     this.apiClient = new APIClient();
     this.apiClient.loginUser(formData).then((data) => {
       onSubmit(data.user)
-    }).then(history.push('/Home')).then(onClose())
+    }).then(onClose()).then(history.push('/Home'))
   }
 
   render() {
@@ -51,7 +52,7 @@ class PureLoginModal extends React.Component {
     return (
       <React.Fragment>
         <div className={classes.darkBackdrop} onClick={onClose}/>
-        <form>
+        <form onSubmit={(e) => this.handleSubmit(e, formData, onSubmit, onClose)}>
           <Paper className={classes.modal}>
             <IconButton className={classes.closeButton} onClick={onClose}>
               <Close />
@@ -72,8 +73,7 @@ class PureLoginModal extends React.Component {
                   autoComplete={formConfig[fieldName].autoComplete}
                   />
             ))}
-            <Button className={classes.loginButton} color='primary' variant='contained' 
-                  onClick={() => this.handleSubmit(formData, onSubmit, onClose)}>
+            <Button type='submit' className={classes.loginButton} color='primary' variant='contained'>
               <Typography className={classes.loginText} variant='button'>
                 Login
               </Typography>

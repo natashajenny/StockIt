@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Select } from '@material-ui/core';
+import { Button, Tabs, Tab, Box } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Refresh, Add } from '@material-ui/icons';
 
@@ -68,20 +68,7 @@ export class PurePortfolio extends React.Component {
       <div className = {classes.root}>
         <h1> Portfolio </h1>
         <div className = {classes.portfolioSubheading}>
-          <Select
-            native
-            value = { this.state.portfolioName }
-            onChange = {this.handleSelectChange}
-            inputProps={{
-              name: 'portfolioName',
-            }}
-          >
-            {portfolios && portfolios.map(portfolio => 
-              <option key={portfolio.portfolio_id} value={portfolio.title}>
-                {portfolio.title}
-              </option>
-            )}
-          </Select>
+          
           <Button variant='contained' color='primary' 
                 className={classes.refreshButton}>
             <Refresh />
