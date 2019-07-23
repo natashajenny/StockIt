@@ -182,15 +182,15 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
 
 def get_all_users():
     users = User().query()
-    for l in users.all():
-        print(l.__dict__)
-#     return users.all()
+#     for l in users.all():
+#         print(l.__dict__)
+    return users.all()
 
 def get_all_portfolios():
     p = Portfolio().query()
-    for l in p.all():
-        print(l.__dict__)
-#     return p.all()
+#     for l in p.all():
+#         print(l.__dict__)
+    return p.all()
 
 def get_all_pl():
     db = Db.instance()
