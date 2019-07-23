@@ -7,6 +7,8 @@ import { UserContext } from './UserContext';
 import history from './history';
 import { Home, Portfolio, Metrics, AboutUs, Profile, Settings, Tutorial, Watchlist, Stocks } from './pages';
 import { NavBar } from './components';
+import { Stock } from './pages/Stock';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -66,7 +68,10 @@ class App extends React.Component {
               <Route path='/Settings' component={Settings} />
               <Route path='/Tutorial' component={Tutorial} />
               <Route path='/Watchlist' component={Watchlist} />
-              <Route path='/Stocks' component={Stocks} />
+              <Route path='/Stocks' exact component={Stocks} />
+              <Route path='/Stocks/:stockId' component={Stock} />
+              {/* <Route path='/Stocks/:StockId' component={Stock} /> */}
+              {/* <Route path={`Stocks/:stockId`} render={() => <Stock/>} /> */}
             </Router>
           </MuiThemeProvider>
         </UserContext.Provider>
