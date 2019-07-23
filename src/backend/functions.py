@@ -1,6 +1,6 @@
 import datetime
 from model import *
-from sqlalchemy import and_, between
+from sqlalchemy import and_, between, func, asc
 from sqlalchemy.sql import exists
 
 ## User
@@ -21,7 +21,8 @@ def find_user(user_id):
 
 # Returns a list of this user's portfolio objects
 def get_portfolios(user_id):
-    portfolios = Portfolio().query().filter(user_id==user_id)
+    portfolios = Portfolio().query().filter(Portfolio.user_id==user_id)
+    print(portfolios)
     return portfolios.all()
 
 
@@ -50,6 +51,11 @@ def get_companies():
     companies = Company().query().order_by(Company.name)
     return companies.all()
 
+# Get all companies names
+def get_com_name():
+    companies = Company().query().with_entities(Company.code).order_by(Company.code)
+    return companies.all()
+
 # Search companies with names like %keyword%
 def get_companies_like(keyword):
     companies = Company().query().filter(Company.name.like('%keyword%'))
@@ -59,9 +65,17 @@ def get_companies_like(keyword):
 ## Stock Log
 
 def get_stock_log(date, code):
-    log = StockLog().query().filter(and_(code==code, date==date))
+    log = StockLog().query().filter(and_(StockLog.code==code, StockLog.date==date)).all()
     return log.all()
 
+## Performance Log
+
+def get_summary():
+    db = Db.instance()
+    subq = db.session.query(PerformanceLog.code, func.max(PerformanceLog.year).label('maxyear')).group_by(PerformanceLog.code).subquery('t2')
+    q = db.session.query(PerformanceLog).\
+    join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
+    return q.all()
 
 ## Portfolio
 
@@ -82,24 +96,25 @@ def find_portfolio(portfolio_id):
 ## Portfolio Log
 
 def get_logs(portfolio_id):
-    log = PortfolioLog().query().filter(portfolio_id==portfolio_id)
-    return log.all()
+    log = PortfolioLog().query().filter(PortfolioLog.portfolio_id==portfolio_id)
+    for l in log.all():
+        print(l.__dict__)
 
-def get_logs(portfolio_id, start_date, end_date):
+def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
 def save_log(portfolio_id, code, number):
-    p = PortfolioLog(portfolio_id=portfolio_id, code=code, number=number)
+    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
     p.save()
 
 def update_log(portfolio_id, code, number):
-    p = PortfolioLog().query().get(and_(portfolio_id==portfolio_id, code==code))
+    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.number = number
     p.update()
 
 def delete_log(portfolio_id, code):
-    p = PortfolioLog().query().get(and_(portfolio_id==portfolio_id, code==code))
+    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.delete()
 
 
@@ -154,4 +169,9 @@ def get_all_users():
 
 def get_all_portfolios():
     p = Portfolio().query()
+    return p.all()
+
+def get_all_pl():
+    db = Db.instance()
+    p = db.session.query(Company.code, PerformanceLog).join(PerformanceLog, PerformanceLog.code == Company.code)
     return p.all()

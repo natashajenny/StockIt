@@ -2,7 +2,7 @@ import secrets
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy import Column, ForeignKey, MetaData
-from sqlalchemy import Date, DateTime, Float, Integer, Numeric, String
+from sqlalchemy import Date, DateTime, Float, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, sessionmaker
 from flask_login import UserMixin
@@ -84,16 +84,17 @@ class Portfolio(Model, Base):
     user_id = Column('user_id', Integer, ForeignKey("users.user_id"), nullable=False)
     title = Column('title', String, nullable=False)
     description = Column('description', String)
-    net_gain = Column('net_gain', Numeric)
+    net_gain = Column('net_gain', Float)
     created_on = Column('created_on', DateTime(timezone=True))
     deleted_on = Column('deleted_on', DateTime(timezone=True))
+    user = relationship('User', backref='portfolios')
 
 class Company(Model, Base):
     __tablename__ = 'companies'
     code = Column('code', String(3), primary_key=True)
     name = Column('name', String, nullable=False)
     sector = Column('sector', String)
-    industry = Column('industry', String)
+    # industry = Column('industry', String)
     listed_on = Column('listed_on', Date)
     summary = Column('summary', String)
     address = Column('address', String)
@@ -121,16 +122,22 @@ class PerformanceLog(Model, Base):
     __tablename__ = 'performance_logs'
     year = Column('date', Date, primary_key=True)
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
-    revenue = Column('revenue', Numeric)
-    expenses = Column('expenses', Numeric)
-    profit = Column('profit', Numeric)
-    assets = Column('assets', Numeric)
-    liabilities = Column('liabilities', Numeric)
-    eps = Column('eps', Numeric)
-    dividend = Column('dividend', Numeric)
-    cdy = Column('cdy', Float)
+    revenue = Column('revenue', Float)
+    expenses = Column('expenses', Float)
+    profit = Column('profit', Float)
+    assets = Column('assets', Float)
+    liabilities = Column('liabilities', Float)
+    eps = Column('eps', Float)
+    gross_dividend = Column('gross_dividend', Float)
+    # cdy = Column('cdy', Float)
     roe = Column('roe', Float)
-    gearing = Column('gearing', Float)
+    roa = Column('roa', Float)
+    profit_margin = Column('profit_margin', Float)
+    interest_cover = Column('interest_cover', Float)
+    net_gearing = Column('net_gearing', Float)
+    asset_turnover = Column('asset_turnover', Float)
+    inventory_turnover = Column('inventory_turnover', Float)
+    company = relationship('Company', backref='performance_logs')
 
 class PortfolioLog(Model, Base):
     __tablename__ = 'portfolio_logs'
@@ -144,27 +151,27 @@ class StockLog(Model, Base):
     __tablename__ = 'stock_logs'
     date = Column('date', Date, primary_key=True)
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
-    opening = Column('opening', Numeric)
-    high = Column('high', Numeric)
-    low = Column('low', Numeric)
-    closing = Column('closing', Numeric)
-    adjusted = Column('adjusted', Numeric)
+    opening = Column('opening', Float)
+    high = Column('high', Float)
+    low = Column('low', Float)
+    closing = Column('closing', Float)
+    adjusted = Column('adjusted', Float)
     volume = Column('volume', Integer)
-    prediction = Column('prediction', Numeric)
+    prediction = Column('prediction', Float)
     sma = Column('sma', Float)
     ema = Column('ema', Float)
     per = Column('per', Float)
     rank = Column('rank', Integer)
-    cap = Column('cap', Numeric)
+    cap = Column('cap', Float)
     company = relationship('Company', backref='stock_logs')
   
 class Watchlist(Model, Base):
     __tablename__ = 'watchlists'
     user_id = Column('user_id', Integer, ForeignKey("users.user_id"), primary_key=True)    
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
-    alert_high = Column('alert_high', Numeric)
-    alert_low = Column('alert_low', Numeric)
-    buy_high = Column('buy_high', Numeric)
-    buy_low = Column('buy_low', Numeric)
-    sell_high = Column('sell_high', Numeric)
-    sell_low = Column('sell_low', Numeric)
+    alert_high = Column('alert_high', Float)
+    alert_low = Column('alert_low', Float)
+    buy_high = Column('buy_high', Float)
+    buy_low = Column('buy_low', Float)
+    sell_high = Column('sell_high', Float)
+    sell_low = Column('sell_low', Float)
