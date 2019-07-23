@@ -39,9 +39,9 @@ import { SearchAutoFill } from '../components/SearchAutoFill/SearchAutoFill';
         return (
             <div className = {classes.root}>
                 <h1> Tutorial </h1>
-                {newsGrid()} 
+                {/* {newsGrid()} 
                 <SearchAutoFill />
-                <Stocklist  items={items}/>
+                <Stocklist  items={items}/> */}
                     {/* <ul> 
                     {console.log(items)};
                     {items.map(item => (
