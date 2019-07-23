@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { styles } from './styles';
 import { PerformanceChart } from '../components/PerformanceChart/PerformanceChart';
 import {  Table, TableCell, TableHead, TableRow, TableBody} from '@material-ui/core';
+import { StockDrawer } from '../components/StockDrawer/StockDrawer';
 export class SingleStock extends React.Component {
     // handleClick = (address) => {
     //     history.push(`/${address}`)
@@ -54,7 +55,8 @@ export class SingleStock extends React.Component {
                     <TableCell align="center">profit_margin</TableCell>
                     <TableCell align="center">roa</TableCell>
                     <TableCell align="center">roe</TableCell>
-                    <TableCell align="center">assets</TableCell>      
+                    <TableCell align="center">assets</TableCell>
+                    <TableCell> <StockDrawer/> </TableCell>     
                     </TableRow>
               </TableHead> 
                 <TableBody>
