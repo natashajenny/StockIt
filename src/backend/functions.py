@@ -105,6 +105,8 @@ def get_logs(portfolio_id):
         join(PortfolioLog, StockLog.code == PortfolioLog.code).\
         join(subq, StockLog.date == subq.c.recentdate).\
         filter(PortfolioLog.portfolio_id==portfolio_id)
+#     for l in q.all():
+#         print(l.__dict__)
     return q.all()
 
 
@@ -118,6 +120,7 @@ def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
+#todo
 def save_log(portfolio_id, code, number):
     p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
     p.save()
