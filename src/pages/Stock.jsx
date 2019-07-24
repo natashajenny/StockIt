@@ -39,11 +39,12 @@ export class SingleStock extends React.Component {
     
     render() {
         const {stockId} = this.props.match.params;
+        const { classes } = this.props;
         console.log(stockId);
         return (
             
            
-    <div>
+    <div className={classes.root}>
         <h1> Stock Performance: {stockId} </h1>
         <PerformanceChart />
             <Table  >
@@ -71,8 +72,8 @@ export class SingleStock extends React.Component {
                     </TableRow>
                 </TableBody>
             </Table>
-            </div>
-        );  
+        </div>
+    );  
     // }
     }
 }

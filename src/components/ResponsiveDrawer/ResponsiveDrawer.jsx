@@ -21,7 +21,7 @@ class PureResponsiveDrawer extends React.Component {
     
     render() {
         const { classes, mobileOpen, handleDrawerToggle } = this.props;
-        const { isLoggedIn, logOut } = this.context;
+        const { user, isLoggedIn, logOut } = this.context;
         return (
             <Drawer 
                 className={classes.drawer} 
@@ -39,7 +39,7 @@ class PureResponsiveDrawer extends React.Component {
                         <List>
                             <ListItem button key = 'Profile' onClick ={() => this.handleClick('Profile')}>
                                 <AccountCircle fontSize = 'large' />
-                                <ListItemText primary = 'Profile' />   
+                                <ListItemText primary = {user.name} />   
                             </ListItem>                 
                         </List>
                         <Divider />

@@ -51,4 +51,16 @@ export const styles = createStyles(theme => ({
     homePaper: {
         margin: '10px',
     },
+    searchResult: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+    },
+    searchResultPanel: {
+        flexDirection: 'row',
+        margin: '10px',
+        width: '200px',
+    },
+    searchResultPaper: {
+        margin: '10px',
+    }
 }));

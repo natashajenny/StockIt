@@ -95,7 +95,7 @@ class StockTable extends React.Component {
           <Table  className={classes.table}>
               <TableHead>
                 <TableRow>
-                    <TableCell  align="center">Company</TableCell>
+                    <TableCell align="center">Company</TableCell>
                     <TableCell align="center">eps</TableCell>
                     <TableCell align="center">gross_dividend</TableCell>
                     <TableCell align="center">profit_margin</TableCell>

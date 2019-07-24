@@ -15,13 +15,13 @@ class PurePortfolioTable extends React.Component {
   
   constructor(props) {
     super(props);
-    const emptyData = { data: '' };
     this.state = {
       isDeleteModalOpen: false,
       selectedStock: null,
       isEditable: false,
       stocks: null,
-      portfolio_data: null
+      portfolio_data: null,
+      portfolioId: '',
     }
   }
 
@@ -112,13 +112,21 @@ class PurePortfolioTable extends React.Component {
       data.portfolio_stocks !== {} &&
         this.setState({
           portfolio_data: data.portfolio_stocks,
+          portfolioId: this.context.user.portfolios[0],
         })
       })
   }
 
+  shouldComponentUpdate = (nextProps) => {
+    if (nextProps.portfolioId === this.state.portfolioId) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   componentDidUpdate = () => {
-    console.log('componentdidup')
-    this.apiClient = new APIClient();
+    console.log('componentdidupdate')
     this.context.user && this.apiClient.getPortfolioStocks(
       this.context.user.user_id, 
       this.props.portfolioId,
@@ -126,6 +134,7 @@ class PurePortfolioTable extends React.Component {
       data.portfolio_stocks !== {} &&
         this.setState({
           portfolio_data: data.portfolio_stocks,
+          portfolioId: this.props.portfolioId,
         })
       })
   }
@@ -141,7 +150,7 @@ class PurePortfolioTable extends React.Component {
                 <TableRow>
                     <TableCell>Actions</TableCell>
                     <TableCell align="center">Code</TableCell>
-                    <TableCell align="center">Bought Price&nbsp;($)</TableCell>
+                    <TableCell align="center">Purchase Price&nbsp;($)</TableCell>
                     <TableCell align="center">Current Price&nbsp;($)</TableCell>
                     {/* <TableCell align="center">Change&nbsp;(%)</TableCell> */}
                     <TableCell align="center">High&nbsp;</TableCell>

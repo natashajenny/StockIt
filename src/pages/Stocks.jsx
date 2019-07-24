@@ -33,22 +33,22 @@ export class PureStocks extends React.Component {
 
     render() {
         var { isLoaded, items } = this.state;
-        // {newsGrid()}
-    if(!isLoaded){
-        return <div>Loading....</div>
-      } else{
-        // newsGrid()
-        console.log(isLoaded);
-        console.log(items);
         const { classes } = this.props;
-        return (
-            <div className = {classes.root}>
-                <h1> Stocks </h1>
-                {newsGrid()}
-                <Stocklist  items={items}/>
-            </div>
-        );  
-    }
+        // {newsGrid()}
+        if(!isLoaded){
+            return <div>Loading....</div>
+        } else {
+            // newsGrid()
+            console.log(isLoaded);
+            console.log(items);
+            return (
+                <div className = {classes.root}>
+                    <h1> Stocks </h1>
+                    {newsGrid()}
+                    <Stocklist  items={items}/>
+                </div>
+            );  
+        }
     }
 }
 
