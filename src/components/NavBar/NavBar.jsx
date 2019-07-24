@@ -8,7 +8,8 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
-import { SearchBar, ResponsiveDrawer, RegisterModal, LoginModal } from '../';
+import { ResponsiveDrawer, RegisterModal, LoginModal } from '../';
+import { SearchBar } from '../';
 import { UserContext } from '../../UserContext';
 import history from '../../history';
 
@@ -134,7 +135,8 @@ class PureNavBar extends React.Component {
                     Stock It                    
                   </Typography>
                 </Button>
-                { isLoggedIn && <SearchBar /> }
+                { isLoggedIn && 
+                  <div className={classes.searchContainer}> <SearchBar /> </div>}
                 <div className={classes.grow} />
                   {isLoggedIn ?
                     <div>

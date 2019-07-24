@@ -1,6 +1,6 @@
 import datetime
 from model import *
-from sqlalchemy import and_, between
+from sqlalchemy import and_, between, func, desc
 from sqlalchemy.sql import exists
 
 ## User
@@ -21,7 +21,8 @@ def find_user(user_id):
 
 # Returns a list of this user's portfolio objects
 def get_portfolios(user_id):
-    portfolios = Portfolio().query().filter(user_id==user_id)
+    portfolios = Portfolio().query().filter(Portfolio.user_id==user_id)
+    print(portfolios)
     return portfolios.all()
 
 
@@ -50,6 +51,11 @@ def get_companies():
     companies = Company().query().order_by(Company.name)
     return companies.all()
 
+# Get all companies names
+def get_com_name():
+    companies = Company().query().with_entities(Company.code).order_by(Company.code)
+    return companies.all()
+
 # Search companies with names like %keyword%
 def get_companies_like(keyword):
     companies = Company().query().filter(Company.name.like('%keyword%'))
@@ -58,10 +64,21 @@ def get_companies_like(keyword):
 
 ## Stock Log
 
-def get_stock_log(date, code):
-    log = StockLog().query().filter(and_(code==code, date==date))
-    return log.all()
+def get_stock_price(date, code):
+#     print(date.date())
+    # this is hardcoded for now
+    d = datetime(2019, 4, 24).date()
+    log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
+    return log.closing
 
+## Performance Log
+
+def get_summary():
+    db = Db.instance()
+    subq = db.session.query(PerformanceLog.code, func.max(PerformanceLog.year).label('maxyear')).group_by(PerformanceLog.code).subquery('t2')
+    q = db.session.query(PerformanceLog).\
+    join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
+    return q.all()
 
 ## Portfolio
 
@@ -82,24 +99,34 @@ def find_portfolio(portfolio_id):
 ## Portfolio Log
 
 def get_logs(portfolio_id):
-    log = PortfolioLog().query().filter(portfolio_id==portfolio_id)
-    return log.all()
+    db = Db.instance()
+    subq = db.session.query(StockLog.code, func.max(StockLog.date).label('recentdate')).group_by(StockLog.code).subquery('t2')
+    q = db.session.query(StockLog).\
+        join(PortfolioLog, StockLog.code == PortfolioLog.code).\
+        join(subq, StockLog.date == subq.c.recentdate).\
+        filter(PortfolioLog.portfolio_id==portfolio_id)
+    return q.all()
 
-def get_logs(portfolio_id, start_date, end_date):
+
+def get_log_date(portfolio_id, code):
+    d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return d.datetime
+
+def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
 def save_log(portfolio_id, code, number):
-    p = PortfolioLog(portfolio_id=portfolio_id, code=code, number=number)
+    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
     p.save()
 
 def update_log(portfolio_id, code, number):
-    p = PortfolioLog().query().get(and_(portfolio_id==portfolio_id, code==code))
+    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.number = number
     p.update()
 
-def delete_log(portfolio_id, code):
-    p = PortfolioLog().query().get(and_(portfolio_id==portfolio_id, code==code))
+def delete_log(user_id, portfolio_id, code):
+    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.delete()
 
 
@@ -122,11 +149,18 @@ def create_wl(user_id, code):
     return wl
 
 def get_wl(user_id):
-    wl = Watchlist().query().filter(user_id==user_id)
+    wl = Watchlist().query().filter(Watchlist.user_id==user_id)
+#     for l in wl.all():
+#         print(l.__dict__)
     return wl.all()
 
+def delete_wl(user_id, code):
+    p = Watchlist().query().filter(and_(Watchlist.user_id == user_id, Watchlist.code == code)).scalar()
+    p.delete()
+
+
 def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
-    wl = Watchlist().query().filter(and_(user_id==user_id, code==code))
+    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code))
     wl.alert_high = alert_high
     wl.alert_low = alert_low
     wl.buy_high = buy_high
@@ -136,7 +170,7 @@ def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_hig
     wl.save()
 
 def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
-    wl = Watchlist().query().filter(and_(user_id==user_id, code==code))
+    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code))
     wl.alert_high = alert_high
     wl.alert_low = alert_low
     wl.buy_high = buy_high
@@ -150,8 +184,17 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
 
 def get_all_users():
     users = User().query()
+#     for l in users.all():
+#         print(l.__dict__)
     return users.all()
 
 def get_all_portfolios():
     p = Portfolio().query()
+#     for l in p.all():
+#         print(l.__dict__)
+    return p.all()
+
+def get_all_pl():
+    db = Db.instance()
+    p = db.session.query(Company.code, PerformanceLog).join(PerformanceLog, PerformanceLog.code == Company.code)
     return p.all()

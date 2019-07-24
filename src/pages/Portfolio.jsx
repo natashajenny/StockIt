@@ -5,6 +5,7 @@ import { Refresh, Add } from '@material-ui/icons';
 
 import { PortfolioTable, CreatePortfolioModal } from '../components';
 import { styles } from './styles';
+
 import { UserContext } from '../UserContext';
 import APIClient from '../api/apiClient.js';
 
@@ -12,17 +13,30 @@ export class PurePortfolio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      portfolioId: '',
       portfolioName: '',
       portfolios: null,
       openCreatePortfolioModal: false,
+      isAddingStock: false,
     }
   }
 
   handleSelectChange = (event) => {
-    this.setState({
-      portfolioName: event.target.value,
-    });
+    for (let node of event.target.children) {
+      if (node.value === event.target.value) {
+        this.setState({
+          portfolioId: node.getAttribute('data-id'),
+          portfolioName: event.target.value,
+        });
+      }
+    }
     /*TODO: Change the portfolio table data*/
+  }
+
+  handleAddStock = () => {
+    this.setState({
+      isAddingStock: !this.state.isAddingStock,
+    })
   }
 
   handleCreatePortfolioClick = () => {
@@ -37,10 +51,10 @@ export class PurePortfolio extends React.Component {
     })
   }
 
-  handleSubmitPorfolio = (formData) => {
+  handleSubmitPorfolio = (e, formData) => {
+    e.preventDefault();
     this.apiClient.addPortfolio(this.context.user.user_id, formData).then(
       (data) => {
-        console.log(data)
         this.setState({
           portfolios: data.portfolios
         })
@@ -54,15 +68,20 @@ export class PurePortfolio extends React.Component {
     this.apiClient = new APIClient();
     this.context.user && this.apiClient.getPortfolios(this.context.user.user_id)
       .then((data) => {
+        console.log(data.portfolios);
         this.setState({
-          portfolios: data.portfolios
+          portfolios: data.portfolios,
+          portfolioId: data.portfolios[0].portfolio_id,
+          portfolioName: data.portfolios[0].title,
         })
       })
   }
 
   render() {
     const { classes } = this.props;
-    const { portfolios } = this.state;
+    const { portfolios, isAddingStock } = this.state;
+    // console.log(this.state.portfolioId);
+    // console.log(this.state.portfolioName);
     return (
       <div className = {classes.root}>
         <h1> Portfolio </h1>
@@ -76,7 +95,9 @@ export class PurePortfolio extends React.Component {
             }}
           >
             {portfolios && portfolios.map(portfolio => 
-              <option key={portfolio.portfolio_id} value={portfolio.title}>
+              <option key={portfolio.portfolio_id} 
+                      data-id= {portfolio.portfolio_id}
+                      value={portfolio.title}>
                 {portfolio.title}
               </option>
             )}
@@ -85,7 +106,8 @@ export class PurePortfolio extends React.Component {
                 className={classes.refreshButton}>
             <Refresh />
           </Button>
-          <Button variant='contained' color='primary' className={classes.addStockButton}>
+          <Button variant='contained' color='primary' className={classes.addStockButton}
+              onClick={this.handleAddStock}>
             <Add />
             Add New Stock
           </Button>
@@ -93,7 +115,7 @@ export class PurePortfolio extends React.Component {
             Create New Portfolio
           </Button>
         </div>
-        <PortfolioTable />
+        <PortfolioTable portfolioId={this.state.portfolioId} isAddingStock={isAddingStock} toggleAddStock={this.handleAddStock}/>
         {this.state.openCreatePortfolioModal && 
             <CreatePortfolioModal onClose={this.closeCreatePortfolioModal}
             onSubmit={this.handleSubmitPorfolio} />}

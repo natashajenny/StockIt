@@ -5,8 +5,10 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import './App.css';
 import { UserContext } from './UserContext';
 import history from './history';
-import { Home, Portfolio, Metrics, AboutUs, Profile, Settings, Tutorial, Watchlist } from './pages';
+import { Home, Portfolio, Metrics, AboutUs, Profile, Settings, Tutorial, Watchlist, Stocks } from './pages';
 import { NavBar } from './components';
+import { Stock } from './pages/Stock';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -23,6 +25,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.logIn = (user) => {
+      console.log(user)
       this.setState({
         isLoggedIn: true,
         user: user,
@@ -35,10 +38,24 @@ class App extends React.Component {
       })
     }
     this.state = {
-      isLoggedIn: false,
+      isLoggedIn: true,
       logIn: this.logIn,
       logOut: this.logOut,
-      user: null,
+      user: {
+        'balance': 0,
+        'dob': null,
+        'email': "alina.aldhytha@gmail.com",
+        'gender': null,
+        'login': "alina",
+        'name': "Alina Young",
+        'password': "Hahaha123",
+        'phone': "450314388",
+        'portfolios': [
+          11,12,13,14
+        ],
+        'salt': "\xe385c2b0387a1fbfb61e9122b69870e0",
+        'user_id': 16,
+      },
     }
   }
 
@@ -57,7 +74,7 @@ class App extends React.Component {
                   <Redirect from='/Watchlist' to='/Home' />
                 </div>
               }
-              <Redirect from='/' to='/Home' />
+              <Redirect from='/' to='/Portfolio' />
               <Route path='/Home' component={Home} />
               <Route path='/Portfolio' component={Portfolio} />
               <Route path='/Metrics' component={Metrics} />
@@ -66,6 +83,10 @@ class App extends React.Component {
               <Route path='/Settings' component={Settings} />
               <Route path='/Tutorial' component={Tutorial} />
               <Route path='/Watchlist' component={Watchlist} />
+              <Route path='/Stocks' exact component={Stocks} />
+              <Route path='/Stocks/:stockId' component={Stock} />
+              {/* <Route path='/Stocks/:StockId' component={Stock} /> */}
+              {/* <Route path={`Stocks/:stockId`} render={() => <Stock/>} /> */}
             </Router>
           </MuiThemeProvider>
         </UserContext.Provider>
