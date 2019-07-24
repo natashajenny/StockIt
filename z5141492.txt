@@ -21,3 +21,7 @@ Week 5
 
 For this week I tried to use Flask Marshmallow to jsonify SQLAlchemy objects from the above functions. I encountered some problems doing this and trying to resolve it now.
 
+
+Week 6
+
+Created backend routes for adding, updating stocks in a portfolio and watchlist. Added delete functionalities for portfolio, portfolio logs and watchlist.
