@@ -111,3 +111,9 @@ Tuesday
 Wednesday
 -Added logout
 -Added create portfolio modal and functionality
+
+Week 8
+Tuesday
+-Attempted to connect stock portfolio
+-Issue with React lifecycle
+-Need to fix parent-child props passing
