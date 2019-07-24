@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 from flask import Flask, g, request, jsonify, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_json import FlaskJSON, json_response
@@ -46,9 +47,6 @@ class PortfolioLogSchema(ma.ModelSchema):
 class WatchlistSchema(ma.ModelSchema):
     class Meta:
         model = Watchlist
-
-
-
 
 
 @app.route('/')
@@ -111,16 +109,6 @@ def all_companies():
     output = pl_schema.dump(comps).data
     return jsonify({'stocks': output})
 
-# @app.route('/company', methods=['GET'])
-# def allcomnames():
-#         stocks = get_com_name()
-#         pl_schema = PerformanceLogSchema(many=True)
-#         output = pl_schema.dump(stocks).data
-#         return jsonify({'stocks': output})
-
-@app.route('/dashboard')
-def dashboard():
-    pass
 
 @app.route('/user/<int:user_id>/portfolio', methods=['GET','POST'])
 def portfolio(user_id):
@@ -160,12 +148,44 @@ def stock(user_id, portfolio_id):
         logs = get_logs(portfolio_id)
         log_schema = StockLogSchema(many=True)
         output = log_schema.dump(logs).data
+        net_gain = 0
         for data in output:
             date_bought = get_log_date(portfolio_id, data['company'])
             data['bought_price'] = get_stock_price(date_bought, data['company'])
             data['quantity'] = get_quantity(portfolio_id, data['company'])
-            data['change'] = round(data['closing']-data['bought_price'], 2)
-        return jsonify({'portfolio_stocks': output})
+            prev_date = datetime.today() - timedelta(days=1)
+            prev_price = get_stock_price(prev_date, data['company'])
+            data['change'] = round(data['closing'] - prev_price, 2)
+            data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
+            value_bought = data['bought_price'] * data['quantity']
+            value_if_sell = data['closing'] * data['quantity']
+            net_gain += value_if_sell - value_bought
+        net_gain = round(net_gain, 2)
+        return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
+
+# @app.route('/test', methods=['GET'])
+# def testok():
+#     logs = get_logs(16)
+#     log_schema = StockLogSchema(many=True)
+#     output = log_schema.dump(logs).data
+#     net_gain = 0
+#     for data in output:
+#         date_bought = get_log_date(16, data['company'])
+#         data['date_bought'] = date_bought
+#         data['bought_price'] = get_stock_price(date_bought, data['company'])
+#         data['quantity'] = get_quantity(16, data['company'])
+#         prev_date = datetime.today() - timedelta(days=1)
+#         prev_price = get_stock_price(prev_date, data['company'])
+#         data['prev_p'] = prev_price
+#         data['change'] = round(data['closing'] - prev_price, 2)
+#         data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
+#         data['value_bought'] = data['bought_price'] * data['quantity']
+#         data['value_if_sell'] = data['closing'] * data['quantity']
+#         net_gain += data['value_if_sell'] - data['value_bought']
+#         data['net_gain'] = net_gain
+#     net_gain = round(net_gain, 2)
+#     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
+   
 
 @app.route('/company/<string:code>', methods=['GET'])
 def stock_details(code):

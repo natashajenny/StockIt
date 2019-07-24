@@ -66,8 +66,8 @@ def get_companies_like(keyword):
 ## Stock Log
 
 def get_stock_price(date, code):
-#     print(date.date())
-    # this is hardcoded for now
+# this is hardcoded for now, uncomment the line below later
+#   d = date.date()
     d = datetime(2019, 4, 24).date()
     log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
     return log.closing
@@ -105,7 +105,10 @@ def delete_portfolio(portfolio_id):
 def find_portfolio(portfolio_id):
     return Portfolio().query().get(portfolio_id)
 
-
+# def update_portfolio(portfolio_id, net_gain):
+#     p = Portfolio().query().filter(Portfolio.portfolio_id == portfolio_id).scalar()
+#     p.net_gain = net_gain
+#     p.update()
 
 ## Portfolio Log
 
