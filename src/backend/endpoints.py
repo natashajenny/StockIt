@@ -168,12 +168,12 @@ def stock(user_id, portfolio_id):
         return jsonify({'portfolio_stocks': output})
 
 @app.route('/company/<string:code>', methods=['GET'])
-def stock_details():
-    pl_det = get_pl_details('ABC')
+def stock_details(code):
+    pl_det = get_pl_details(code)
     pl_schema = PerformanceLogSchema()
     pl_output = pl_schema.dump(pl_det).data
 
-    stock_det = get_stock_details('ABC')
+    stock_det = get_stock_details(code)
     s_schema = StockLogSchema()
     s_output = s_schema.dump(stock_det).data
     pl_output.update(s_output)
