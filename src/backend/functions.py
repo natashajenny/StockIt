@@ -124,6 +124,7 @@ def save_log(portfolio_id, code, number):
 
 def update_log(portfolio_id, code, number):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    p.datetime = datetime.now()
     p.number = number
     p.update()
 
