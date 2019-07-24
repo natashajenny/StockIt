@@ -105,23 +105,29 @@ def get_logs(portfolio_id):
         join(PortfolioLog, StockLog.code == PortfolioLog.code).\
         join(subq, StockLog.date == subq.c.recentdate).\
         filter(PortfolioLog.portfolio_id==portfolio_id)
+#     for l in q.all():
+#         print(l.__dict__)
     return q.all()
 
 
 def get_log_date(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+#     for l in d.all():
+#         print(l.__dict__)
     return d.datetime
 
 def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
+#todo
 def save_log(portfolio_id, code, number):
     p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
     p.save()
 
 def update_log(portfolio_id, code, number):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    p.datetime = datetime.now()
     p.number = number
     p.update()
 
@@ -129,6 +135,9 @@ def delete_log(user_id, portfolio_id, code):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.delete()
 
+def get_quantity(portfolio_id, code):
+    d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return d.number
 
 ## News Log
 

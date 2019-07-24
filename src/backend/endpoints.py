@@ -156,15 +156,29 @@ def stock(user_id, portfolio_id):
         code = data_dict['code']
         num = data_dict['quantity']
         save_log(portfolio_id, code, num)
-    # get existing stocks    
+    # get existing stocks
     logs = get_logs(portfolio_id)
     log_schema = StockLogSchema(many=True)
     output = log_schema.dump(logs).data
     for data in output:
         date_bought = get_log_date(portfolio_id, data['company'])
         data['bought_price'] = get_stock_price(date_bought, data['company'])
-    print(output)
+        data['quantity'] = get_quantity(portfolio_id, data['company'])
+        data['change'] = round(data['closing']-data['bought_price'], 2)
     return jsonify({'portfolio_stocks': output})
+
+# @app.route('/test', methods=['GET'])
+# def testok():
+#     logs = get_logs(16)
+#     log_schema = StockLogSchema(many=True)
+#     output = log_schema.dump(logs).data
+#     for o in output:
+#         # find out the date it was bought
+#         date_bought = get_log_date(16, o['company'])
+#         o['bought_price'] = get_stock_price(date_bought, o['company'])
+#         o['quantity'] = get_quantity(16, o['company'])
+#         o['change'] = round(o['closing']-o['bought_price'], 2)
+#     return jsonify({'portfolio_stocks': output})
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/update/<string:code>', methods=['POST'])
 def update_stock(portfolio_id, code):
