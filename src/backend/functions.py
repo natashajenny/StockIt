@@ -40,6 +40,7 @@ def validate_login(login, password):
 
 def get_company(code):
     company = Company().query().get(code)
+    print(company.__dict__)
     return company
 
 def get_stock_logs(code):
@@ -71,6 +72,11 @@ def get_stock_price(date, code):
     log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
     return log.closing
 
+def get_stock_details(code):
+    q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
+#     print(q.__dict__)
+    return q        
+
 ## Performance Log
 
 def get_summary():
@@ -79,6 +85,11 @@ def get_summary():
     q = db.session.query(PerformanceLog).\
     join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
     return q.all()
+
+def get_pl_details(code):
+    q = PerformanceLog().query().filter(PerformanceLog.code == code).order_by(desc(PerformanceLog.year)).first()
+#     print(q.__dict__)
+    return q
 
 ## Portfolio
 
