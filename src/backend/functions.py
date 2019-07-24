@@ -110,6 +110,8 @@ def get_logs(portfolio_id):
 
 def get_log_date(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+#     for l in d.all():
+#         print(l.__dict__)
     return d.datetime
 
 def get_logs_limit(portfolio_id, start_date, end_date):
@@ -129,6 +131,9 @@ def delete_log(portfolio_id, code):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.delete()
 
+def get_quantity(portfolio_id, code):
+    d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return d.number
 
 ## News Log
 
