@@ -1,8 +1,9 @@
 import React from 'react';
-import { Paper, Typography } from '@material-ui/core';
+import { Link, Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
+import history from '../history.js';
 import * as stockCodes from '../mock/stock_code.js';
 
 export class PureSearchResult extends React.Component {
@@ -18,6 +19,7 @@ export class PureSearchResult extends React.Component {
         const searchInput = this.props.location.search.split('?')[1];
         this.setState({
             filteredResults: stockCodes.suggestions.filter(code => 
+                code.label.search(searchInput.toUpperCase()) !== -1 ||
                 code.value.search(searchInput.toUpperCase()) !== -1
             ),
             searchInput,
@@ -35,7 +37,8 @@ export class PureSearchResult extends React.Component {
         const searchInput = this.props.location.search.split('?')[1];
         this.setState({
             filteredResults: stockCodes.suggestions.filter(code => 
-                code.label.search(searchInput.toUpperCase()) !== -1
+                code.label.search(searchInput.toUpperCase()) !== -1 ||
+                code.value.search(searchInput.toUpperCase()) !== -1
             ),
             searchInput,
         })
@@ -52,7 +55,9 @@ export class PureSearchResult extends React.Component {
                         <Paper className = {classes.searchResultPaper}>
                             <div className = {classes.searchResultPanel}>
                                 <Typography variant='h6'>
-                                    {result.label}
+                                    <Link component='button' variant='h6' onClick={() => history.push(`/Stocks/${result.label}`)}>
+                                        {result.label}
+                                    </Link>
                                 </Typography>
                                 <Typography variant='caption'>
                                     {result.value}
