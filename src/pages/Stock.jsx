@@ -7,39 +7,42 @@ import { styles } from './styles';
 import { PerformanceChart } from '../components/PerformanceChart/PerformanceChart';
 import {  Table, TableCell, TableHead, TableRow, TableBody} from '@material-ui/core';
 import { StockDrawer } from '../components/StockDrawer/StockDrawer';
+import APIClient from '../api/apiClient.js';
 export class SingleStock extends React.Component {
-    // handleClick = (address) => {
-    //     history.push(`/${address}`)
-    // }
+    
+
  
-    // constructor(props){
-    //     super(props);
-    //     this.state = {
-    //       items: [],
-    //       isLoaded: false,
-    //     }
-    //   }
     constructor(props) {
         super(props);
         console.log(props);
+        this.state = {
+            items: [],
+            isLoaded: false,
+            company:'',
+          }
+        }
         
-      }
-    // componentDidMount(){
-    //     this.apiClient = new APIClient();
-    //     this.apiClient.getStocks()
-    //         .then(json =>{
-    //             this.setState({
-    //                 isLoaded: true,
-    //                 items: json.stocks,
-    //             })
-    //         });
-    // }
+      
+    componentDidMount(){
+        this.apiClient = new APIClient();
+        this.apiClient.getCompany(this.company)
+            .then(json =>{
+                this.setState({
+                    isLoaded: true,
+                    items: json.stocks,
+                })
+            });
+    }
     
 
     
     render() {
         const {stockId} = this.props.match.params;
-        console.log(stockId);
+        this.company = stockId;
+        console.log("stock id is " + stockId)
+        console.log(this.props);
+        console.log("this.company: " + this.company);
+
         return (
             
            

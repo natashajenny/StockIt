@@ -101,7 +101,7 @@ const suggestions = [
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    height: 250,
+    // height: 250,
   },
   input: {
     display: 'flex',
@@ -430,7 +430,7 @@ export function SearchAutoFill() {
               shrink: true,
             },
           }}
-          placeholder="Search a Stock(start with a)"
+          placeholder=""
           options={suggestions}
           components={components}
           value={single}
