@@ -99,3 +99,15 @@ Friday
 Saturday
 -Added user context
 
+Week 7
+Monday
+-Connected login and register modals to Backend
+
+Tuesday
+-Added home page
+-Updated user context design
+-Cleaned code
+
+Wednesday
+-Added logout
+-Added create portfolio modal and functionality

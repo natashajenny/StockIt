@@ -44,7 +44,7 @@ const useStyles = makeStyles({
       >
         <List>
           <SearchAutoFill />
-          {['Add Stock', 'Search Stock', 'Save Stock'].map((text, index) => (
+          {['Add To Portfolio', 'Add to Watchlist'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />

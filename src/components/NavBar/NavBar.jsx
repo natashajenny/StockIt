@@ -135,7 +135,8 @@ class PureNavBar extends React.Component {
                     Stock It                    
                   </Typography>
                 </Button>
-                { isLoggedIn && <SearchBar /> }
+                { isLoggedIn && 
+                  <div className={classes.searchContainer}> <SearchBar /> </div>}
                 <div className={classes.grow} />
                   {isLoggedIn ?
                     <div>

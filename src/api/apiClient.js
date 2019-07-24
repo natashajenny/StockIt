@@ -40,6 +40,10 @@ class APIClient {
         return this.perform('delete', `/user/${userId}/portfolio/${portfolioId}/delete/${code}`);
     }
     
+    updatePortfolioStock(userId, portfolioId, code, stock) {
+        return this.perform('post', `/user/${userId}/portfolio/${portfolioId}/update/${code}`, stock);
+    }
+
     async perform (method, resource, data) {
         return client({
             method,

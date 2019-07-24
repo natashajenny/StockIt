@@ -30,14 +30,23 @@ class CompanySchema(ma.ModelSchema):
     class Meta:
         model = Company
 
+class StockLogSchema(ma.ModelSchema):
+    class Meta:
+        model = StockLog
 
 class PerformanceLogSchema(ma.ModelSchema):
     class Meta:
         model = PerformanceLog
 
 class PortfolioLogSchema(ma.ModelSchema):
+    # details = ma.Nested(StockLogSchema)
     class Meta:
         model = PortfolioLog
+
+class WatchlistSchema(ma.ModelSchema):
+    class Meta:
+        model = Watchlist
+
 
 
 
@@ -133,30 +142,64 @@ def portfolio(user_id):
         output = portfolio_schema.dump(portfolios).data
         return jsonify({'portfolios': output})
 
+@app.route('/user/<int:user_id>/delete/<int:portfolio_id>', methods=['DELETE'])        
+def delete_portfolio(portfolio_id, code):
+    delete_portfolio(portfolio_id)
+
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
 def stock(user_id, portfolio_id):
     # add stock to portfolio
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        code = data_dict['code']['data']
-        num = data_dict['number']['data']
+        print(data_dict)
+        code = data_dict['code']
+        num = data_dict['quantity']
         save_log(portfolio_id, code, num)
     # get existing stocks    
-    else:
-        logs = get_logs(portfolio_id)
-        log_schema = PerformanceLogSchema(many=True)
-        output = log_schema.dump(logs).data
-        print(output)
-        return jsonify({'portfolio_stocks': output})
+    logs = get_logs(portfolio_id)
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(logs).data
+    for data in output:
+        date_bought = get_log_date(portfolio_id, data['company'])
+        data['bought_price'] = get_stock_price(date_bought, data['company'])
+    print(output)
+    return jsonify({'portfolio_stocks': output})
+
+@app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/update/<string:code>', methods=['POST'])
+def update_stock(portfolio_id, code):
+    data = list(request.form.to_dict().keys())[0]
+    data_dict = json.loads(data)
+    num = data_dict['quantity']
+    update_log(portfolio_id, code, num)
+
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/delete/<string:code>', methods=['DELETE'])        
-def delete_stock(portfolio_id, code):
-    delete_log(portfolio_id, code)
+def delete_stock(user_id, portfolio_id, code):
+    delete_log(useR_id, portfolio_id, code)
 
-@app.route('/watchlist')
-def watchlist():
-    pass
+@app.route('/user/<int:user_id>/watchlist', methods=['GET','POST'])
+def watchlist(user_id):
+    if request.method == 'POST':
+        # maybe there should be a search functionality here to add the stock to the watchlist?
+        data = list(request.form.to_dict().keys())[0]
+        data_dict = json.loads(data)
+        code = data_dict['code']['data']
+        w = create_wl(user_id, code)
+        # watchlist gets updated
+        wl = get_wl(user_id)
+        wl_schema = WatchlistSchema(many=True)
+        output = wl_schema.dump(wl).data
+        return jsonify({'wl_stocks': output})
+    else:
+        wl = get_wl(user_id)
+        wl_schema = WatchlistSchema(many=True)
+        output = wl_schema.dump(wl).data
+        return jsonify({'wl_stocks': output})
+
+@app.route('/user/<int:user_id>/delete_wl/<string:code>', methods=['DELETE'])        
+def delete_wl(user_id, code):
+    delete_wl(user_id, code)
 
 @app.route('/logout')
 def logout():

@@ -7,3 +7,4 @@ export * from './Tutorial';
 export * from './Watchlist';
 export * from './Home';
 export * from './Stocks';
+export * from './Stock';

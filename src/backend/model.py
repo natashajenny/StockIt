@@ -147,6 +147,7 @@ class PortfolioLog(Model, Base):
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
     number = Column('number', Integer, nullable=False)
 
+
 class StockLog(Model, Base):
     __tablename__ = 'stock_logs'
     date = Column('date', Date, primary_key=True)

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { NoSsr, Paper, MenuItem, Typography, TextField } from '@material-ui/core';
-import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
+import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 import { Search } from '@material-ui/icons';
-
+// import { SearchAutoFill } from '../SearchAutoFill/SearchAutoFill';
 import { styles } from './styles';
 
 const suggestions = [
@@ -102,21 +102,21 @@ const suggestions = [
       padding: 0,
       height: 'auto',
     },
+    typographyRoot: {
+      color: '#dddddd',
+      padding: theme.spacing(1, 1, 1, 7),
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: 200,
+      },
+    },
     valueContainer: {
       display: 'flex',
       flexWrap: 'wrap',
       flex: 1,
       alignItems: 'center',
       overflow: 'hidden',
-    },
-    chip: {
-      margin: theme.spacing(0.5, 0.25),
-    },
-    chipFocused: {
-      backgroundColor: emphasize(
-        theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
-        0.08,
-      ),
     },
     noOptionsMessage: {
       padding: theme.spacing(1, 2),
@@ -129,6 +129,30 @@ const suggestions = [
       left: 2,
       bottom: 6,
       fontSize: 16,
+    },
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginRight: theme.spacing(2),
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+      },
+    },
+    searchIcon: {
+      width: theme.spacing(7),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     paper: {
       position: 'absolute',
@@ -380,8 +404,10 @@ const suggestions = [
     };
   
     return (
-      <div className={classes.root}>
+      <div className={classes.search}>
+        <div className={classes.searchIcon}>
           <Search />
+        </div>
           <NoSsr>
             <Select
               classes={classes}

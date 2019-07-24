@@ -5,9 +5,13 @@ import {Stocklist} from '../components/Stocklist/Stocklist';
 // import {StockDrawer} from '../components/StockDrawer/StockDrawer';
 import { styles } from './styles';
 import APIClient from '../api/apiClient.js';
+// import history from '../history';
+
 
 export class PureStocks extends React.Component {
-
+    // handleClick = (address) => {
+    //     history.push('/Stocks/${address}')
+    // }
  
     constructor(props){
         super(props);
@@ -33,13 +37,14 @@ export class PureStocks extends React.Component {
     if(!isLoaded){
         return <div>Loading....</div>
       } else{
-        newsGrid()
+        // newsGrid()
         console.log(isLoaded);
         console.log(items);
         const { classes } = this.props;
         return (
             <div className = {classes.root}>
-                <h1> Tutorial </h1>
+                <h1> Stocks </h1>
+                {newsGrid()}
                 <Stocklist  items={items}/>
             </div>
         );  

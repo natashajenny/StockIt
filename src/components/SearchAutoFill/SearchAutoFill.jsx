@@ -396,15 +396,15 @@ export function SearchAutoFill() {
   const classes = useStyles();
   const theme = useTheme();
   const [single, setSingle] = React.useState(null);
-  const [multi, setMulti] = React.useState(null);
+  // const [multi, setMulti] = React.useState(null);
 
   function handleChangeSingle(value) {
     setSingle(value);
   }
 
-  function handleChangeMulti(value) {
-    setMulti(value);
-  }
+  // function handleChangeMulti(value) {
+  //   setMulti(value);
+  // }
 
   const selectStyles = {
     input: base => ({
@@ -436,7 +436,7 @@ export function SearchAutoFill() {
           value={single}
           onChange={handleChangeSingle}
         />
-        <div className={classes.divider} />
+        {/* <div className={classes.divider} />
         <Select
           classes={classes}
           styles={selectStyles}
@@ -454,7 +454,7 @@ export function SearchAutoFill() {
           value={multi}
           onChange={handleChangeMulti}
           isMulti
-        />
+        /> */}
       </NoSsr>
     </div>
   );
