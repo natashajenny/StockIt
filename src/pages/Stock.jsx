@@ -7,39 +7,47 @@ import { styles } from './styles';
 import { PerformanceChart } from '../components/PerformanceChart/PerformanceChart';
 import {  Table, TableCell, TableHead, TableRow, TableBody} from '@material-ui/core';
 import { StockDrawer } from '../components/StockDrawer/StockDrawer';
+import APIClient from '../api/apiClient.js';
 export class SingleStock extends React.Component {
-    // handleClick = (address) => {
-    //     history.push(`/${address}`)
-    // }
+    
+
  
-    // constructor(props){
-    //     super(props);
-    //     this.state = {
-    //       items: [],
-    //       isLoaded: false,
-    //     }
-    //   }
     constructor(props) {
         super(props);
         console.log(props);
+        this.state = {
+            items: [],
+            isLoaded: false,
+            company:'',
+          }
+        }
         
-      }
-    // componentDidMount(){
-    //     this.apiClient = new APIClient();
-    //     this.apiClient.getStocks()
-    //         .then(json =>{
-    //             this.setState({
-    //                 isLoaded: true,
-    //                 items: json.stocks,
-    //             })
-    //         });
-    // }
+      
+    componentDidMount(){
+        this.apiClient = new APIClient();
+        console.log("In componentDidMount: " + this.company);
+        this.apiClient.getStockDetails(this.company)
+            .then(json =>{
+                this.setState({
+                    items: json.details,
+                    isLoaded: true,
+                    company: json.details.company,
+
+                })
+            });
+            
+    }
     
 
     
     render() {
+        var {items, isLoaded, company } = this.state;
         const {stockId} = this.props.match.params;
-        console.log(stockId);
+        this.company = stockId;
+        // console.log("stock id is " + stockId)
+        console.log(isLoaded);
+        console.log("this.company: " + company);
+        console.log(items);
         return (
             
            
@@ -49,25 +57,34 @@ export class SingleStock extends React.Component {
             <Table  >
               <TableHead>
                 <TableRow>
-                    <TableCell  align="center">Company</TableCell>
+                    <TableCell  align="center">company</TableCell>
+                    <TableCell align="center">closing</TableCell>
+                    <TableCell align="center">date</TableCell>
                     <TableCell align="center">eps</TableCell>
-                    <TableCell align="center">gross_dividend</TableCell>
+                    <TableCell align="center">high</TableCell>
+                    <TableCell align="center">low</TableCell>
+                    <TableCell align="center">interest_cover</TableCell>
                     <TableCell align="center">profit_margin</TableCell>
                     <TableCell align="center">roa</TableCell>
                     <TableCell align="center">roe</TableCell>
-                    <TableCell align="center">assets</TableCell>
+                    <TableCell align="center">volume</TableCell>
+                    
                     <TableCell> <StockDrawer/> </TableCell>     
                     </TableRow>
               </TableHead> 
                 <TableBody>
-                    <TableRow key={stockId}>
-                    <TableCell align="center">{stockId}</TableCell>
-                        <TableCell align="center">28.4</TableCell>
-                        <TableCell align="center">40.0</TableCell>
-                        <TableCell align="center">0.1161</TableCell>
-                        <TableCell align="center">0.0967</TableCell>
-                        <TableCell align="cen ter">0.1522</TableCell>
-                        <TableCell align="center">2078100000.0</TableCell>
+                    <TableRow key={items.company}>
+                    <TableCell align="center">{items.company}</TableCell>
+                        <TableCell align="center">{items.closing}</TableCell>
+                        <TableCell align="center">{items.date}</TableCell>
+                        <TableCell align="center">{items.eps}</TableCell>
+                        <TableCell align="center" style={{color:'green'}}>{items.high}</TableCell>
+                        <TableCell align="center" style={{color: 'red'}}>{items.low}</TableCell>
+                        <TableCell align="center">{items.interest_cover}</TableCell>
+                        <TableCell align="center">{items.profit_margin}</TableCell>
+                        <TableCell align="center">{items.roa}</TableCell>
+                        <TableCell align="center">{items.roe}</TableCell>
+                        <TableCell align="center">{items.volume}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
