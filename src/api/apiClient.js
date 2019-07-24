@@ -27,6 +27,10 @@ class APIClient {
     getStocks() {
         return this.perform('get', '/company')
     }
+
+    getStockDetails(code){
+        return this.perform('get',`/company/${code}` )
+    }
     
     // getCompanies() {
     //     return this.perform('get', '/companies')
