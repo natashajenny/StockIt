@@ -31,3 +31,24 @@ To be implemented:
     1. Improving UI and color scheme 
     2. Api calls to our data base to have real time stock updates
     6. Database to store the login options (may need help from backend to set this up) 
+
+week 6: 
+
+1.Connected frontend to backend, got backend stocks data displaying to front end. 
+2.Created and impelmented a searchbar with auto fill functionality. When you partially type a stock name it will find the most similar stock names that matches. Done using regex expressions integrated with material ui 
+3. Created the news tiles, which will link to relavant news articles. 
+
+Improvements to be made:
+1. Since the backend data is massive, it takes a while to load data, will need to have a static json file in front end which will be updated everytime database runs, this would help to reduce time to fetch data.
+2.Auto search functionality will route to specific stock .
+
+Week 7: 
+1. set up react router dom, for dynamically passing links and url 
+2.Links are correctly rendering the correct component. 
+3. Individual Stock page is made
+4. Stock drawer for adding to portfolio or watchlist is also done. 
+
+Work to be done next sprint: 
+1. adding stock to watchlist and portfolio and making sure it correctly saves for each user (wiped every sessioned) 
+2. Improve the stocks adding interface
+3. Overlaying prediction graph with the current selected portfolio total assets . 
