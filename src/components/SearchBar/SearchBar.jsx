@@ -24,9 +24,7 @@ class PureSearchBar extends React.Component {
     return (
       <div className={classes.search}>
         <div className={classes.searchIcon}>
-          <IconButton onClick={this.handleSearch}>
-            <Search />
-          </IconButton>          
+          <Search />
         </div>
         <InputBase
           placeholder="Search…"
@@ -36,7 +34,6 @@ class PureSearchBar extends React.Component {
           }}
           inputProps={{ 'aria-label': 'Search' }}
           onKeyPress={this.handleSearch}
-          onSubmit={this.handleSearch}
         />
       </div>
     )
