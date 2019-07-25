@@ -1,0 +1,58 @@
+{
+    "success": true,
+    "payload": {
+        "ID": "12345",
+        "stocks": [
+            {
+                "StockID": "1",
+                "Code": "A2M",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "StockID": "2",
+                "Code": "ABC",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "StockID": "3",
+                "Code": "AGL",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "StockID": "4",
+                "Code": "ANZ",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "13.48",
+                "Low": "13.16",
+                "Return": "17.62",
+                "Quantity": "50"
+            },
+            {
+                "StockID": "5",
+                "Code": "BHP",
+                "CurPrice": "13.22",
+                "Chg": "-0.32",
+                "High": "33.48",
+                "Low": "13.16",
+                "Return": "14.22",
+                "Quantity": "50"
+            }
+        ]
+    }
+}

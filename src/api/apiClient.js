@@ -43,7 +43,22 @@ class APIClient {
     //     return this.perform('get', '/companies')
     // }
     
+    getPortfolioStocks(userId, portfolioId) {
+        return this.perform('get', `/user/${userId}/portfolio/${portfolioId}`)
+    }
+
+    addPortfolioStock(userId, portfolioId, stock) {
+        return this.perform('post', `/user/${userId}/portfolio/${portfolioId}`, stock);
+    }
+
+    deletePortfolioStock(userId, portfolioId, code) {
+        return this.perform('delete', `/user/${userId}/portfolio/${portfolioId}/delete/${code}`);
+    }
     
+    updatePortfolioStock(userId, portfolioId, code, stock) {
+        return this.perform('post', `/user/${userId}/portfolio/${portfolioId}/update/${code}`, stock);
+    }
+
     async perform (method, resource, data) {
         return client({
             method,

@@ -99,3 +99,21 @@ Friday
 Saturday
 -Added user context
 
+Week 7
+Monday
+-Connected login and register modals to Backend
+
+Tuesday
+-Added home page
+-Updated user context design
+-Cleaned code
+
+Wednesday
+-Added logout
+-Added create portfolio modal and functionality
+
+Week 8
+Tuesday
+-Attempted to connect stock portfolio
+-Issue with React lifecycle
+-Need to fix parent-child props passing

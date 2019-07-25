@@ -1,27 +1,63 @@
 import React from 'react';
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, 
+import { Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, 
     Paper, Input } from '@material-ui/core';
-import { Check, Close, Edit, Delete } from '@material-ui/icons';
+import { Add, Check, Close, Edit, Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 import { styles } from './styles';
-import portfolio_data from '../../mock/portfolio_data.json';
+// import portfolio_data from '../../mock/portfolio_data.json';
 import { DeleteModal } from '../forms';
+import { SearchAutoFill } from '../';
+import { UserContext } from '../../UserContext';
+import APIClient from '../../api/apiClient.js';
 
 class PurePortfolioTable extends React.Component {
   
+  constructor(props) {
+    super(props);
+    const emptyData = { data: '' };
+    this.state = {
+      isDeleteModalOpen: false,
+      selectedStock: null,
+      isEditable: false,
+      stocks: null,
+      portfolio_data: null
+    }
+  }
+
+  handleSubmitAdd = () => {
+    this.apiClient.addPortfolioStock(
+      this.context.user.user_id,
+      this.props.portfolioId,
+      this.state.selectedStock
+    ).then((data) => {
+      this.props.toggleAddStock();
+    })
+  }
+
+  handleCancelAdd = () => {
+    this.props.toggleAddStock();
+  }
+
   handleSubmitChange = () => {
     //TODO: apiClient update db with data from selectedStock
-    this.setState({
-      isEditable: false,
-      selectedRow: null,
-    })
+    this.apiClient.updatePortfolioStock(
+      this.context.user.user_id,
+      this.props.portfolioId,
+      this.state.selectedStock.company,
+      this.state.selectedStock,
+    ).then((data) => 
+        this.setState({
+          isEditable: false,
+          selectedStock: null,
+        })
+      )
   }
 
   handleCancelChange = () => {
     this.setState({
       isEditable: false,
-      selectedRow: null,
+      selectedStock: null,
     })
   }
 
@@ -50,10 +86,16 @@ class PurePortfolioTable extends React.Component {
   }
   delete = () => {
     //TODO: apiclient delete param: stock key
-    this.setState({
-      isDeleteModalOpen: false,
-      selectedStock: null,
-    })
+    this.apiClient.deletePortfolioStock(
+      this.context.user.user_id,
+      this.props.portfolioId,
+      this.state.selectedStock.company,
+    ).then((data) => 
+        this.setState({
+          isDeleteModalOpen: false,
+          selectedStock: null,
+        })
+      )
   }
   closeDeleteModal = () => {
     this.setState({
@@ -61,17 +103,36 @@ class PurePortfolioTable extends React.Component {
     })
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDeleteModalOpen: false,
-      selectedStock: null,
-      isEditable: false,
-    }
+  componentDidMount = () => {
+    this.apiClient = new APIClient();
+    this.context.user && this.apiClient.getPortfolioStocks(
+      this.context.user.user_id, 
+      this.context.user.portfolios[0],
+    ).then((data) => {
+      data.portfolio_stocks !== {} &&
+        this.setState({
+          portfolio_data: data.portfolio_stocks,
+        })
+      })
   }
+
+  componentDidUpdate = () => {
+    console.log('componentdidup')
+    this.apiClient = new APIClient();
+    this.context.user && this.apiClient.getPortfolioStocks(
+      this.context.user.user_id, 
+      this.props.portfolioId,
+    ).then((data) => {
+      data.portfolio_stocks !== {} &&
+        this.setState({
+          portfolio_data: data.portfolio_stocks,
+        })
+      })
+  }
+
   render() {
-    const { classes } = this.props;
-    const { isEditable, selectedStock } = this.state;
+    const { isAddingStock, classes } = this.props;
+    const { selectedStock, portfolio_data, isEditable } = this.state;
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -82,18 +143,58 @@ class PurePortfolioTable extends React.Component {
                     <TableCell align="center">Code</TableCell>
                     <TableCell align="center">Bought Price&nbsp;($)</TableCell>
                     <TableCell align="center">Current Price&nbsp;($)</TableCell>
-                    <TableCell align="center">Change&nbsp;(%)</TableCell>
+                    {/* <TableCell align="center">Change&nbsp;(%)</TableCell> */}
                     <TableCell align="center">High&nbsp;</TableCell>
                     <TableCell align="center">Low&nbsp;</TableCell>
-                    <TableCell align="center">Return&nbsp;(%)</TableCell>
+                    {/* <TableCell align="center">Return&nbsp;(%)</TableCell> */}
                     <TableCell align="center">Quantity&nbsp;</TableCell>
                 </TableRow>
               </TableHead>
             <TableBody>
-              {portfolio_data.payload.stocks.map(row => (
-                <TableRow key={row.StockID}>
+              {isAddingStock &&
+                <TableRow key='new_stock'>
                   <TableCell className={classes.row}>
-                    {isEditable && row.StockID === selectedStock.StockID ? 
+                    <IconButton onClick={this.handleSubmitAdd}><Check /></IconButton>
+                    <IconButton onClick={this.handleCancelAdd}><Close /></IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Input
+                      onChange={(e) => this.handleInputChange(e,'code')}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Input
+                      onChange={(e) => this.handleInputChange(e,'boughtPrice')}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    {selectedStock && selectedStock.currentPrice ? selectedStock.currentPrice : '-'}
+                  </TableCell>
+                  {/* <TableCell align="center">
+                    {selectedStock && selectedStock.change ? selectedStock.change : '-'}
+                  </TableCell> */}
+                  <TableCell align="center">
+                    {selectedStock && selectedStock.high ? selectedStock.high : '-'}
+                  </TableCell>
+                  <TableCell align="center">
+                    {selectedStock && selectedStock.low ? selectedStock.low : '-'}
+                  </TableCell>
+                  {/* <TableCell align="center">
+                    {selectedStock && selectedStock.return ? selectedStock.return : '-'}
+                  </TableCell> */}
+                  <TableCell align="center">
+                    <Input
+                      onChange={(e) => this.handleInputChange(e,'quantity')}
+                    />
+                  </TableCell>
+                </TableRow>
+              }
+              {console.log(portfolio_data)}
+              {portfolio_data && portfolio_data.length !== 0 
+                && portfolio_data.map(row => (
+                <TableRow key={row.company}>
+                  <TableCell className={classes.row}>
+                    {isEditable && row.company === selectedStock.company ? 
                       <div>
                         <IconButton onClick={this.handleSubmitChange}><Check /></IconButton>
                         <IconButton onClick={this.handleCancelChange}><Close /></IconButton>
@@ -105,22 +206,22 @@ class PurePortfolioTable extends React.Component {
                       </div>
                     }
                   </TableCell>
-                  <TableCell align="center">{row.Code}</TableCell>
+                  <TableCell align="center">{row.company}</TableCell>
                   <TableCell align="center">
-                    { isEditable && row.StockID === selectedStock.StockID ? 
+                    { isEditable && row.company === selectedStock.company ? 
                       <Input
-                        defaultValue={row.BoughtPrice} 
-                        onChange={(e) => this.handleInputChange(e,'BoughtPrice')}
+                        defaultValue={row.boughtPrice} 
+                        onChange={(e) => this.handleInputChange(e,'boughtPrice')}
                       />
                     :
-                      row.BoughtPrice
+                      row.boughtPrice
                     }
                   </TableCell>
-                  <TableCell align="center">{row.CurPrice}</TableCell>
-                  <TableCell align="center">{row.Chg}</TableCell>
-                  <TableCell align="center">{row.High}</TableCell>
-                  <TableCell align="center">{row.Low}</TableCell>
-                  <TableCell align="center">{row.Return}</TableCell>
+                  <TableCell align="center">{row.adjusted}</TableCell>
+                  {/* <TableCell align="center">{row.change}</TableCell> */}
+                  <TableCell align="center">{row.high}</TableCell>
+                  <TableCell align="center">{row.low}</TableCell>
+                  {/* <TableCell align="center">{row.Return}</TableCell> */}
                   <TableCell align="center">
                     { isEditable && row.StockID === selectedStock.StockID ? 
                       <Input
@@ -131,8 +232,8 @@ class PurePortfolioTable extends React.Component {
                       row.Quantity
                     }
                   </TableCell>
-                </TableRow>
-              ))}
+                </TableRow>))
+              }
             </TableBody>
           </Table>
         </Paper>
@@ -144,5 +245,7 @@ class PurePortfolioTable extends React.Component {
     );
   }
 }
+
+PurePortfolioTable.contextType = UserContext;
 
 export const PortfolioTable = withStyles(styles)(PurePortfolioTable);

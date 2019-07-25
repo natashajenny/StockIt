@@ -140,6 +140,7 @@ def stock(user_id, portfolio_id):
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
+<<<<<<< HEAD
         code = data_dict['code']['data']
         num = data_dict['number']['data']
         bought_price = data_dict['bought_price']['data']
@@ -163,6 +164,22 @@ def stock(user_id, portfolio_id):
             net_gain += value_if_sell - value_bought
         net_gain = round(net_gain, 2)
         return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
+=======
+        print(data_dict)
+        code = data_dict['code']
+        num = data_dict['quantity']
+        save_log(portfolio_id, code, num)
+    # get existing stocks
+    logs = get_logs(portfolio_id)
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(logs).data
+    for data in output:
+        date_bought = get_log_date(portfolio_id, data['company'])
+        data['bought_price'] = get_stock_price(date_bought, data['company'])
+        data['quantity'] = get_quantity(portfolio_id, data['company'])
+        data['change'] = round(data['closing']-data['bought_price'], 2)
+    return jsonify({'portfolio_stocks': output})
+>>>>>>> 0a290f2d79ace99ac34fcb0d0486896020bbf193
 
 # @app.route('/test', methods=['GET'])
 # def testok():
@@ -214,14 +231,19 @@ def stocklist_to_portfolio(code, portfolio_id):
 def update_stock(portfolio_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
+<<<<<<< HEAD
     num = data_dict['number']['data']
     bought_price = data_dict['bought_price']['data']
     update_log(portfolio_id, code, num, bought_price)
+=======
+    num = data_dict['quantity']
+    update_log(portfolio_id, code, num)
+>>>>>>> 0a290f2d79ace99ac34fcb0d0486896020bbf193
 
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/delete/<string:code>', methods=['DELETE'])        
-def delete_stock(portfolio_id, code):
-    delete_log(portfolio_id, code)
+def delete_stock(user_id, portfolio_id, code):
+    delete_log(useR_id, portfolio_id, code)
 
 
 # create watchlist for a code

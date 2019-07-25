@@ -25,6 +25,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.logIn = (user) => {
+      console.log(user)
       this.setState({
         isLoggedIn: true,
         user: user,
@@ -37,10 +38,24 @@ class App extends React.Component {
       })
     }
     this.state = {
-      isLoggedIn: false,
+      isLoggedIn: true,
       logIn: this.logIn,
       logOut: this.logOut,
-      user: null,
+      user: {
+        'balance': 0,
+        'dob': null,
+        'email': "alina.aldhytha@gmail.com",
+        'gender': null,
+        'login': "alina",
+        'name': "Alina Young",
+        'password': "Hahaha123",
+        'phone': "450314388",
+        'portfolios': [
+          11,12,13,14
+        ],
+        'salt': "\xe385c2b0387a1fbfb61e9122b69870e0",
+        'user_id': 16,
+      },
     }
   }
 
@@ -59,7 +74,7 @@ class App extends React.Component {
                   <Redirect from='/Watchlist' to='/Home' />
                 </div>
               }
-              <Redirect from='/' to='/Home' />
+              <Redirect from='/' to='/Portfolio' />
               <Route path='/Home' component={Home} />
               <Route path='/Portfolio' component={Portfolio} />
               <Route path='/Metrics' component={Metrics} />

@@ -154,7 +154,7 @@ def update_log(portfolio_id, code, number, bought_price):
     p.bought_price = bought_price
     p.update()
 
-def delete_log(portfolio_id, code):
+def delete_log(user_id, portfolio_id, code):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.delete()
 

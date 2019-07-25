@@ -1,20 +1,20 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import { WatchItems,PortfolioTable} from '../components';
+import { WatchlistTable } from '../components';
 import { styles } from './styles';
 
 export class PureWatchlist extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-        <div>
+        <div className={classes.root}>
             <h1> Watchlist </h1>
-            <PortfolioTable />
-            <div className = {classes.root}>
+            <WatchlistTable />
+            {/* <div className = {classes.root}>
                 <WatchItems />
                 <WatchItems />
-            </div>
+            </div> */}
         </div>
         );  
     }

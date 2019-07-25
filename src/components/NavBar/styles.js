@@ -14,6 +14,9 @@ export const styles = createStyles(theme => ({
         },
         color: 'white',
     },
+    searchContainer: {
+        width: '300px',
+    },
     sectionDesktop: {
         display: 'none',
         [theme.breakpoints.up('md')]: {
