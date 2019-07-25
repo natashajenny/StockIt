@@ -81,6 +81,8 @@ def get_summary():
     subq = db.session.query(PerformanceLog.code, func.max(PerformanceLog.year).label('maxyear')).group_by(PerformanceLog.code).subquery('t2')
     q = db.session.query(PerformanceLog).\
     join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
+    for l in q.all():
+            print(l.__dict__)
     return q.all()
 
 def get_pl_details(code):
@@ -116,14 +118,14 @@ def get_logs(portfolio_id):
         join(PortfolioLog, StockLog.code == PortfolioLog.code).\
         join(subq, StockLog.date == subq.c.recentdate).\
         filter(PortfolioLog.portfolio_id==portfolio_id)
-    for l in q.all():
-        print(l.__dict__)
+#     for l in q.all():
+#         print(l.__dict__)
     return q.all()
 
 def get_portfolio_stocks(portfolio_id):
     q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
-    for l in q.all():
-       print(l.__dict__)
+#     for l in q.all():
+#        print(l.__dict__)
     return q.all()
 
 def get_log_date(portfolio_id, code):
@@ -184,13 +186,17 @@ def get_wl(user_id):
 #         print(l.__dict__)
     return wl.all()
 
+# def get_wl_stock(user_id, code):
+#     wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
+#     return wl
+
 def delete_wl(user_id, code):
     p = Watchlist().query().filter(and_(Watchlist.user_id == user_id, Watchlist.code == code)).scalar()
     p.delete()
 
 
 def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
-    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code))
+    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
     wl.alert_high = alert_high
     wl.alert_low = alert_low
     wl.buy_high = buy_high
@@ -198,9 +204,10 @@ def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_hig
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.save()
+    return wl
 
 def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
-    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code))
+    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
     wl.alert_high = alert_high
     wl.alert_low = alert_low
     wl.buy_high = buy_high
@@ -208,14 +215,15 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.update()
+    return wl
 
 
 ## Functions for testing
 
 def get_all_users():
     users = User().query()
-#     for l in users.all():
-#         print(l.__dict__)
+    for l in users.all():
+        print(l.__dict__)
     return users.all()
 
 def get_all_portfolios():

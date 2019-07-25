@@ -223,13 +223,17 @@ def update_stock(portfolio_id, code):
 def delete_stock(portfolio_id, code):
     delete_log(portfolio_id, code)
 
+@app.route('/test', methods=['GET'])
+def testok():
+    wl = get_wl(16)
+    wl_schema = WatchlistSchema(many=True)
+    output = wl_schema.dump(wl).data
+    return jsonify({'wl_stocks': output})
+
+# create watchlist for a code
 @app.route('/user/<int:user_id>/watchlist', methods=['GET','POST'])
-def watchlist(user_id):
+def watchlist(user_id, code):
     if request.method == 'POST':
-        # maybe there should be a search functionality here to add the stock to the watchlist?
-        data = list(request.form.to_dict().keys())[0]
-        data_dict = json.loads(data)
-        code = data_dict['code']['data']
         w = create_wl(user_id, code)
         # watchlist gets updated
         wl = get_wl(user_id)
@@ -242,9 +246,50 @@ def watchlist(user_id):
         output = wl_schema.dump(wl).data
         return jsonify({'wl_stocks': output})
 
+# user sets alerts for a particular code in their watchlist
+@app.route('/user/<int:user_id>/watchlist/<string:code>/set_alerts', methods=['POST'])
+def watchlist_set(user_id, code):
+    data = list(request.form.to_dict().keys())[0]
+    data_dict = json.loads(data)
+    alert_high = data_dict['alert_high']['data']
+    alert_low = data_dict['alert_low']['data']
+    buy_high = data_dict['buy_high']['data']
+    buy_low = data_dict['buy_low']['data']
+    sell_high = data_dict['sell_high']['data']
+    sell_low = data_dict['sell_low']['data']
+
+    set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
+    wl = get_wl(user_id)
+    wl_schema = WatchlistSchema(many=True)
+    output = wl_schema.dump(wl).data
+    return jsonify({'wl_stocks': output})
+
+# user updates alerts for a particular code in their watchlist
+@app.route('/user/<int:user_id>/watchlist/<string:code>/update_alerts', methods=['POST'])
+def watchlist_update(user_id, code):
+    data = list(request.form.to_dict().keys())[0]
+    data_dict = json.loads(data)
+    alert_high = data_dict['alert_high']['data']
+    alert_low = data_dict['alert_low']['data']
+    buy_high = data_dict['buy_high']['data']
+    buy_low = data_dict['buy_low']['data']
+    sell_high = data_dict['sell_high']['data']
+    sell_low = data_dict['sell_low']['data']
+
+    update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
+    wl = get_wl(user_id)
+    wl_schema = WatchlistSchema(many=True)
+    output = wl_schema.dump(wl).data
+    return jsonify({'wl_stocks': output})
+
+
 @app.route('/user/<int:user_id>/delete_wl/<string:code>', methods=['DELETE'])        
 def delete_wl(user_id, code):
     delete_wl(user_id, code)
+    # wl = get_wl(user_id)
+    # wl_schema = WatchlistSchema(many=True)
+    # output = wl_schema.dump(wl).data
+    # return jsonify({'wl_stocks': output})
 
 @app.route('/logout')
 def logout():
