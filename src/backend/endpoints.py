@@ -142,7 +142,8 @@ def stock(user_id, portfolio_id):
         data_dict = json.loads(data)
         code = data_dict['code']['data']
         num = data_dict['number']['data']
-        save_log(portfolio_id, code, num)
+        bought_price = data_dict['bought_price']['data']
+        save_log(portfolio_id, code, num, bought_price)
     # get existing stocks    
     else:
         logs = get_logs(portfolio_id)
@@ -150,8 +151,7 @@ def stock(user_id, portfolio_id):
         output = log_schema.dump(logs).data
         net_gain = 0
         for data in output:
-            date_bought = get_log_date(portfolio_id, data['company'])
-            data['bought_price'] = get_stock_price(date_bought, data['company'])
+            data['bought_price'] = get_bought_price(portfolio_id, data['company'])
             data['quantity'] = get_quantity(portfolio_id, data['company'])
             prev_date = datetime.today() - timedelta(days=1)
             prev_price = get_stock_price(prev_date, data['company'])
@@ -159,6 +159,7 @@ def stock(user_id, portfolio_id):
             data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
             value_bought = data['bought_price'] * data['quantity']
             value_if_sell = data['closing'] * data['quantity']
+            data['stock_gain'] = round(value_if_sell - value_bought, 2)
             net_gain += value_if_sell - value_bought
         net_gain = round(net_gain, 2)
         return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
@@ -170,17 +171,16 @@ def stock(user_id, portfolio_id):
 #     output = log_schema.dump(logs).data
 #     net_gain = 0
 #     for data in output:
-#         date_bought = get_log_date(16, data['company'])
-#         data['date_bought'] = date_bought
-#         data['bought_price'] = get_stock_price(date_bought, data['company'])
+#         data['bought_price'] = get_bought_price(16, data['company'])
 #         data['quantity'] = get_quantity(16, data['company'])
 #         prev_date = datetime.today() - timedelta(days=1)
 #         prev_price = get_stock_price(prev_date, data['company'])
-#         data['prev_p'] = prev_price
+#         data['prev_price'] = prev_price
 #         data['change'] = round(data['closing'] - prev_price, 2)
 #         data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
 #         data['value_bought'] = data['bought_price'] * data['quantity']
 #         data['value_if_sell'] = data['closing'] * data['quantity']
+#         data['stock_gain'] = round(data['value_if_sell'] - data['value_bought'], 2)
 #         net_gain += data['value_if_sell'] - data['value_bought']
 #         data['net_gain'] = net_gain
 #     net_gain = round(net_gain, 2)
@@ -205,7 +205,8 @@ def update_stock(portfolio_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
     num = data_dict['number']['data']
-    update_log(portfolio_id, code, num)
+    bought_price = data_dict['bought_price']['data']
+    update_log(portfolio_id, code, num, bought_price)
 
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/delete/<string:code>', methods=['DELETE'])        

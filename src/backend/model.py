@@ -146,6 +146,7 @@ class PortfolioLog(Model, Base):
                            primary_key=True)
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
     number = Column('number', Integer, nullable=False)
+    bought_price = Column('bought_price', Float, nullable=False)
 
 
 class StockLog(Model, Base):

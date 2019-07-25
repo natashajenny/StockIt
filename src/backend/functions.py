@@ -65,10 +65,9 @@ def get_companies_like(keyword):
 
 ## Stock Log
 
+# closing price of the stock at a particular date
 def get_stock_price(date, code):
-# this is hardcoded for now, uncomment the line below later
-#   d = date.date()
-    d = datetime(2019, 4, 24).date()
+    d = date.date()
     log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
     return log.closing
 
@@ -119,10 +118,15 @@ def get_logs(portfolio_id):
         join(PortfolioLog, StockLog.code == PortfolioLog.code).\
         join(subq, StockLog.date == subq.c.recentdate).\
         filter(PortfolioLog.portfolio_id==portfolio_id)
-#     for l in q.all():
-#         print(l.__dict__)
+    for l in q.all():
+        print(l.__dict__)
     return q.all()
 
+def get_portfolio_stocks(portfolio_id):
+    q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
+    for l in q.all():
+       print(l.__dict__)
+    return q.all()
 
 def get_log_date(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
@@ -134,15 +138,20 @@ def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
+def get_bought_price(portfolio_id, code):
+    log = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return log.bought_price
+
 #todo
-def save_log(portfolio_id, code, number):
-    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
+def save_log(portfolio_id, code, number, bought_price):
+    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number, bought_price=bought_price)
     p.save()
 
-def update_log(portfolio_id, code, number):
+def update_log(portfolio_id, code, number, bought_price):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.datetime = datetime.now()
     p.number = number
+    p.bought_price = bought_price
     p.update()
 
 def delete_log(portfolio_id, code):
@@ -213,8 +222,8 @@ def get_all_users():
 
 def get_all_portfolios():
     p = Portfolio().query()
-#     for l in p.all():
-#         print(l.__dict__)
+    for l in p.all():
+        print(l.__dict__)
     return p.all()
 
 def get_all_pl():
