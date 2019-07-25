@@ -28,24 +28,26 @@ export class PureAddStocks extends React.Component {
             
     }
 
-    addWatchlist(){
-        console.log("HELLO");
+    addWatchlist(items){
+        console.log(items);
+        this.apiClient.addWatchlist(this.context.user.user_id,items);
     }
     render() {
         var userId = this.context.user.user_id;
-       
+        var items = this.props.items;
         // {newsGrid()}
         // newsGrid()
         // console.log(this.context.user);
+        console.log("VARIABLE PASSED IN: " + items);
         console.log(userId);
         console.log(this.state.portfolios);
         
         const { classes } = this.props;
         return (
             <div className = {classes.root}>
-                <h1> Stocks </h1>
-                <Button  onClick= {() => this.addPortfolio()} variant="contained" color="primary">Add Portfolio</Button>
-                <Button onClick={() => this.addWatchlist()} variant="contained" color="primary">Add Watchlist</Button>
+                <h1> Add Stocks </h1>
+                <Button  onClick= {() => this.addPortfolio()}  variant="contained" color="primary">Add Portfolio</Button>
+                <Button onClick={() => this.addWatchlist(items)} variant="contained" color="primary">Add Watchlist</Button>
             </div>
         );  
     }
