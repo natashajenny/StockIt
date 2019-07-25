@@ -199,6 +199,16 @@ def stock_details(code):
     pl_output.update(s_output)
     return jsonify({'details': pl_output})
 
+@app.route('/company/<string:code>/add_portfolio', methods=['POST'])
+def stocklist_to_portfolio(code, portfolio_id):
+    # add stock to portfolio from the stocks page
+    data = list(request.form.to_dict().keys())[0]
+    data_dict = json.loads(data)
+    portfolio_id = data_dict['portfolio_id']['data']
+    code = data_dict['code']['data']
+    num = data_dict['number']['data']
+    bought_price = data_dict['bought_price']['data']
+    save_log(portfolio_id, code, num, bought_price)
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/update/<string:code>', methods=['POST'])
 def update_stock(portfolio_id, code):
