@@ -12,7 +12,6 @@ def create_user(login, password, name, email, phone):
     return user
 
 def delete_user(user_id):
-    print(user_id)
     user = User().query().get(user_id)
     user.delete()
 
@@ -22,7 +21,6 @@ def find_user(user_id):
 # Returns a list of this user's portfolio objects
 def get_portfolios(user_id):
     portfolios = Portfolio().query().filter(Portfolio.user_id==user_id)
-    print(portfolios)
     return portfolios.all()
 
 
@@ -40,7 +38,7 @@ def validate_login(login, password):
 
 def get_company(code):
     company = Company().query().get(code)
-    print(company.__dict__)
+#     print(company.__dict__)
     return company
 
 def get_stock_logs(code):
@@ -222,8 +220,8 @@ def get_all_users():
 
 def get_all_portfolios():
     p = Portfolio().query()
-    for l in p.all():
-        print(l.__dict__)
+#     for l in p.all():
+#         print(l.__dict__)
     return p.all()
 
 def get_all_pl():
