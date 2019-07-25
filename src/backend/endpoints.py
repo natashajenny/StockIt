@@ -223,12 +223,6 @@ def update_stock(portfolio_id, code):
 def delete_stock(portfolio_id, code):
     delete_log(portfolio_id, code)
 
-@app.route('/test', methods=['GET'])
-def testok():
-    wl = get_wl(16)
-    wl_schema = WatchlistSchema(many=True)
-    output = wl_schema.dump(wl).data
-    return jsonify({'wl_stocks': output})
 
 # create watchlist for a code
 @app.route('/user/<int:user_id>/watchlist', methods=['GET','POST'])

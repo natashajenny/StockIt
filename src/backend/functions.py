@@ -81,8 +81,8 @@ def get_summary():
     subq = db.session.query(PerformanceLog.code, func.max(PerformanceLog.year).label('maxyear')).group_by(PerformanceLog.code).subquery('t2')
     q = db.session.query(PerformanceLog).\
     join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
-    for l in q.all():
-            print(l.__dict__)
+#     for l in q.all():
+#             print(l.__dict__)
     return q.all()
 
 def get_pl_details(code):
@@ -204,7 +204,6 @@ def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_hig
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.save()
-    return wl
 
 def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
     wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
@@ -215,15 +214,15 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.update()
-    return wl
+
 
 
 ## Functions for testing
 
 def get_all_users():
     users = User().query()
-    for l in users.all():
-        print(l.__dict__)
+#     for l in users.all():
+#         print(l.__dict__)
     return users.all()
 
 def get_all_portfolios():
