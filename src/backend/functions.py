@@ -12,7 +12,6 @@ def create_user(login, password, name, email, phone):
     return user
 
 def delete_user(user_id):
-    print(user_id)
     user = User().query().get(user_id)
     user.delete()
 
@@ -22,7 +21,6 @@ def find_user(user_id):
 # Returns a list of this user's portfolio objects
 def get_portfolios(user_id):
     portfolios = Portfolio().query().filter(Portfolio.user_id==user_id)
-    print(portfolios)
     return portfolios.all()
 
 
@@ -40,6 +38,7 @@ def validate_login(login, password):
 
 def get_company(code):
     company = Company().query().get(code)
+#     print(company.__dict__)
     return company
 
 def get_stock_logs(code):
@@ -64,12 +63,16 @@ def get_companies_like(keyword):
 
 ## Stock Log
 
+# closing price of the stock at a particular date
 def get_stock_price(date, code):
-#     print(date.date())
-    # this is hardcoded for now
-    d = datetime(2019, 4, 24).date()
+    d = date.date()
     log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
     return log.closing
+
+def get_stock_details(code):
+    q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
+#     print(q.__dict__)
+    return q        
 
 ## Performance Log
 
@@ -79,6 +82,11 @@ def get_summary():
     q = db.session.query(PerformanceLog).\
     join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
     return q.all()
+
+def get_pl_details(code):
+    q = PerformanceLog().query().filter(PerformanceLog.code == code).order_by(desc(PerformanceLog.year)).first()
+#     print(q.__dict__)
+    return q
 
 ## Portfolio
 
@@ -94,7 +102,10 @@ def delete_portfolio(portfolio_id):
 def find_portfolio(portfolio_id):
     return Portfolio().query().get(portfolio_id)
 
-
+# def update_portfolio(portfolio_id, net_gain):
+#     p = Portfolio().query().filter(Portfolio.portfolio_id == portfolio_id).scalar()
+#     p.net_gain = net_gain
+#     p.update()
 
 ## Portfolio Log
 
@@ -105,30 +116,49 @@ def get_logs(portfolio_id):
         join(PortfolioLog, StockLog.code == PortfolioLog.code).\
         join(subq, StockLog.date == subq.c.recentdate).\
         filter(PortfolioLog.portfolio_id==portfolio_id)
+    for l in q.all():
+        print(l.__dict__)
     return q.all()
 
+def get_portfolio_stocks(portfolio_id):
+    q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
+    for l in q.all():
+       print(l.__dict__)
+    return q.all()
 
 def get_log_date(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+#     for l in d.all():
+#         print(l.__dict__)
     return d.datetime
 
 def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
-def save_log(portfolio_id, code, number):
-    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
+def get_bought_price(portfolio_id, code):
+    log = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return log.bought_price
+
+#todo
+def save_log(portfolio_id, code, number, bought_price):
+    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number, bought_price=bought_price)
     p.save()
 
-def update_log(portfolio_id, code, number):
+def update_log(portfolio_id, code, number, bought_price):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    p.datetime = datetime.now()
     p.number = number
+    p.bought_price = bought_price
     p.update()
 
 def delete_log(user_id, portfolio_id, code):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.delete()
 
+def get_quantity(portfolio_id, code):
+    d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return d.number
 
 ## News Log
 
