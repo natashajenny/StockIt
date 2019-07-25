@@ -146,6 +146,7 @@ class PortfolioLog(Model, Base):
                            primary_key=True)
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
     number = Column('number', Integer, nullable=False)
+    bought_price = Column('bought_price', Float, nullable=False)
 
 
 class StockLog(Model, Base):
@@ -176,3 +177,5 @@ class Watchlist(Model, Base):
     buy_low = Column('buy_low', Float)
     sell_high = Column('sell_high', Float)
     sell_low = Column('sell_low', Float)
+    company = relationship('Company', backref='watchlists')
+    

@@ -12,7 +12,6 @@ def create_user(login, password, name, email, phone):
     return user
 
 def delete_user(user_id):
-    print(user_id)
     user = User().query().get(user_id)
     user.delete()
 
@@ -22,7 +21,6 @@ def find_user(user_id):
 # Returns a list of this user's portfolio objects
 def get_portfolios(user_id):
     portfolios = Portfolio().query().filter(Portfolio.user_id==user_id)
-    print(portfolios)
     return portfolios.all()
 
 
@@ -40,7 +38,7 @@ def validate_login(login, password):
 
 def get_company(code):
     company = Company().query().get(code)
-    print(company.__dict__)
+#     print(company.__dict__)
     return company
 
 def get_stock_logs(code):
@@ -65,10 +63,9 @@ def get_companies_like(keyword):
 
 ## Stock Log
 
+# closing price of the stock at a particular date
 def get_stock_price(date, code):
-#     print(date.date())
-    # this is hardcoded for now
-    d = datetime(2019, 4, 24).date()
+    d = date.date()
     log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
     return log.closing
 
@@ -84,6 +81,8 @@ def get_summary():
     subq = db.session.query(PerformanceLog.code, func.max(PerformanceLog.year).label('maxyear')).group_by(PerformanceLog.code).subquery('t2')
     q = db.session.query(PerformanceLog).\
     join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
+#     for l in q.all():
+#             print(l.__dict__)
     return q.all()
 
 def get_pl_details(code):
@@ -105,7 +104,10 @@ def delete_portfolio(portfolio_id):
 def find_portfolio(portfolio_id):
     return Portfolio().query().get(portfolio_id)
 
-
+# def update_portfolio(portfolio_id, net_gain):
+#     p = Portfolio().query().filter(Portfolio.portfolio_id == portfolio_id).scalar()
+#     p.net_gain = net_gain
+#     p.update()
 
 ## Portfolio Log
 
@@ -120,6 +122,11 @@ def get_logs(portfolio_id):
 #         print(l.__dict__)
     return q.all()
 
+def get_portfolio_stocks(portfolio_id):
+    q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
+#     for l in q.all():
+#        print(l.__dict__)
+    return q.all()
 
 def get_log_date(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
@@ -131,15 +138,20 @@ def get_logs_limit(portfolio_id, start_date, end_date):
     log = PortfolioLog().query().filter(and_(portfolio_id==portfolio_id, datetime.between(start_date, end_date)))
     return log.all()
 
+def get_bought_price(portfolio_id, code):
+    log = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    return log.bought_price
+
 #todo
-def save_log(portfolio_id, code, number):
-    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number)
+def save_log(portfolio_id, code, number, bought_price):
+    p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number, bought_price=bought_price)
     p.save()
 
-def update_log(portfolio_id, code, number):
+def update_log(portfolio_id, code, number, bought_price):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
     p.datetime = datetime.now()
     p.number = number
+    p.bought_price = bought_price
     p.update()
 
 def delete_log(portfolio_id, code):
@@ -174,13 +186,17 @@ def get_wl(user_id):
 #         print(l.__dict__)
     return wl.all()
 
+# def get_wl_stock(user_id, code):
+#     wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
+#     return wl
+
 def delete_wl(user_id, code):
     p = Watchlist().query().filter(and_(Watchlist.user_id == user_id, Watchlist.code == code)).scalar()
     p.delete()
 
 
 def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
-    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code))
+    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
     wl.alert_high = alert_high
     wl.alert_low = alert_low
     wl.buy_high = buy_high
@@ -190,7 +206,7 @@ def set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_hig
     wl.save()
 
 def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low):
-    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code))
+    wl = Watchlist().query().filter(and_(Watchlist.user_id==user_id, Watchlist.code==code)).scalar()
     wl.alert_high = alert_high
     wl.alert_low = alert_low
     wl.buy_high = buy_high
@@ -198,6 +214,7 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.update()
+
 
 
 ## Functions for testing
