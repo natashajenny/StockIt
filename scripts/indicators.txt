@@ -1,0 +1,66 @@
+P/E ratio
+P/S ratio
+
+ASX200
+Currency
+Sector
+
+Risk Metrics
+	average return
+	Volatility (the standard deviation of returns)
+	alpha and beta
+	The Sharpe ratio
+
+PE ratio
+PX volume
+PX ebitda
+current enterprise value
+2-day net price change
+10-day volatility
+50-day moving average
+10-day moving average
+quick ratio
+alpha overridable
+alpha for beta pm,
+beta raw overridable
+risk premium
+IS EPS
+S&P 500 index
+
+Book value
+Market capitalization
+Change of stock Net price over the one month period
+Percentage change of Net price over the one month period
+Dividend yield
+Earnings per share
+Earnings per share growth –
+Sales revenue turnover -
+Net revenue
+Net revenue growth
+Sales growth
+Price to earnings ratio
+Price to earnings ratio, five years average
+Price to book ratio
+Price to sales ratio
+Dividend per share
+Current ratio
+Quick ratio
+Total debt to equity
+Analyst ratio
+Revenue growth adjusted by 5 year compound annual growth ratio
+Profit margin
+Operating margin 
+Asset turnover
+
+
+book_value
+market_cap
+DIVIDEND_YIELD
+BEST_EPS
+PE_RATIO
+PX_TO_BOOK_RATIO
+BEST_DPS
+CUR_RATIO
+QUICK_RATIO
+TOT_DEBT_TO_TOT_EQY
+history_price
