@@ -1,5 +1,5 @@
+import secrets
 from datetime import datetime
-#from secrets import token_bytes
 from sqlalchemy import create_engine
 from sqlalchemy import Column, ForeignKey, MetaData
 from sqlalchemy import Date, DateTime, Float, Integer, Numeric, String
@@ -66,7 +66,7 @@ class User(Model, Base):
     user_id = Column('user_id', Integer, primary_key=True)
     login = Column('login', String, nullable=False)
     password = Column('password', String, nullable=False)
-    salt = Column('salt', String, nullable=False)
+    salt = Column('salt', String, nullable=False, default=secrets.token_bytes(16))
     name = Column('name', String)
     dob = Column('dob', Date)
     gender = Column('gender', String(1))
@@ -115,98 +115,18 @@ class NewsLog(Model, Base):
 
 class PerformanceLog(Model, Base):
     __tablename__ = 'performance_logs'
-    date = Column('date', Date, primary_key=True)
+    year = Column('date', Date, primary_key=True)
     code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
     revenue = Column('revenue', Numeric)
     expenses = Column('expenses', Numeric)
-    ebitda = Column('ebitda', Numeric)
-    ebit = Column('ebit', Numeric)
     profit = Column('profit', Numeric)
-    npataa = Column('npataa', Numeric)
     assets = Column('assets', Numeric)
     liabilities = Column('liabilities', Numeric)
-    operating_cash = Column('operating_cash', Numeric)
-    investing_cash = Column('investing_cash', Numeric)
-    financing_cash = Column('financing_cash', Numeric)
-    shares = Column('shares', Numeric)
     eps = Column('eps', Numeric)
-    dps = Column('dps', Numeric)
-    net_dividend = Column('net_dividend', Numeric)
-    gross_dividend = Column('gross_dividend', Numeric)
-    net_yield = Column('net_yield', Numeric)
-    gross_yield = Column('gross_yield', Numeric)
-    dividend_cover = Column('dividend_cover', Numeric)
-    total_equity = Column('total_equity', Numeric)
-    total_debt = Column('total_debt', Numeric)
-    invested_capital = Column('invested_capital', Numeric)
-    working_capital = Column('working_capital', Numeric)
-    gross_investment = Column('gross_investment', Numeric)
-    noplat = Column('noplat', Numeric)
-    profit_margin = Column('profit_margin', Numeric)
-    ebit_margin = Column('ebit_margin', Numeric)
-    ebita_margin = Column('ebita_margin', Numeric)
-    ebitda_margin = Column('ebitda_margin', Numeric)
-    roe = Column('roe', Numeric)
-    roa = Column('roa', Numeric)
-    roic = Column('roic', Numeric)
-    noplat_margin = Column('noplat_margin', Numeric)
-    capital_turnover = Column('capital_turnover', Numeric)
-    inventory_turnover = Column('inventory_turnover', Numeric)
-    asset_turnover = Column('asset_turnover', Numeric)
-    ppe_turnover = Column('ppe_turnover', Numeric)
-    depreciation_ppe = Column('depreciation_ppe', Numeric)
-    depreciation_revenue = Column('depreciation_revenue', Numeric)
-    wkg_capital_revenue = Column('wkg_capital_revenue', Numeric)
-    wkg_capital_turnover = Column('wkg_capital_turnover', Numeric)
-    financial_leverage = Column('financial_leverage', Numeric)
-    gross_gearing = Column('gross_gearing', Numeric)
-    net_gearing = Column('net_gearing', Numeric)
-    interest_cover = Column('interest_cover', Numeric)
-    current_ratio = Column('current_ratio', Numeric)
-    quick_ratio = Column('quick_ratio', Numeric)
-    gross_debt_cf = Column('gross_debt_cf', Numeric)
-    net_debt_cf = Column('net_debt_cf', Numeric)
-    nta_ps = Column('nta_ps', Numeric)
-    bv_ps = Column('bv_ps', Numeric)
-    cash_ps = Column('cash_ps', Numeric)
-    days_inventory = Column('days_inventory', Numeric)
-    days_receivables = Column('days_receivables', Numeric)
-    days_payables = Column('days_payables', Numeric)
-    cf_ps = Column('cf_ps', Numeric)
-    sales_ps = Column('sales_ps', Numeric)
-    share_price = Column('share_price', Numeric)
-    market_cap = Column('market_cap', Numeric)
-    net_debt = Column('net_debt', Numeric)
-    ev = Column('ev', Numeric)
-    ev_ebit = Column('ev_ebit', Numeric)
-    ev_ebitda = Column('ev_ebitda', Numeric)
-    market_cap_npat = Column('market_cap_npat', Numeric)
-    market_cap_revenue = Column('market_cap_revenue', Numeric)
-    price_book_value = Column('price_book_value', Numeric)
-    price_cash_flow = Column('price_cash_flow', Numeric)
-    per = Column('per', Numeric)
-    cash_asset = Column('cash_asset', Numeric)
-    trade_asset = Column('trade_asset', Numeric)
-    inventory_asset = Column('inventory_asset', Numeric)
-    equipment_asset = Column('equipment_asset', Numeric)
-    intangible_asset = Column('intangible_asset', Numeric)
-    goodwill_asset = Column('goodwill_asset', Numeric)
-    nci_asset = Column('nci_asset', Numeric)
-    other_asset = Column('other_asset', Numeric)
-    interest_income = Column('interest_income', Numeric)
-    non_interest_income = Column('non_interest_income', Numeric)
-    interest_expense = Column('interest_expense', Numeric)
-    non_interest_expense = Column('non_interest_expense', Numeric)
-    interest_margin = Column('interest_margin', Numeric)
-    spread = Column('spread', Numeric)
-    non_interest_total = Column('non_interest_total', Numeric)
-    abnormals = Column('abnormals', Numeric)
-    pretax_profit = Column('pretax_profit', Numeric)
-    claims_ratio = Column('claims_ratio', Numeric)
-    expense_ratio = Column('expense_ratio', Numeric)
-    profitability = Column('profitability', Numeric)
-    solvency = Column('solvency', Numeric)
-    company = relationship('Company', backref='performance_logs')
+    dividend = Column('dividend', Numeric)
+    cdy = Column('cdy', Float)
+    roe = Column('roe', Float)
+    gearing = Column('gearing', Float)
 
 class PortfolioLog(Model, Base):
     __tablename__ = 'portfolio_logs'
@@ -226,32 +146,6 @@ class StockLog(Model, Base):
     closing = Column('closing', Numeric)
     adjusted = Column('adjusted', Numeric)
     volume = Column('volume', Integer)
-    sma15
-    sma50
-    sma200
-    ema15
-    ema50
-    ema200
-    macd
-    macd_sig
-    macd_hist
-    bb_hi
-    bb_mid
-    bb_lo
-    slowk
-    slowd
-    rsi
-    adx
-    cci
-    aroon_dn
-    aroon_up
-    chaikin
-    obv
-    mom
- 
-    
-    
-    
     prediction = Column('prediction', Numeric)
     sma = Column('sma', Float)
     ema = Column('ema', Float)
@@ -259,15 +153,7 @@ class StockLog(Model, Base):
     rank = Column('rank', Integer)
     cap = Column('cap', Numeric)
     company = relationship('Company', backref='stock_logs')
-
-
-class IndexLog(Model, Base):
-    __tablename__ = 'index_logs'
-    date = Column('date', Date, primary_key=True)
-    index = Column('index', String, primary_key=True)
-    value = Column('value', Numeric)
-
-
+  
 class Watchlist(Model, Base):
     __tablename__ = 'watchlists'
     user_id = Column('user_id', Integer, ForeignKey("users.user_id"), primary_key=True)    

@@ -226,32 +226,6 @@ class StockLog(Model, Base):
     closing = Column('closing', Numeric)
     adjusted = Column('adjusted', Numeric)
     volume = Column('volume', Integer)
-    sma15
-    sma50
-    sma200
-    ema15
-    ema50
-    ema200
-    macd
-    macd_sig
-    macd_hist
-    bb_hi
-    bb_mid
-    bb_lo
-    slowk
-    slowd
-    rsi
-    adx
-    cci
-    aroon_dn
-    aroon_up
-    chaikin
-    obv
-    mom
- 
-    
-    
-    
     prediction = Column('prediction', Numeric)
     sma = Column('sma', Float)
     ema = Column('ema', Float)
