@@ -125,5 +125,9 @@ export const styles = createStyles(theme => ({
   },
   userDetails: {
     paddingTop: "30px"
+  },
+  settingsNotification: {
+    display: 'flex',
+    flexDirection: 'row',
   }
 }));
