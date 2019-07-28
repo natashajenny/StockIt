@@ -16,16 +16,12 @@ export class PureProfile extends React.Component {
         <div className={classes.topCard}>
           <div className={classes.userCard}>
             <div className={classes.photoContainer}>
-              <img
-                className={classes.userPhoto}
-                src={userPhoto}
-                alt="user-photo"
-              />
+              <img className={classes.userPhoto} src={userPhoto} />
             </div>
             <div className={classes.userNameContainer}>
               <div className={classes.userName}>
                 <Typography variant="h4">{user.name}</Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" style={{ marginTop: "20px" }}>
                   Email: {user.email}
                   <br />
                   User name: {user.login}
