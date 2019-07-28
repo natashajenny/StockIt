@@ -1,16 +1,6 @@
 P/E ratio
 P/S ratio
 
-ASX200
-Currency
-Sector
-
-Risk Metrics
-	average return
-	Volatility (the standard deviation of returns)
-	alpha and beta
-	The Sharpe ratio
-
 PE ratio
 PX volume
 PX ebitda
