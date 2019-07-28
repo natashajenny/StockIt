@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 // import {Stocklist} from '../components/Stocklist/Stocklist';
 // import {StockDrawer} from '../components/StockDrawer/StockDrawer';
 import { styles } from './styles';
+import {AddStocks } from '../components/AddStocks/AddStocks';
 // import APIClient from '../api/apiClient.js';
 
 
@@ -39,6 +40,8 @@ import { styles } from './styles';
             <div >
                 <h1> Tutorial </h1>
                 {/* <Stocklist  items={items}/> */}
+                {/* <StockDrawer /> */}
+                <AddStocks />
             </div>
         );  
     // }

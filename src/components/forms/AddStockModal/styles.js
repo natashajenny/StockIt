@@ -17,7 +17,7 @@ export const styles = createStyles({
     },
     modal: {
         zIndex: 1111,
-        width: 350,
+        width: 300,
         position: 'fixed',
         top: '50%',
         left: '50%',
@@ -38,11 +38,11 @@ export const styles = createStyles({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '55%',
+        width: '65%',
         paddingTop: '20px',
     },
     textField: {
-        width: '90%',
+        width: '70%',
         marginBottom: 16,
     },
     submitButton: {
@@ -52,5 +52,10 @@ export const styles = createStyles({
     },
     submitText: {
         fontSize: 16,
+    },
+    codeInput: {
+        width: '83%',
+        marginTop: 16,
+        marginBottom: 16,
     },
 });

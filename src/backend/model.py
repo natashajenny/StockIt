@@ -177,3 +177,5 @@ class Watchlist(Model, Base):
     buy_low = Column('buy_low', Float)
     sell_high = Column('sell_high', Float)
     sell_low = Column('sell_low', Float)
+    company = relationship('Company', backref='watchlists')
+    

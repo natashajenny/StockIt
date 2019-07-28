@@ -3,6 +3,7 @@ import { Button, IconButton, Paper, TextField, Typography } from '@material-ui/c
 import { Close } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
+import { SearchAutoFill } from '../../SearchAutoFill';
 import { styles } from './styles';
 
 class PureAddStockModal extends React.Component {
@@ -12,23 +13,21 @@ class PureAddStockModal extends React.Component {
         this.state = {
             formData: {
                 code: emptyData,
-                search: emptyData,
+                price: emptyData,
+                quantity: emptyData,
             }
         }; 
-        this.formConfig =  {
-            title: { label: 'Title' },
-            description: { label: 'Description' },
-        };
+        this.fieldNames=['code', 'price', 'quantity']
     }
 
-    handleInputChange = (e) => {
+    handleInputChange = (name, value) => {
         const { formData } = this.state;
         this.setState({
             formData: {
                 ...formData,
-                [e.target.name]: {
-                    ...formData[e.target.name],
-                    data: e.target.value,
+                [name]: {
+                    ...formData[name],
+                    data: value,
                 },
             },
         });
@@ -37,7 +36,6 @@ class PureAddStockModal extends React.Component {
     render() {
         const { onClose, onSubmit, classes } = this.props;
         const { formData } = this.state;
-        const { formConfig } = this;
         console.log(formData)
         return (
             <React.Fragment>
@@ -48,22 +46,25 @@ class PureAddStockModal extends React.Component {
                             <Close />
                         </IconButton>
                         <Typography variant='h4'>
-                           Create New Portfolio
+                           Add New Stock
                         </Typography>
-                        { Object.keys(formConfig).map((fieldName, i) => (
+                        { this.fieldNames.map((fieldName, i) => (
+                        i !== 0 ? 
                         <TextField
                             required
                             key={i}
                             className={classes.textField}
-                            onChange={this.handleInputChange}
+                            onChange={(e) => this.handleInputChange(e.target.name, e.target.value)}
                             name={fieldName}
                             error={formData[fieldName].error !== undefined}
                             helperText={formData[fieldName].error}
-                            inputRef={formConfig[fieldName].ref}
-                            onBlur={formConfig[fieldName].onBlur}
-                            label={formConfig[fieldName].label}
-                            type={formConfig[fieldName].type}
-                            />
+                            label={fieldName}
+                            autoComplete='off'
+                        />
+                        :
+                            <div className={classes.codeInput}>
+                                <SearchAutoFill handleChange ={this.handleInputChange}/>
+                            </div>
                         ))}
                         <div className={classes.buttons}>
                             <Button color='secondary' variant='contained' onClick={onClose}>

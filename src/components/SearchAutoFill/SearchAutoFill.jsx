@@ -4,8 +4,7 @@ import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 
-import history from '../../history.js';
-import * as suggestions from '../../mock/stock_code.js';
+import * as stockCodes from '../../mock/stock_code.js';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -289,14 +288,14 @@ const useStyles = makeStyles(theme => ({
     ValueContainer,
   };
   
- function PureSearchAutoFill() {
+ function PureSearchAutoFill(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [single, setSingle] = React.useState(null);
   
-    function handleChangeSingle(value) {
+    function handleChangeSingle(handleChange, value) {
       setSingle(value);
-      history.push(`/stocks/${value.label}`);
+      handleChange('code', value.label);
     }
   
     const selectStyles = {
@@ -323,11 +322,11 @@ const useStyles = makeStyles(theme => ({
                   shrink: true,
                 },
               }}
-              placeholder="Search..."
-              options={suggestions}
+              placeholder="Code"
+              options={stockCodes.suggestions}
               components={components}
               value={single}
-              onChange={handleChangeSingle}
+              onChange={ (event) => handleChangeSingle(props.handleChange, event)}
             />
           </NoSsr>
         </div>

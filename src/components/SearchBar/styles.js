@@ -18,7 +18,7 @@ export const styles = createStyles(theme => ({
         alignItems: 'center',
     },
     searchIcon: {
-        color: theme.palette.common.white,
+        color: 'inherit',
         width: theme.spacing(7),
         height: '100%',
         position: 'absolute',
@@ -27,7 +27,7 @@ export const styles = createStyles(theme => ({
         justifyContent: 'center',
     },
     inputRoot: {
-        color: 'inherit',
+        backgroundColor: fade(theme.palette.common.black, 0.1),
     },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 7),

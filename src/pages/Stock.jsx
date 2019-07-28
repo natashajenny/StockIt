@@ -6,8 +6,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { styles } from './styles';
 import { PerformanceChart } from '../components/PerformanceChart/PerformanceChart';
 import {  Table, TableCell, TableHead, TableRow, TableBody} from '@material-ui/core';
-import { StockDrawer } from '../components/StockDrawer/StockDrawer';
+// import { StockDrawer } from '../components/StockDrawer/StockDrawer';
 import APIClient from '../api/apiClient.js';
+import { AddStocks } from '../components/AddStocks/AddStocks';
+
 export class SingleStock extends React.Component {
     
 
@@ -43,6 +45,7 @@ export class SingleStock extends React.Component {
     render() {
         var {items, isLoaded, company } = this.state;
         const {stockId} = this.props.match.params;
+        const { classes } = this.props;
         this.company = stockId;
         // console.log("stock id is " + stockId)
         console.log(isLoaded);
@@ -69,7 +72,7 @@ export class SingleStock extends React.Component {
                     <TableCell align="center">roe</TableCell>
                     <TableCell align="center">volume</TableCell>
                     
-                    <TableCell> <StockDrawer/> </TableCell>     
+                    <TableCell> <AddStocks items={items.company}/> </TableCell>     
                     </TableRow>
               </TableHead> 
                 <TableBody>

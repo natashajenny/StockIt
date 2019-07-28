@@ -3,7 +3,7 @@ import { Button, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Refresh, Add } from '@material-ui/icons';
 
-import { PortfolioTable, CreatePortfolioModal } from '../components';
+import { AddStockModal, PortfolioTable, CreatePortfolioModal } from '../components';
 import { styles } from './styles';
 
 import { UserContext } from '../UserContext';
@@ -33,9 +33,14 @@ export class PurePortfolio extends React.Component {
     /*TODO: Change the portfolio table data*/
   }
 
-  handleAddStock = () => {
-    this.setState({
-      isAddingStock: !this.state.isAddingStock,
+  handleAddStock = (e, stock) => {
+    e.preventDefault();
+    this.apiClient.addPortfolioStock(
+      this.context.user.user_id,
+      this.state.portfolioId,
+      stock
+    ).then((data) => {
+      this.closeAddStockModal();
     })
   }
 
@@ -51,6 +56,18 @@ export class PurePortfolio extends React.Component {
     })
   }
 
+  handleAddStockModalClick = () => {
+    this.setState({
+      openAddStockModal: true,
+    })
+  }
+
+  closeAddStockModal = () => {
+    this.setState({
+      openAddStockModal: false,
+    })
+  }
+  
   handleSubmitPorfolio = (e, formData) => {
     e.preventDefault();
     this.apiClient.addPortfolio(this.context.user.user_id, formData).then(
@@ -79,7 +96,7 @@ export class PurePortfolio extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { portfolios, isAddingStock } = this.state;
+    const { portfolios } = this.state;
     // console.log(this.state.portfolioId);
     // console.log(this.state.portfolioName);
     return (
@@ -107,7 +124,7 @@ export class PurePortfolio extends React.Component {
             <Refresh />
           </Button>
           <Button variant='contained' color='primary' className={classes.addStockButton}
-              onClick={this.handleAddStock}>
+              onClick={this.handleAddStockModalClick}>
             <Add />
             Add New Stock
           </Button>
@@ -115,10 +132,13 @@ export class PurePortfolio extends React.Component {
             Create New Portfolio
           </Button>
         </div>
-        <PortfolioTable portfolioId={this.state.portfolioId} isAddingStock={isAddingStock} toggleAddStock={this.handleAddStock}/>
+        <PortfolioTable portfolioId={this.state.portfolioId}/>
         {this.state.openCreatePortfolioModal && 
             <CreatePortfolioModal onClose={this.closeCreatePortfolioModal}
             onSubmit={this.handleSubmitPorfolio} />}
+        {this.state.openAddStockModal &&
+            <AddStockModal onClose = {this.closeAddStockModal} 
+            onSubmit={this.handleAddStock} />}
       </div>
     );
   }

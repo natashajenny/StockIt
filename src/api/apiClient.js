@@ -32,6 +32,17 @@ class APIClient {
         return this.perform('get',`/company/${code}` )
     }
     
+    addWatchlist(userId, code){
+        return this.perform('post', `/user/${userId}/watchlist`, code)
+    }
+
+    getWatchlist(userId, code){
+        return this.perform('get', `/user/${userId}/watchlist`, code)
+    }
+    // getCompanies() {
+    //     return this.perform('get', '/companies')
+    // }
+    
     getPortfolioStocks(userId, portfolioId) {
         return this.perform('get', `/user/${userId}/portfolio/${portfolioId}`)
     }
