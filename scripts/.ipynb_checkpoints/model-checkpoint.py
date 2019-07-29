@@ -265,6 +265,7 @@ class TestTable(Model, Base):
     closing = Column('closing', Float)
     adjusted = Column('adjusted', Float)
     change = Column('change', Float)
+    change_pct = Column('change_pct', Float)
     volume = Column('volume', Integer)   
     sma15 = Column('sma15', Float)
     sma50 = Column('sma50', Float)
