@@ -63,12 +63,6 @@ def get_companies_like(keyword):
 
 ## Stock Log
 
-# closing price of the stock at a particular date
-def get_stock_price(date, code):
-    d = date.date()
-    log = StockLog().query().filter(and_(StockLog.date == d, StockLog.code == code)).scalar()
-    return log.closing
-
 def get_stock_details(code):
     q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
 #     print(q.__dict__)

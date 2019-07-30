@@ -155,10 +155,6 @@ def stock(user_id, portfolio_id):
         for data in output:
             data['bought_price'] = get_bought_price(portfolio_id, data['company'])
             data['quantity'] = get_quantity(portfolio_id, data['company'])
-            prev_date = datetime.today() - timedelta(days=1)
-            prev_price = get_stock_price(prev_date, data['company'])
-            data['change'] = round(data['closing'] - prev_price, 2)
-            data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
             value_bought = data['bought_price'] * data['quantity']
             value_if_sell = data['closing'] * data['quantity']
             data['stock_gain'] = round(value_if_sell - value_bought, 2)
@@ -228,10 +224,6 @@ def update_stock(portfolio_id, code):
     for data in output:
         data['bought_price'] = get_bought_price(portfolio_id, data['company'])
         data['quantity'] = get_quantity(portfolio_id, data['company'])
-        prev_date = datetime.today() - timedelta(days=1)
-        prev_price = get_stock_price(prev_date, data['company'])
-        data['change'] = round(data['closing'] - prev_price, 2)
-        data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
         value_bought = data['bought_price'] * data['quantity']
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
@@ -251,10 +243,6 @@ def delete_stock(user_id, portfolio_id, code):
     for data in output:
         data['bought_price'] = get_bought_price(portfolio_id, data['company'])
         data['quantity'] = get_quantity(portfolio_id, data['company'])
-        prev_date = datetime.today() - timedelta(days=1)
-        prev_price = get_stock_price(prev_date, data['company'])
-        data['change'] = round(data['closing'] - prev_price, 2)
-        data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
         value_bought = data['bought_price'] * data['quantity']
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
