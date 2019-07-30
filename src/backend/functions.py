@@ -1,6 +1,6 @@
 import datetime
 from model import *
-from sqlalchemy import and_, between, func, desc
+from sqlalchemy import and_, between, func, desc, asc
 from sqlalchemy.sql import exists
 
 ## User
@@ -83,6 +83,18 @@ def get_pl_details(code):
     q = PerformanceLog().query().filter(PerformanceLog.code == code).order_by(desc(PerformanceLog.year)).first()
 #     print(q.__dict__)
     return q
+
+def get_top_ten():
+    q = StockLog().query().order_by(asc(StockLog.rank)).limit(10)
+#     for l in q.all():
+#         print(l.__dict__)
+    return q.all()
+
+def get_bottom_ten():
+    q = StockLog().query().filter(StockLog.rank.isnot(None)).order_by(desc(StockLog.rank)).limit(10)
+#     for l in q.all():
+#         print(l.__dict__)
+    return q.all()
 
 ## Portfolio
 
