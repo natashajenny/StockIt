@@ -1,6 +1,6 @@
 import datetime
 from model import *
-from sqlalchemy import and_, between, func, desc
+from sqlalchemy import and_, between, func, desc, asc
 from sqlalchemy.sql import exists
 
 ## User
@@ -65,7 +65,7 @@ def get_companies_like(keyword):
 
 def get_stock_details(code):
     q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
-#     print(q.__dict__)
+    print(q.__dict__)
     return q        
 
 ## Performance Log
@@ -83,6 +83,18 @@ def get_pl_details(code):
     q = PerformanceLog().query().filter(PerformanceLog.code == code).order_by(desc(PerformanceLog.year)).first()
 #     print(q.__dict__)
     return q
+
+def get_top_ten():
+    q = StockLog().query().order_by(asc(StockLog.rank)).limit(10)
+#     for l in q.all():
+#         print(l.__dict__)
+    return q.all()
+
+def get_bottom_ten():
+    q = StockLog().query().filter(StockLog.rank.isnot(None)).order_by(desc(StockLog.rank)).limit(10)
+#     for l in q.all():
+#         print(l.__dict__)
+    return q.all()
 
 ## Portfolio
 
@@ -107,13 +119,9 @@ def find_portfolio(portfolio_id):
 
 def get_logs(portfolio_id):
     db = Db.instance()
-    subq = db.session.query(StockLog.code, func.max(StockLog.date).label('recentdate')).group_by(StockLog.code).subquery('t2')
-    q = db.session.query(StockLog).\
-        join(PortfolioLog, StockLog.code == PortfolioLog.code).\
-        join(subq, StockLog.date == subq.c.recentdate).\
-        filter(PortfolioLog.portfolio_id==portfolio_id)
-#     for l in q.all():
-#         print(l.__dict__)
+    subq = db.session.query(StockLog.code.label('stock_code'), func.max(StockLog.date).label('recent_date')).group_by(StockLog.code).subquery('t2')
+    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code)).\
+        join(PortfolioLog, PortfolioLog.code == StockLog.code).filter(PortfolioLog.portfolio_id == portfolio_id)
     return q.all()
 
 def get_portfolio_stocks(portfolio_id):
@@ -221,8 +229,8 @@ def get_all_users():
 
 def get_all_portfolios():
     p = Portfolio().query()
-#     for l in p.all():
-#         print(l.__dict__)
+    for l in p.all():
+        print(l.__dict__)
     return p.all()
 
 def get_all_pl():

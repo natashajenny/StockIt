@@ -36,7 +36,7 @@ class PureAddStockModal extends React.Component {
     render() {
         const { onClose, onSubmit, classes } = this.props;
         const { formData } = this.state;
-        console.log(formData)
+        // console.log(formData)
         return (
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>

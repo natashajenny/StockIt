@@ -141,26 +141,27 @@ def stock(user_id, portfolio_id):
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
+        print(data_dict)
         code = data_dict['code']['data']
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
         save_log(portfolio_id, code, num, bought_price)
-        return jsonify({'result': 'successful'})
-    else:
-        # get existing stocks
-        logs = get_logs(portfolio_id)
-        log_schema = StockLogSchema(many=True)
-        output = log_schema.dump(logs).data
-        net_gain = 0
-        for data in output:
-            data['bought_price'] = get_bought_price(portfolio_id, data['company'])
-            data['quantity'] = get_quantity(portfolio_id, data['company'])
-            value_bought = data['bought_price'] * data['quantity']
-            value_if_sell = data['closing'] * data['quantity']
-            data['stock_gain'] = round(value_if_sell - value_bought, 2)
-            net_gain += value_if_sell - value_bought
-        net_gain = round(net_gain, 2)
-        return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
+        # return jsonify({'result': 'successful'})
+    # else:
+    # get existing stocks
+    logs = get_logs(portfolio_id)
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(logs).data
+    net_gain = 0
+    for data in output:
+        data['bought_price'] = get_bought_price(portfolio_id, data['company'])
+        data['quantity'] = get_quantity(portfolio_id, data['company'])
+        value_bought = data['bought_price'] * data['quantity']
+        value_if_sell = data['closing'] * data['quantity']
+        data['stock_gain'] = round(value_if_sell - value_bought, 2)
+        net_gain += value_if_sell - value_bought
+    net_gain = round(net_gain, 2)
+    return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
 
 
 # @app.route('/test', methods=['GET'])
@@ -210,11 +211,12 @@ def stocklist_to_portfolio(code, portfolio_id):
     save_log(portfolio_id, code, num, bought_price)
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>/update/<string:code>', methods=['POST'])
-def update_stock(portfolio_id, code):
+def update_stock(user_id, portfolio_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    num = data_dict['quantity']['data']
-    bought_price = data_dict['bought_price']['data']
+    print(data_dict['quantity'])
+    num = data_dict['quantity']
+    bought_price = data_dict['bought_price']
     update_log(portfolio_id, code, num, bought_price)
     # get existing stocks
     logs = get_logs(portfolio_id)
@@ -248,6 +250,7 @@ def delete_stock(user_id, portfolio_id, code):
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
+    print(output)
     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
 
 @app.route('/user/<int:user_id>/watchlist', methods=['GET'])
@@ -302,6 +305,21 @@ def watchlist_update(user_id, code):
     wl_schema = WatchlistSchema(many=True)
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
+
+
+@app.route('/top_ten', methods=['GET'])
+def top_ten():
+    stocks = get_top_ten()
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(stocks).data
+    return jsonify({'stocks': output})
+
+@app.route('/bottom_ten', methods=['GET'])
+def bottom_ten():
+    stocks = get_bottom_ten()
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(stocks).data
+    return jsonify({'stocks': output})
 
 
 @app.route('/user/<int:user_id>/delete_wl/<string:code>', methods=['DELETE'])        

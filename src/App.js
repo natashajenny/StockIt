@@ -76,7 +76,7 @@ class App extends React.Component {
         name: "Alina Young",
         password: "Hahaha123",
         phone: "450314388",
-        portfolios: [11, 12, 13, 14],
+        portfolios: [16, 17],
         salt: "\xe385c2b0387a1fbfb61e9122b69870e0",
         user_id: 16
       }
@@ -99,7 +99,7 @@ class App extends React.Component {
                 </div>
               )}
               {/* <Redirect from="/" to="/Home" /> */}
-              <Redirect from="/" to="/Settings" />
+              <Redirect from="/" to="/Portfolio" />
               <Route path="/Home" component={Home} />
               <Route path="/Portfolio" component={Portfolio} />
               <Route path="/Metrics" component={Metrics} />

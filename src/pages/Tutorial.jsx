@@ -8,6 +8,8 @@ import  tut3 from '../static/images/tut3.png';
 import  tut4 from '../static/images/tut4.png';
 import  tut5 from '../static/images/tut5.png';
 
+import { styles } from "./styles";
+
 
  class PureTutorial extends React.Component {
 
