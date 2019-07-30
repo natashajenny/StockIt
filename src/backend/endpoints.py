@@ -307,6 +307,21 @@ def watchlist_update(user_id, code):
     return jsonify({'wl_stocks': output})
 
 
+@app.route('/top_ten', methods=['GET'])
+def top_ten():
+    stocks = get_top_ten()
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(stocks).data
+    return jsonify({'bottom_stocks': output})
+
+@app.route('/bottom_ten', methods=['GET'])
+def bottom_ten():
+    stocks = get_bottom_ten()
+    log_schema = StockLogSchema(many=True)
+    output = log_schema.dump(stocks).data
+    return jsonify({'bottom_stocks': output})
+
+
 @app.route('/user/<int:user_id>/delete_wl/<string:code>', methods=['DELETE'])        
 def delete_wl(user_id, code):
     delete_wl(user_id, code)
