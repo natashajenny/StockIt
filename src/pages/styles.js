@@ -1,4 +1,4 @@
-import { opacity, createStyles } from "@material-ui/core/styles";
+import { createStyles } from "@material-ui/core/styles";
 
 export const styles = createStyles(theme => ({
   root: {
@@ -127,7 +127,8 @@ export const styles = createStyles(theme => ({
     paddingTop: "30px"
   },
   settingsNotification: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
   }
 }));

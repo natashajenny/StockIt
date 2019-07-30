@@ -1,76 +1,110 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URI = 'http://localhost:4000';
+const BASE_URI = "http://localhost:4000";
 
 const client = axios.create({
-    baseURL: BASE_URI,
-    json: true,
+  baseURL: BASE_URI,
+  json: true
 });
 
 class APIClient {
-    registerUser(user) {
-        return this.perform('post', '/register', user);
-    }
-    
-    loginUser(user) {
-        return this.perform('post', '/login', user);
-    }
+  registerUser(user) {
+    return this.perform("post", "/register", user);
+  }
 
-    getPortfolios(userId) {
-        return this.perform('get', `/user/${userId}/portfolio`)
-    }
+  loginUser(user) {
+    return this.perform("post", "/login", user);
+  }
 
-    addPortfolio(userId, portfolio) {
-        return this.perform('post', `/user/${userId}/portfolio`, portfolio)
-    }
+  getPortfolios(userId) {
+    return this.perform("get", `/user/${userId}/portfolio`);
+  }
 
-    getStocks() {
-        return this.perform('get', '/company')
-    }
+  addPortfolio(userId, portfolio) {
+    return this.perform("post", `/user/${userId}/portfolio`, portfolio);
+  }
 
-    getStockDetails(code){
-        return this.perform('get',`/company/${code}` )
-    }
-    
-    addWatchlist(userId, code){
-        return this.perform('post', `/user/${userId}/watchlist`, code)
-    }
+  getStocks() {
+    return this.perform("get", "/company");
+  }
 
-    getWatchlist(userId, code){
-        return this.perform('get', `/user/${userId}/watchlist`, code)
-    }
-    // getCompanies() {
-    //     return this.perform('get', '/companies')
-    // }
-    
-    getPortfolioStocks(userId, portfolioId) {
-        return this.perform('get', `/user/${userId}/portfolio/${portfolioId}`)
-    }
+  getStockDetails(code) {
+    return this.perform("get", `/company/${code}`);
+  }
 
-    addPortfolioStock(userId, portfolioId, stock) {
-        return this.perform('post', `/user/${userId}/portfolio/${portfolioId}`, stock);
-    }
+  addWatchlist(userId, code) {
+    return this.perform("post", `/user/${userId}/watchlist`, code);
+  }
 
-    deletePortfolioStock(userId, portfolioId, code) {
-        return this.perform('delete', `/user/${userId}/portfolio/${portfolioId}/delete/${code}`);
-    }
-    
-    updatePortfolioStock(userId, portfolioId, code, stock) {
-        return this.perform('post', `/user/${userId}/portfolio/${portfolioId}/update/${code}`, stock);
-    }
+  getWatchlist(userId, code) {
+    return this.perform("get", `/user/${userId}/watchlist`, code);
+  }
 
-    async perform (method, resource, data) {
-        return client({
-            method,
-            url: resource,
-            data,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }).then(resp => {
-            return resp.data ? resp.data : [];
-        })
-    }
+  getPortfolioStocks(userId, portfolioId) {
+    return this.perform("get", `/user/${userId}/portfolio/${portfolioId}`);
+  }
+
+  addPortfolioStock(userId, portfolioId, stock) {
+    return this.perform(
+      "post",
+      `/user/${userId}/portfolio/${portfolioId}`,
+      stock
+    );
+  }
+
+  deletePortfolioStock(userId, portfolioId, code) {
+    return this.perform(
+      "delete",
+      `/user/${userId}/portfolio/${portfolioId}/delete/${code}`
+    );
+  }
+
+  updatePortfolioStock(userId, portfolioId, code, stock) {
+    return this.perform(
+      "post",
+      `/user/${userId}/portfolio/${portfolioId}/update/${code}`,
+      stock
+    );
+  }
+
+  addWatchlistStock(userId, code, stock) {
+    return this.perform("post", `/user/${userId}/watchlist/${code}`).then(
+      this.perform(
+        "post",
+        `/user/${userId}/watchlist/${code}/set_alerts`,
+        stock
+      )
+    );
+  }
+
+  getWatchlistStocks(userId) {
+    return this.perform("get", `/user/${userId}/watchlist`);
+  }
+
+  updateWatchlistStock(userId, code, stock) {
+    return this.perform(
+      "post",
+      `/user/${userId}/watchlist/${code}/update_alerts`,
+      stock
+    );
+  }
+
+  deleteWatchlistStock(userId, code) {
+    return this.perform("delete", `/user/${userId}/watchlist/${code}`);
+  }
+
+  async perform(method, resource, data) {
+    return client({
+      method,
+      url: resource,
+      data,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then(resp => {
+      return resp.data ? resp.data : [];
+    });
+  }
 }
 
 export default APIClient;
