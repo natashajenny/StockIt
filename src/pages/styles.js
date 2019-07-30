@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import {  createStyles } from "@material-ui/core/styles";
-=======
-import { createStyles } from "@material-ui/core/styles";
->>>>>>> 68d2ac2c8de2b5ad92bd5e1502caebaad6243932
 
 export const styles = createStyles(theme => ({
   root: {

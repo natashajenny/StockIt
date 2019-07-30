@@ -7,10 +7,7 @@ import  tut2 from '../static/images/tut2.png';
 import  tut3 from '../static/images/tut3.png';
 import  tut4 from '../static/images/tut4.png';
 import  tut5 from '../static/images/tut5.png';
-
-import { styles } from "./styles";
-
-
+import { StockRank } from "../components/StockRank/StockRank";
  class PureTutorial extends React.Component {
 
 
@@ -24,6 +21,7 @@ import { styles } from "./styles";
         return (
        
             <div text-align='center' >
+                <StockRank />
                 <h1> Tutorial </h1>
                 <h1> How do we predict stock prices? </h1>
                     <h2 >1. Calculate Technical Indicators </h2>
