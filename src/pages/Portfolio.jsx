@@ -94,6 +94,17 @@ export class PurePortfolio extends React.Component {
       .then(this.closeCreatePortfolioModal());
   };
 
+  handleRefreshClick = () => {
+    this.apiClient
+      .getPortfolioStocks(this.context.user.user_id, this.state.portfolioId)
+      .then(data => {
+        this.setState({
+          portfolio_data: data.portfolio_stocks,
+          netGain: data.net_gain
+        });
+      });
+  };
+
   handleChangePortfolioData = (portfolio_data, netGain) => {
     this.setState({
       portfolio_data: portfolio_data,
@@ -138,7 +149,11 @@ export class PurePortfolio extends React.Component {
         <div style={{ display: "flex", width: "100%" }}>
           <h1> Portfolio </h1>
           <div style={{ flex: "1" }} />
-          <h1> ${netGain} </h1>
+          {netGain >= 0 ? (
+            <h1 style={{ color: "green" }}> +${netGain} </h1>
+          ) : (
+            <h1 style={{ color: "red" }}> -${-netGain} </h1>
+          )}
         </div>
         <div className={classes.portfolioSubheading}>
           {!portfolios || portfolios.length === 0 ? (
@@ -174,6 +189,7 @@ export class PurePortfolio extends React.Component {
                 variant="contained"
                 color="primary"
                 className={classes.refreshButton}
+                onClick={this.handleRefreshClick}
               >
                 <Refresh />
               </Button>

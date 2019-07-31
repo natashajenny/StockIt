@@ -171,7 +171,7 @@ class PurePortfolioTable extends React.Component {
   render() {
     const { classes } = this.props;
     const { selectedStock, portfolio_data, isEditable } = this.state;
-    // console.log(this.state.portfolio_data);
+    console.log(this.state.selectedStock);
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -286,7 +286,7 @@ class PurePortfolioTable extends React.Component {
         {this.state.isDeleteModalOpen && (
           <DeleteModal
             onClose={this.closeDeleteModal}
-            name={this.state.selectedStock.Code}
+            name={this.state.selectedStock.company}
             onDelete={this.delete}
           />
         )}
