@@ -65,8 +65,8 @@ export class PureStockRank extends React.Component {
               </TableHead> 
                 <TableBody>
                 {top.map((item,index) => (
-                <TableRow key={index} >
-                  <TableCell align="center">{index}</TableCell>
+                <TableRow key={index+1} >
+                  <TableCell align="center">{index+1}</TableCell>
                   <TableCell style={{color:'green'}} align="center">{item.company}</TableCell>         
                 </TableRow>
               ))}
@@ -81,9 +81,9 @@ export class PureStockRank extends React.Component {
                     </TableRow>
               </TableHead> 
                 <TableBody>
-                {top.map((item,index) => (
-                <TableRow key={index} >
-                  <TableCell align="center">{index}</TableCell>
+                {bot.map((item,index) => (
+                <TableRow key={index+1} >
+                  <TableCell align="center">{index+1}</TableCell>
                   <TableCell style={{color: 'red'}} align="center">{item.company}</TableCell>         
                 </TableRow>
               ))}
