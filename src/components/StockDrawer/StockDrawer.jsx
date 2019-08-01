@@ -8,9 +8,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import { SearchAutoFill } from '../SearchAutoFill/SearchAutoFill';
-
+// import { SearchAutoFill } from '../SearchAutoFill/SearchAutoFill';
+import { UserContext } from '../../UserContext';
 import Button from '@material-ui/core/Button';
+
+
+
+
 
 const useStyles = makeStyles({
     list: {
@@ -35,6 +39,9 @@ const useStyles = makeStyles({
       setState({ ...state, [side]: open });
     };
   
+    const addClick = (text, index) =>{
+        console.log("text:" + text + " index: " + index );
+    }
     const sideList = side => (
       <div
         className={classes.list}
@@ -43,9 +50,8 @@ const useStyles = makeStyles({
         onKeyDown={toggleDrawer(side, false)}
       >
         <List>
-          <SearchAutoFill />
           {['Add To Portfolio', 'Add to Watchlist'].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem button key={text} onClick={addClick(text,index)}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -65,5 +71,5 @@ const useStyles = makeStyles({
   }
   
 
-
+  TempDrawer.contextType = UserContext;
   export const StockDrawer = TempDrawer;

@@ -63,6 +63,7 @@ class PureCreatePortfolioModal extends React.Component {
                             onBlur={formConfig[fieldName].onBlur}
                             label={formConfig[fieldName].label}
                             type={formConfig[fieldName].type}
+                            autoComplete='off'
                             />
                         ))}
                         <div className={classes.buttons}>

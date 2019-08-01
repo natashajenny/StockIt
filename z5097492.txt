@@ -117,3 +117,31 @@ Tuesday
 -Attempted to connect stock portfolio
 -Issue with React lifecycle
 -Need to fix parent-child props passing
+
+Wednesday
+-Fixed issue with React lifecycle
+-Connected stock portfolio but it still rerenders quite often
+-Need to minimise rerendering of components
+
+Thursday
+-Merged current progress to Master
+-Added SearchBar functionality
+-Added SearchResult page to show stocks
+
+Friday
+-Added navigation from Search result to specific stock page
+-Merged current progress to Master
+
+Week 9
+Sunday
+-Added Settings notification context
+-Updated profile page
+
+Wednesday
+-Updated colors on Portfolio table
+-Added refresh button functionality
+-Completely fixed portfolio table rerendering issue
+
+Thursday
+-Updated Watchlist functionality
+-Updated endpoints for watchlist
