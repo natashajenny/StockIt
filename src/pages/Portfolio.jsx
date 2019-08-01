@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Select } from "@material-ui/core";
+import { Button, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Refresh, Add } from "@material-ui/icons";
 
@@ -17,10 +17,10 @@ export class PurePortfolio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      portfolioId: "",
-      portfolioName: "",
+      selectedPortfolio: null,
       portfolios: null,
       openCreatePortfolioModal: false,
+      openAddStockModal: false,
       isAddingStock: false,
       netGain: 0,
       portfolio_data: null
@@ -31,10 +31,10 @@ export class PurePortfolio extends React.Component {
     // console.log(event.target.children);
     for (let node of event.target.children) {
       if (node.value === event.target.value) {
-        // console.log(node.dataset.id);
         this.setState({
-          portfolioId: node.dataset.id,
-          portfolioName: event.target.value
+          selectedPortfolio: this.state.portfolios.filter(
+            portfolio => portfolio.title === event.target.value
+          )[0]
         });
       }
     }
@@ -46,7 +46,7 @@ export class PurePortfolio extends React.Component {
     this.apiClient
       .addPortfolioStock(
         this.context.user.user_id,
-        this.state.portfolioId,
+        this.state.selectedPortfolio.portfolio_id,
         stock
       )
       .then(data => {
@@ -96,7 +96,10 @@ export class PurePortfolio extends React.Component {
 
   handleRefreshClick = () => {
     this.apiClient
-      .getPortfolioStocks(this.context.user.user_id, this.state.portfolioId)
+      .getPortfolioStocks(
+        this.context.user.user_id,
+        this.state.selectedPortfolio.portfolio_id
+      )
       .then(data => {
         this.setState({
           portfolio_data: data.portfolio_stocks,
@@ -116,14 +119,12 @@ export class PurePortfolio extends React.Component {
     this.apiClient = new APIClient();
     this.context.user &&
       this.apiClient.getPortfolios(this.context.user.user_id).then(data => {
-        // console.log(data.portfolios);
         this.setState({
           portfolios: data.portfolios
         });
         data.portfolios &&
           this.setState({
-            portfolioId: data.portfolios[0].portfolio_id,
-            portfolioName: data.portfolios[0].title
+            selectedPortfolio: data.portfolios[0]
           });
 
         this.apiClient
@@ -142,8 +143,12 @@ export class PurePortfolio extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { portfolios, portfolio_data, netGain } = this.state;
-    // console.log(portfolio_data && portfolio_data.length);
+    const {
+      selectedPortfolio,
+      portfolios,
+      portfolio_data,
+      netGain
+    } = this.state;
     return (
       <div className={classes.root}>
         <div style={{ display: "flex", width: "100%" }}>
@@ -155,6 +160,11 @@ export class PurePortfolio extends React.Component {
             <h1 style={{ color: "red" }}> -${-netGain} </h1>
           )}
         </div>
+        {selectedPortfolio && (
+          <Typography variant="body1" style={{ marginBottom: "20px" }}>
+            {selectedPortfolio.description}
+          </Typography>
+        )}
         <div className={classes.portfolioSubheading}>
           {!portfolios || portfolios.length === 0 ? (
             <Button
@@ -213,12 +223,14 @@ export class PurePortfolio extends React.Component {
             </div>
           )}
         </div>
-        <PortfolioTable
-          portfolioId={this.state.portfolioId}
-          portfolio_data={portfolio_data}
-          netGain={netGain}
-          handleChangePortfolioData={this.handleChangePortfolioData}
-        />
+        {selectedPortfolio && (
+          <PortfolioTable
+            portfolioId={selectedPortfolio.portfolio_id}
+            portfolio_data={portfolio_data}
+            netGain={netGain}
+            handleChangePortfolioData={this.handleChangePortfolioData}
+          />
+        )}
         {this.state.openCreatePortfolioModal && (
           <CreatePortfolioModal
             onClose={this.closeCreatePortfolioModal}

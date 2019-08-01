@@ -96,9 +96,9 @@ class PurePortfolioTable extends React.Component {
         this.setState({
           portfolio_data: data.portfolio_stocks,
           selectedStock: null,
+          isDeleteModalOpen: false,
           netGain: data.net_gain
         });
-        this.closeDeleteModal();
         this.props.handleChangePortfolioData(
           data.portfolio_stocks,
           data.net_gain
@@ -131,14 +131,8 @@ class PurePortfolioTable extends React.Component {
         return true;
       }
       if (
-        nextState.portfolio_data &&
-        nextState.portfolio_data.length !== this.state.portfolio_data.length
-      ) {
-        return true;
-      }
-      if (
-        nextProps.portfolio_data &&
-        nextProps.portfolio_data.length !== this.state.portfolio_data.length
+        nextProps.netGain !== this.state.netGain ||
+        nextState.netGain !== this.state.netGain
       ) {
         return true;
       }
@@ -171,7 +165,7 @@ class PurePortfolioTable extends React.Component {
   render() {
     const { classes } = this.props;
     const { selectedStock, portfolio_data, isEditable } = this.state;
-    console.log(this.state.selectedStock);
+    // console.log(portfolio_data);
     return (
       <React.Fragment>
         <Paper className={classes.root}>

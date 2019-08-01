@@ -76,7 +76,7 @@ class App extends React.Component {
         name: "Alina Young",
         password: "Hahaha123",
         phone: "450314388",
-        portfolios: [16, 17],
+        portfolios: [16, 17, 19],
         salt: "\xe385c2b0387a1fbfb61e9122b69870e0",
         user_id: 16
       }

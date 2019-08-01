@@ -19,23 +19,23 @@ class PureAddWatchlistStockModal extends React.Component {
     this.state = {
       formData: {
         code: emptyData,
-        alertHigh: emptyData,
-        alertLow: emptyData,
-        buyHigh: emptyData,
-        buyLow: emptyData,
-        sellHigh: emptyData,
-        sellLow: emptyData,
+        alert_high: emptyData,
+        alert_low: emptyData,
+        buy_high: emptyData,
+        buy_low: emptyData,
+        sell_high: emptyData,
+        sell_low: emptyData,
         quantity: emptyData
       }
     };
     this.fieldNames = [
       "code",
-      "alertHigh",
-      "alertLow",
-      "buyHigh",
-      "buyLow",
-      "sellHigh",
-      "sellLow",
+      "alert_high",
+      "alert_low",
+      "buy_high",
+      "buy_low",
+      "sell_high",
+      "sell_low",
       "quantity"
     ];
   }
@@ -66,27 +66,49 @@ class PureAddWatchlistStockModal extends React.Component {
               <Close />
             </IconButton>
             <Typography variant="h4">Add New Stock</Typography>
-            {this.fieldNames.map((fieldName, i) =>
-              i !== 0 ? (
-                <TextField
-                  required
-                  key={i}
-                  className={classes.textField}
-                  onChange={e =>
-                    this.handleInputChange(e.target.name, e.target.value)
-                  }
-                  name={fieldName}
-                  error={formData[fieldName].error !== undefined}
-                  helperText={formData[fieldName].error}
-                  label={fieldName}
-                  autoComplete="off"
-                />
-              ) : (
-                <div className={classes.codeInput}>
-                  <SearchAutoFill handleChange={this.handleInputChange} />
-                </div>
-              )
-            )}
+            <div className={classes.codeInput}>
+              <SearchAutoFill handleChange={this.handleInputChange} />
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gridColumnGap: "35px",
+                width: "70%"
+              }}
+            >
+              {this.fieldNames.map((fieldName, i) =>
+                i !== 0 && i !== 7 ? (
+                  <TextField
+                    key={i}
+                    className={classes.textField}
+                    onChange={e =>
+                      this.handleInputChange(e.target.name, e.target.value)
+                    }
+                    name={fieldName}
+                    error={formData[fieldName].error !== undefined}
+                    helperText={formData[fieldName].error}
+                    label={fieldName}
+                    autoComplete="off"
+                  />
+                ) : (
+                  i === 7 && (
+                    <TextField
+                      key={i}
+                      onChange={e =>
+                        this.handleInputChange(e.target.name, e.target.value)
+                      }
+                      name={fieldName}
+                      error={formData[fieldName].error !== undefined}
+                      helperText={formData[fieldName].error}
+                      label={fieldName}
+                      autoComplete="off"
+                      style={{ gridColumn: "2 span" }}
+                    />
+                  )
+                )
+              )}
+            </div>
             <div className={classes.buttons}>
               <Button color="secondary" variant="contained" onClick={onClose}>
                 <Typography variant="button">Cancel</Typography>

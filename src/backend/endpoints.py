@@ -275,12 +275,12 @@ def createWatchlist(user_id, code):
 def watchlist_set(user_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    alert_high = data_dict['alert_high']['data']
-    alert_low = data_dict['alert_low']['data']
-    buy_high = data_dict['buy_high']['data']
-    buy_low = data_dict['buy_low']['data']
-    sell_high = data_dict['sell_high']['data']
-    sell_low = data_dict['sell_low']['data']
+    alert_high = int(data_dict['alert_high']['data'])
+    alert_low = int(data_dict['alert_low']['data'])
+    buy_high = int(data_dict['buy_high']['data'])
+    buy_low = int(data_dict['buy_low']['data'])
+    sell_high = int(data_dict['sell_high']['data'])
+    sell_low = int(data_dict['sell_low']['data'])
 
     set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
     wl = get_wl(user_id)
@@ -293,12 +293,12 @@ def watchlist_set(user_id, code):
 def watchlist_update(user_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    alert_high = data_dict['alert_high']['data']
-    alert_low = data_dict['alert_low']['data']
-    buy_high = data_dict['buy_high']['data']
-    buy_low = data_dict['buy_low']['data']
-    sell_high = data_dict['sell_high']['data']
-    sell_low = data_dict['sell_low']['data']
+    alert_high = data_dict['alert_high']
+    alert_low = data_dict['alert_low']
+    buy_high = data_dict['buy_high']
+    buy_low = data_dict['buy_low']
+    sell_high = data_dict['sell_high']
+    sell_low = data_dict['sell_low']
 
     update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
     wl = get_wl(user_id)
@@ -323,12 +323,12 @@ def bottom_ten():
 
 
 @app.route('/user/<int:user_id>/delete_wl/<string:code>', methods=['DELETE'])        
-def delete_wl(user_id, code):
+def watchlist_delete(user_id, code):
     delete_wl(user_id, code)
-    # wl = get_wl(user_id)
-    # wl_schema = WatchlistSchema(many=True)
-    # output = wl_schema.dump(wl).data
-    # return jsonify({'wl_stocks': output})
+    wl = get_wl(user_id)
+    wl_schema = WatchlistSchema(many=True)
+    output = wl_schema.dump(wl).data
+    return jsonify({'wl_stocks': output})
 
 @app.route('/logout')
 def logout():
