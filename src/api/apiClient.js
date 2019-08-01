@@ -79,6 +79,14 @@ class APIClient {
     return this.perform("get", `/user/${userId}/watchlist`);
   }
 
+  gettopten() {
+    return this.perform("get","/top_ten" );
+  }
+
+  getbotten() {
+    return this.perform("get","/bottom_ten" );
+  }
+
   updateWatchlistStock(userId, code, stock) {
     return this.perform(
       "post",

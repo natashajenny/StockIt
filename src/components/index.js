@@ -11,3 +11,4 @@ export * from './Stocklist';
 export * from './StockDrawer';
 export * from './SearchAutoFill';
 export * from './AddStocks';
+export * from './StockRank';
