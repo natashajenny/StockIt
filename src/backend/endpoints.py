@@ -327,14 +327,7 @@ def delete_wl(user_id, code):
     delete_wl(user_id, code)
 
 @app.route('/grapher', methods=['GET'])
-# def grapher(type, stocks, start_date, end_date):
-def grapher():
-    # stocks = array of stocks, can be 1 or multiple stocks
-    stock = 'CBA'
-    start_date='2009-07-01'
-    end_date='2019-07-01'
-    type='ema'
-
+def grapher(type, stocks, start_date, end_date):
     return {
         'world': get_plot([stock], indicies=['world'],start=start_date, finish=end_date),
         'sma': get_plot([stock], closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date),
