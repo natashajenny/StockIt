@@ -159,6 +159,7 @@ def stock(user_id, portfolio_id):
         value_bought = data['bought_price'] * data['quantity']
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
+        data['unit_gain'] = round(data['closing']-data['bought_price'], 2)
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
@@ -275,12 +276,12 @@ def createWatchlist(user_id, code):
 def watchlist_set(user_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    alert_high = int(data_dict['alert_high']['data'])
-    alert_low = int(data_dict['alert_low']['data'])
-    buy_high = int(data_dict['buy_high']['data'])
-    buy_low = int(data_dict['buy_low']['data'])
-    sell_high = int(data_dict['sell_high']['data'])
-    sell_low = int(data_dict['sell_low']['data'])
+    alert_high = float(data_dict['alert_high']['data'])
+    alert_low = float(data_dict['alert_low']['data'])
+    buy_high = float(data_dict['buy_high']['data'])
+    buy_low = float(data_dict['buy_low']['data'])
+    sell_high = float(data_dict['sell_high']['data'])
+    sell_low = float(data_dict['sell_low']['data'])
 
     set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
     wl = get_wl(user_id)

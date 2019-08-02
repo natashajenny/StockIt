@@ -155,9 +155,9 @@ export class PurePortfolio extends React.Component {
           <h1> Portfolio </h1>
           <div style={{ flex: "1" }} />
           {netGain >= 0 ? (
-            <h1 style={{ color: "green" }}> +${netGain} </h1>
+            <h1 style={{ color: "green" }}>Net Gain = +${netGain} </h1>
           ) : (
-            <h1 style={{ color: "red" }}> -${-netGain} </h1>
+            <h1 style={{ color: "red" }}>Net Loss = -${-netGain} </h1>
           )}
         </div>
         {selectedPortfolio && (
