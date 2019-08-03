@@ -348,12 +348,3 @@ def all_users():
     user_schema = UserSchema(many=True)
     output = user_schema.dump(users).data
     return jsonify({'users' : output})
-
-
-# @app.route('/allports', methods=['GET'])
-# def all_ports():
-#     ports = get_portfolios(16)
-#     portfolio_schema = PortfolioSchema(many=True)
-#     output = portfolio_schema.dump(ports).data
-#     return jsonify({'portfolios' : output})
-
