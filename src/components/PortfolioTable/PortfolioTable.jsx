@@ -176,11 +176,12 @@ class PurePortfolioTable extends React.Component {
                 <TableCell align="center">Code</TableCell>
                 <TableCell align="center">Purchase Price&nbsp;($)</TableCell>
                 <TableCell align="center">Current Price&nbsp;($)</TableCell>
-                <TableCell align="center">Change&nbsp;($)</TableCell>
-                <TableCell align="center">Change&nbsp;(%)</TableCell>
-                <TableCell align="center">High&nbsp;</TableCell>
-                <TableCell align="center">Low&nbsp;</TableCell>
-                <TableCell align="center">Stock Gain&nbsp;</TableCell>
+                <TableCell align="center">Daily Change&nbsp;($)</TableCell>
+                <TableCell align="center">Daily Change&nbsp;(%)</TableCell>
+                <TableCell align="center">Daily High&nbsp;($)</TableCell>
+                <TableCell align="center">Daily Low&nbsp;($)</TableCell>
+                <TableCell align="center">Unit Gain(Loss)&nbsp;($)</TableCell>
+                <TableCell align="center">Total Gain(Loss)&nbsp;($)</TableCell>
                 <TableCell align="center">Quantity&nbsp;</TableCell>
               </TableRow>
             </TableHead>
@@ -251,6 +252,17 @@ class PurePortfolioTable extends React.Component {
                     </TableCell>
                     <TableCell align="center">{row.high}</TableCell>
                     <TableCell align="center">{row.low}</TableCell>
+                    <TableCell align="center">
+                      {row.unit_gain >= 0 ? (
+                        <Typography variant="body2" style={{ color: "green" }}>
+                          {row.unit_gain}
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2" style={{ color: "red" }}>
+                          {row.unit_gain}
+                        </Typography>
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       {row.stock_gain >= 0 ? (
                         <Typography variant="body2" style={{ color: "green" }}>
