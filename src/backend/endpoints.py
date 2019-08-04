@@ -159,6 +159,7 @@ def stock(user_id, portfolio_id):
         value_bought = data['bought_price'] * data['quantity']
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
+        data['unit_gain'] = round(data['closing']-data['bought_price'], 2)
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
@@ -275,12 +276,12 @@ def createWatchlist(user_id, code):
 def watchlist_set(user_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    alert_high = data_dict['alert_high']['data']
-    alert_low = data_dict['alert_low']['data']
-    buy_high = data_dict['buy_high']['data']
-    buy_low = data_dict['buy_low']['data']
-    sell_high = data_dict['sell_high']['data']
-    sell_low = data_dict['sell_low']['data']
+    alert_high = float(data_dict['alert_high']['data'])
+    alert_low = float(data_dict['alert_low']['data'])
+    buy_high = float(data_dict['buy_high']['data'])
+    buy_low = float(data_dict['buy_low']['data'])
+    sell_high = float(data_dict['sell_high']['data'])
+    sell_low = float(data_dict['sell_low']['data'])
 
     set_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
     wl = get_wl(user_id)
@@ -293,12 +294,12 @@ def watchlist_set(user_id, code):
 def watchlist_update(user_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    alert_high = data_dict['alert_high']['data']
-    alert_low = data_dict['alert_low']['data']
-    buy_high = data_dict['buy_high']['data']
-    buy_low = data_dict['buy_low']['data']
-    sell_high = data_dict['sell_high']['data']
-    sell_low = data_dict['sell_low']['data']
+    alert_high = data_dict['alert_high']
+    alert_low = data_dict['alert_low']
+    buy_high = data_dict['buy_high']
+    buy_low = data_dict['buy_low']
+    sell_high = data_dict['sell_high']
+    sell_low = data_dict['sell_low']
 
     update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_high, sell_low)
     wl = get_wl(user_id)
@@ -323,11 +324,11 @@ def bottom_ten():
 
 
 @app.route('/user/<int:user_id>/delete_wl/<string:code>', methods=['DELETE'])        
-def delete_wl(user_id, code):
+def watchlist_delete(user_id, code):
     delete_wl(user_id, code)
 
-@app.route('/grapher/<type:string>/<start_date:string>/<end_date:string>', methods=['GET'])
-def grapher(type, stock, start_date, end_date):
+@app.route('/grapher/<graph_type:string>/<start_date:string>/<end_date:string>', methods=['GET'])
+def grapher(graph_type, stock, start_date, end_date):
     return {
         'world': get_plot([stock], indicies=['world'],start=start_date, finish=end_date),
         'sma': get_plot([stock], closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date),
@@ -344,7 +345,7 @@ def grapher(type, stock, start_date, end_date):
         'chaikin': get_plot([stock], chaikin=1, size=(12, 2), start=start_date, finish=end_date),
         'mom': get_plot([stock], mom=1, size=(12, 2), start=start_date, finish=end_date),
         'dp_pb': get_plot([stock], dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
-    }.get(type,get_plot([stock], closing=1, start=start_date, finish=end_date))
+    }.get(graph_type,get_plot([stock], closing=1, start=start_date, finish=end_date))
 
 
 @app.route('/logout')
@@ -364,12 +365,3 @@ def all_users():
     user_schema = UserSchema(many=True)
     output = user_schema.dump(users).data
     return jsonify({'users' : output})
-
-
-# @app.route('/allports', methods=['GET'])
-# def all_ports():
-#     ports = get_portfolios(16)
-#     portfolio_schema = PortfolioSchema(many=True)
-#     output = portfolio_schema.dump(ports).data
-#     return jsonify({'portfolios' : output})
-

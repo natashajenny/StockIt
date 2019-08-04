@@ -13,16 +13,25 @@ export class PureWatchlist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAddingStock: false
+      isAddingStock: false,
+      openAddStockModal: false,
+      watchlist_data: null
     };
   }
 
   handleAddStock = (e, stock) => {
     e.preventDefault();
     this.apiClient
-      .addWatchlistStock(this.context.user.user_id, stock.code, stock)
+      .addWatchlist(this.context.user.user_id, stock.code.data)
       .then(data => {
-        this.closeAddStockModal();
+        this.apiClient
+          .addWatchlistStock(this.context.user.user_id, stock.code.data, stock)
+          .then(data => {
+            this.setState({
+              watchlist_data: data.wl_stocks
+            });
+            this.closeAddStockModal();
+          });
       });
   };
 
@@ -38,35 +47,56 @@ export class PureWatchlist extends React.Component {
     });
   };
 
+  handleRefreshClick = () => {
+    this.apiClient.getWatchlistStocks(this.context.user.user_id).then(data => {
+      this.setState({
+        watchlist_data: data.wl_stocks
+      });
+    });
+  };
+
+  handleChangeWatchlistData = watchlist_data => {
+    this.setState({
+      watchlist_data: watchlist_data
+    });
+  };
+
   componentDidMount = () => {
     this.apiClient = new APIClient();
     this.context.user &&
       this.apiClient
         .getWatchlistStocks(this.context.user.user_id)
         .then(data => {
-          console.log(data.wl_stocks);
           this.setState({
-            Watchlists: data.wl_stocks
+            watchlist_data: data.wl_stocks
           });
         });
   };
+
   render() {
     const { classes } = this.props;
+    const { watchlist_data } = this.state;
     return (
       <div className={classes.root}>
-        <h1> Watchlist </h1>
-        <div className={classes.WatchlistSubheading}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.addStockButton}
-            onClick={this.handleAddStockModalClick}
-          >
-            <Add />
-            Add New Stock
-          </Button>
+        <div style={{ display: "flex", width: "100%" }}>
+          <h1> Watchlist </h1>
+          <div style={{ flex: "1" }} />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.addStockButton}
+              onClick={this.handleAddStockModalClick}
+            >
+              <Add />
+              Add New Stock
+            </Button>
+          </div>
         </div>
-        <WatchlistTable WatchlistId={this.state.WatchlistId} />
+        <WatchlistTable
+          watchlist_data={watchlist_data}
+          handleChangeWatchlistData={this.handleChangeWatchlistData}
+        />
         {this.state.openAddStockModal && (
           <AddWatchlistStockModal
             onClose={this.closeAddStockModal}

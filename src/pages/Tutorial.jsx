@@ -1,7 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { styles } from './styles';
-// import {AddStocks } from '../components/AddStocks/AddStocks';
 import  tut1 from '../static/images/tut1.png';
 import  tut2 from '../static/images/tut2.png';
 import  tut3 from '../static/images/tut3.png';
@@ -41,10 +40,13 @@ import { StockRank } from "../components/StockRank/StockRank";
                     <h2 >5. Predicted Data vs Stock Performance </h2>
                     <p>write some stuff</p>
                         <img src={tut5} alt='heatmap'/>
+<<<<<<< HEAD
                         <Grapher />
                 {/* <Stocklist  items={items}/> */}
                 {/* <StockDrawer /> */}
                 {/* <AddStocks />    */}
+=======
+>>>>>>> 5725d4876087209f51345501462b817b8e4d36cc
             </div>
         );  
     // }

@@ -1,75 +1,167 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-// import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-// import { SearchAutoFill } from '../SearchAutoFill/SearchAutoFill';
-import { UserContext } from '../../UserContext';
-import Button from '@material-ui/core/Button';
+import React from "react";
+import { Select, Drawer, IconButton, Typography } from "@material-ui/core";
+import { Close, CheckCircle } from "@material-ui/icons";
+import { withStyles } from "@material-ui/core/styles";
 
+import { UserContext } from "../../UserContext";
+import { styles } from "./styles";
+import APIClient from "../../api/apiClient.js";
+import { AddStockToWatchlist } from "./AddStockToWatchlist";
+import { AddStockToPortfolio } from "./AddStockToPortfolio";
 
-
-
-
-const useStyles = makeStyles({
-    list: {
-      width: 250,
-    },
-    fullList: {
-      width: 'auto',
-    },
-  });
-
- function TempDrawer() {
-    const classes = useStyles();
-    const [state, setState] = React.useState({
-      right: false,
-    });
-  
-    const toggleDrawer = (side, open) => event => {
-      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-        return;
-      }
-  
-      setState({ ...state, [side]: open });
+class PureStockDrawer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedPortfolio: null,
+      portfolios: null,
+      addedStock: false
     };
-  
-    const addClick = (text, index) =>{
-        console.log("text:" + text + " index: " + index );
+  }
+
+  handleSelectChange = event => {
+    for (let node of event.target.children) {
+      if (node.value === event.target.value) {
+        this.setState({
+          selectedPortfolio: this.state.portfolios.filter(
+            portfolio => portfolio.title === event.target.value
+          )[0]
+        });
+      }
     }
-    const sideList = side => (
-      <div
-        className={classes.list}
-        role="presentation"
-        onClick={toggleDrawer(side, false)}
-        onKeyDown={toggleDrawer(side, false)}
-      >
-        <List>
-          {['Add To Portfolio', 'Add to Watchlist'].map((text, index) => (
-            <ListItem button key={text} onClick={addClick(text,index)}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-       </div>
-    );
-  
+  };
+
+  handleAddStockToPortfolio = (e, stock) => {
+    e.preventDefault();
+    this.apiClient
+      .addPortfolioStock(
+        this.context.user.user_id,
+        this.state.selectedPortfolio.portfolio_id,
+        stock
+      )
+      .then(data => {
+        this.setState({
+          addedStock: true
+        });
+      });
+  };
+
+  handleAddStockToWatchlist = (e, stock) => {
+    e.preventDefault();
+    this.apiClient
+      .addWatchlist(this.context.user.user_id, stock.code.data)
+      .then(data => {
+        this.apiClient
+          .addWatchlistStock(this.context.user.user_id, stock.code.data, stock)
+          .then(data => {
+            this.setState({
+              addedStock: true
+            });
+          });
+      });
+  };
+
+  componentWillMount = () => {
+    this.apiClient = new APIClient();
+    this.apiClient.getPortfolios(this.context.user.user_id).then(data => {
+      data.portfolios.push({ title: "Watchlist", portfolio_id: "0" });
+      this.setState({
+        portfolios: data.portfolios
+      });
+      this.setState({
+        selectedPortfolio: data.portfolios[0]
+      });
+    });
+  };
+
+  render() {
+    const { classes, isOpen, onClose, stock } = this.props;
+    const { portfolios, addedStock, selectedPortfolio } = this.state;
     return (
-      <div>     
-        <Button onClick={toggleDrawer('right', true)} variant="contained" color="primary">Add Stock</Button>
-        <Drawer anchor="right" open={state.right} onClose={toggleDrawer('right', false)}>
-          {sideList('right')}
+      <div>
+        <Drawer
+          className={classes.drawer}
+          classes={{ paper: classes.drawerPaper }}
+          anchor="right"
+          open={isOpen}
+          onClose={onClose}
+          ModalProps={{
+            keepMounted: true
+          }}
+        >
+          <div className={classes.toolbar} />
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <Close />
+          </IconButton>
+          <div className={classes.root}>
+            <h1> Add Stock </h1>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                width: "100%"
+              }}
+            >
+              <Typography variant="body1">to </Typography>
+              <Select
+                native
+                value={this.state.portfolioName}
+                onChange={this.handleSelectChange}
+                inputProps={{
+                  name: "portfolioName"
+                }}
+                style={{
+                  width: "70%"
+                }}
+              >
+                {portfolios &&
+                  portfolios.map(portfolio => (
+                    <option
+                      key={portfolio.portfolio_id}
+                      data-id={portfolio.portfolio_id}
+                      value={portfolio.title}
+                    >
+                      {portfolio.title}
+                    </option>
+                  ))}
+              </Select>
+            </div>
+            {selectedPortfolio && selectedPortfolio.title === "Watchlist" ? (
+              <AddStockToWatchlist
+                onSubmit={this.handleAddStockToWatchlist}
+                stock={stock}
+              />
+            ) : (
+              <AddStockToPortfolio
+                onSubmit={this.handleAddStockToPortfolio}
+                stock={stock}
+              />
+            )}
+            {addedStock && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: "15px"
+                }}
+              >
+                <CheckCircle style={{ color: "green" }} />
+                <Typography variant="caption" style={{ color: "green" }}>
+                  The stock has been successfully added to{" "}
+                  {selectedPortfolio.title}
+                </Typography>
+              </div>
+            )}
+          </div>
         </Drawer>
       </div>
     );
   }
-  
+}
 
-  TempDrawer.contextType = UserContext;
-  export const StockDrawer = TempDrawer;
+PureStockDrawer.contextType = UserContext;
+
+export const StockDrawer = withStyles(styles)(PureStockDrawer);
