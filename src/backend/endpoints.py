@@ -326,7 +326,7 @@ def bottom_ten():
 def delete_wl(user_id, code):
     delete_wl(user_id, code)
 
-@app.route('/grapher/<type:string>/<start_date:string>/<end_date:string>', methods=['GET'])
+@app.route('/grapher/<string:type>/<string:start_date>/<string:end_date>', methods=['GET'])
 def grapher(type, stock, start_date, end_date):
     return {
         'world': get_plot([stock], indicies=['world'],start=start_date, finish=end_date),
