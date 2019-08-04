@@ -1,3 +1,4 @@
+import base64
 import copy
 import PIL
 import warnings
@@ -5,9 +6,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from model import Company, StockLog, IndexLog, PerformanceLog
-from model import start_engine
+from model import *
 from datetime import date, datetime
+from io import BytesIO
 
 warnings.filterwarnings("ignore")
 sns.set()
@@ -193,8 +194,11 @@ def get_plot(
 
     if not micro:
         plt.legend()
-    plt.savefig('plot.png', format='png')
-    plt.close()     
-    img = PIL.Image.open('plot.png')
-    return img
+
+    fig_file = BytesIO()
+    plt.savefig(fig_file, format='png')
+    fig_file.seek(0)
+    fig_png = base64.b64encode(fig_file.getvalue())
+    result = str(fig_png)[2:-1]
+    return result
 
