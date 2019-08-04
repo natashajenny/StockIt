@@ -345,7 +345,7 @@ def grapher(type, stock, start_date, end_date):
         'chaikin': get_plot([stock], chaikin=1, size=(12, 2), start=start_date, finish=end_date),
         'mom': get_plot([stock], mom=1, size=(12, 2), start=start_date, finish=end_date),
         'dp_pb': get_plot([stock], dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
-    }.get(graph_type,get_plot([stock], closing=1, start=start_date, finish=end_date))
+    }.get(type,get_plot([stock], closing=1, start=start_date, finish=end_date))
 
 
 @app.route('/logout')

@@ -40,13 +40,10 @@ import { StockRank } from "../components/StockRank/StockRank";
                     <h2 >5. Predicted Data vs Stock Performance </h2>
                     <p>write some stuff</p>
                         <img src={tut5} alt='heatmap'/>
-<<<<<<< HEAD
                         <Grapher />
                 {/* <Stocklist  items={items}/> */}
                 {/* <StockDrawer /> */}
                 {/* <AddStocks />    */}
-=======
->>>>>>> 5725d4876087209f51345501462b817b8e4d36cc
             </div>
         );  
     // }

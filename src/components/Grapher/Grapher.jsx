@@ -17,7 +17,7 @@ import { Carousel } from 'react-responsive-carousel'
     this.state = {
       images: null,
       type: 'world',
-      stocks: 'ABC',
+      stocks: 'CBA',
       sdate:"2009-07-01",
       edate:"2019-07-01",
     }
@@ -32,7 +32,8 @@ import { Carousel } from 'react-responsive-carousel'
 
     render () {
         const { images } = this.state
-    
+      const {type,stocks,sdate,edate} = this.state;
+      console.log(type + stocks+ sdate+ edate);
         if (!images) return <div>Images are not fetched yet!</div>
     
         // #3. Finally, render the `<Carousel />` with the state's images.
@@ -40,7 +41,7 @@ import { Carousel } from 'react-responsive-carousel'
           {
             images.map( image => {
               return <div>
-                <img src={ image.path } />
+                <img src={ image.path } alt='graph' />
                 <p className="legend">{ image.name }</p>
               </div>
             })
