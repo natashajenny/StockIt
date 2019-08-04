@@ -25,10 +25,9 @@ class PureWatchlistTable extends React.Component {
       selectedStock: null,
       isEditable: false,
       stocks: null,
-      Watchlist_data: null
+      watchlist_data: null
     };
     this.formConfig = [
-      "company",
       "alert_high",
       "alert_low",
       "buy_high",
@@ -46,13 +45,14 @@ class PureWatchlistTable extends React.Component {
         this.state.selectedStock.company,
         this.state.selectedStock
       )
-      .then(data =>
+      .then(data => {
         this.setState({
-          Watchlist_data: data.Watchlist_stocks,
+          watchlist_data: data.wl_stocks,
           isEditable: false,
           selectedStock: null
-        })
-      );
+        });
+        this.props.handleChangeWatchlistData(data.wl_stocks);
+      });
   };
 
   handleCancelChange = () => {
@@ -92,13 +92,14 @@ class PureWatchlistTable extends React.Component {
         this.context.user.user_id,
         this.state.selectedStock.company
       )
-      .then(data =>
+      .then(data => {
         this.setState({
-          Watchlist_data: data.Watchlist_stocks,
-          isDeleteModalOpen: false,
-          selectedStock: null
-        })
-      );
+          watchlist_data: data.wl_stocks,
+          selectedStock: null,
+          isDeleteModalOpen: false
+        });
+        this.props.handleChangeWatchlistData(data.wl_stocks);
+      });
   };
   closeDeleteModal = () => {
     this.setState({
@@ -108,41 +109,43 @@ class PureWatchlistTable extends React.Component {
 
   componentDidMount = () => {
     this.apiClient = new APIClient();
+    this.setState({
+      watchlist_data: this.props.watchlist_data
+    });
+  };
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    if (
+      nextProps.watchlist_data &&
+      this.state.watchlist_data &&
+      nextProps.watchlist_data.length === this.state.watchlist_data.length
+    ) {
+      if (nextState.isDeleteModalOpen !== this.state.isDeleteModalOpen) {
+        return true;
+      }
+      if (nextState.isEditable !== this.state.isEditable) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
+
+  componentDidUpdate = () => {
     this.context.user &&
       this.apiClient
         .getWatchlistStocks(this.context.user.user_id)
         .then(data => {
-          data.Watchlist_stocks !== {} &&
-            this.setState({
-              Watchlist_data: data.Watchlist_stocks
-            });
-        });
-  };
-
-  shouldComponentUpdate = nextState => {
-    if (nextState.watchlist_data === this.state.watchlist_data) {
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  componentDidUpdate = () => {
-    console.log("componentdidupdate");
-    this.context.user &&
-      this.apiClient
-        .getWatchlistStocks(this.context.user.user_id, this.props.WatchlistId)
-        .then(data => {
-          data.Watchlist_stocks !== {} &&
-            this.setState({
-              Watchlist_data: data.Watchlist_stocks
-            });
+          this.setState({
+            watchlist_data: data.wl_stocks
+          });
+          this.props.handleChangeWatchlistData(data.wl_stocks);
         });
   };
 
   render() {
     const { classes } = this.props;
-    const { selectedStock, Watchlist_data, isEditable } = this.state;
+    const { selectedStock, watchlist_data, isEditable } = this.state;
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -160,10 +163,9 @@ class PureWatchlistTable extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log(Watchlist_data)}
-              {Watchlist_data &&
-                Watchlist_data.length !== 0 &&
-                Watchlist_data.map(row => (
+              {watchlist_data &&
+                watchlist_data.length !== 0 &&
+                watchlist_data.map(row => (
                   <TableRow key={row.company}>
                     <TableCell className={classes.row}>
                       {isEditable && row.company === selectedStock.company ? (
@@ -193,11 +195,11 @@ class PureWatchlistTable extends React.Component {
                       <TableCell align="center">
                         {isEditable && row.company === selectedStock.company ? (
                           <Input
-                            defaultValue={row.fieldName}
+                            defaultValue={row[fieldName]}
                             onChange={e => this.handleInputChange(e, fieldName)}
                           />
                         ) : (
-                          row.fieldName
+                          row[fieldName]
                         )}
                       </TableCell>
                     ))}
@@ -209,7 +211,7 @@ class PureWatchlistTable extends React.Component {
         {this.state.isDeleteModalOpen && (
           <DeleteModal
             onClose={this.closeDeleteModal}
-            name={this.state.selectedStock.Code}
+            name={this.state.selectedStock.company}
             onDelete={this.delete}
           />
         )}

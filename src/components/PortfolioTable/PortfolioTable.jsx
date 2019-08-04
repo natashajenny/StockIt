@@ -96,9 +96,9 @@ class PurePortfolioTable extends React.Component {
         this.setState({
           portfolio_data: data.portfolio_stocks,
           selectedStock: null,
+          isDeleteModalOpen: false,
           netGain: data.net_gain
         });
-        this.closeDeleteModal();
         this.props.handleChangePortfolioData(
           data.portfolio_stocks,
           data.net_gain
@@ -131,14 +131,8 @@ class PurePortfolioTable extends React.Component {
         return true;
       }
       if (
-        nextState.portfolio_data &&
-        nextState.portfolio_data.length !== this.state.portfolio_data.length
-      ) {
-        return true;
-      }
-      if (
-        nextProps.portfolio_data &&
-        nextProps.portfolio_data.length !== this.state.portfolio_data.length
+        nextProps.netGain !== this.state.netGain ||
+        nextState.netGain !== this.state.netGain
       ) {
         return true;
       }
@@ -171,7 +165,7 @@ class PurePortfolioTable extends React.Component {
   render() {
     const { classes } = this.props;
     const { selectedStock, portfolio_data, isEditable } = this.state;
-    // console.log(this.state.portfolio_data);
+    // console.log(portfolio_data);
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -182,11 +176,12 @@ class PurePortfolioTable extends React.Component {
                 <TableCell align="center">Code</TableCell>
                 <TableCell align="center">Purchase Price&nbsp;($)</TableCell>
                 <TableCell align="center">Current Price&nbsp;($)</TableCell>
-                <TableCell align="center">Change&nbsp;($)</TableCell>
-                <TableCell align="center">Change&nbsp;(%)</TableCell>
-                <TableCell align="center">High&nbsp;</TableCell>
-                <TableCell align="center">Low&nbsp;</TableCell>
-                <TableCell align="center">Stock Gain&nbsp;</TableCell>
+                <TableCell align="center">Daily Change&nbsp;($)</TableCell>
+                <TableCell align="center">Daily Change&nbsp;(%)</TableCell>
+                <TableCell align="center">Daily High&nbsp;($)</TableCell>
+                <TableCell align="center">Daily Low&nbsp;($)</TableCell>
+                <TableCell align="center">Unit Gain(Loss)&nbsp;($)</TableCell>
+                <TableCell align="center">Total Gain(Loss)&nbsp;($)</TableCell>
                 <TableCell align="center">Quantity&nbsp;</TableCell>
               </TableRow>
             </TableHead>
@@ -258,6 +253,17 @@ class PurePortfolioTable extends React.Component {
                     <TableCell align="center">{row.high}</TableCell>
                     <TableCell align="center">{row.low}</TableCell>
                     <TableCell align="center">
+                      {row.unit_gain >= 0 ? (
+                        <Typography variant="body2" style={{ color: "green" }}>
+                          {row.unit_gain}
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2" style={{ color: "red" }}>
+                          {row.unit_gain}
+                        </Typography>
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
                       {row.stock_gain >= 0 ? (
                         <Typography variant="body2" style={{ color: "green" }}>
                           {row.stock_gain}
@@ -286,7 +292,7 @@ class PurePortfolioTable extends React.Component {
         {this.state.isDeleteModalOpen && (
           <DeleteModal
             onClose={this.closeDeleteModal}
-            name={this.state.selectedStock.Code}
+            name={this.state.selectedStock.company}
             onDelete={this.delete}
           />
         )}

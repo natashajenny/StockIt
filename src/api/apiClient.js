@@ -33,7 +33,7 @@ class APIClient {
   }
 
   addWatchlist(userId, code) {
-    return this.perform("post", `/user/${userId}/watchlist`, code);
+    return this.perform("post", `/user/${userId}/watchlist/${code}`);
   }
 
   getWatchlist(userId, code) {
@@ -68,12 +68,10 @@ class APIClient {
   }
 
   addWatchlistStock(userId, code, stock) {
-    return this.perform("post", `/user/${userId}/watchlist/${code}`).then(
-      this.perform(
-        "post",
-        `/user/${userId}/watchlist/${code}/set_alerts`,
-        stock
-      )
+    return this.perform(
+      "post",
+      `/user/${userId}/watchlist/${code}/set_alerts`,
+      stock
     );
   }
 
@@ -98,7 +96,7 @@ class APIClient {
   }
 
   deleteWatchlistStock(userId, code) {
-    return this.perform("delete", `/user/${userId}/watchlist/${code}`);
+    return this.perform("delete", `/user/${userId}/delete_wl/${code}`);
   }
 
   async perform(method, resource, data) {
@@ -112,6 +110,10 @@ class APIClient {
     }).then(resp => {
       return resp.data ? resp.data : [];
     });
+  }
+
+  getGraph(type, stocks, start_date, end_date){
+    return this.perform("get","/grapher",type, stocks, start_date, end_date );
   }
 }
 
