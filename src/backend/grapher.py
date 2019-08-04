@@ -185,11 +185,6 @@ def get_plot(
             else:
                 new[idx] = (new[idx] - new[idx].mean()) / new[idx].std()
             plt.plot(new.index, new[idx], label='%s index' % idx.capitalize())
-            print('new.index')
-            print(new.index)
-            print('new[idx]')
-            print(new[idx])
-            print(idx.capitalize())
         if len(companies) > 0:
             if norm == 'minmax':
                 df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
