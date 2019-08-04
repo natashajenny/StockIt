@@ -162,31 +162,7 @@ def stock(user_id, portfolio_id):
         data['unit_gain'] = round(data['closing']-data['bought_price'], 2)
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
-    return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
-
-
-# @app.route('/test', methods=['GET'])
-# def testok():
-#     logs = get_logs(16)
-#     log_schema = StockLogSchema(many=True)
-#     output = log_schema.dump(logs).data
-#     net_gain = 0
-#     for data in output:
-#         data['bought_price'] = get_bought_price(16, data['company'])
-#         data['quantity'] = get_quantity(16, data['company'])
-#         prev_date = datetime.today() - timedelta(days=1)
-#         prev_price = get_stock_price(prev_date, data['company'])
-#         data['prev_price'] = prev_price
-#         data['change'] = round(data['closing'] - prev_price, 2)
-#         data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
-#         data['value_bought'] = data['bought_price'] * data['quantity']
-#         data['value_if_sell'] = data['closing'] * data['quantity']
-#         data['stock_gain'] = round(data['value_if_sell'] - data['value_bought'], 2)
-#         net_gain += data['value_if_sell'] - data['value_bought']
-#         data['net_gain'] = net_gain
-#     net_gain = round(net_gain, 2)
-#     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
-   
+    return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})   
 
 @app.route('/company/<string:code>', methods=['GET'])
 def stock_details(code):
@@ -327,7 +303,7 @@ def bottom_ten():
 def watchlist_delete(user_id, code):
     delete_wl(user_id, code)
 
-@app.route('/grapher/<string:type>/<string:start_date>/<string:end_date>', methods=['GET'])
+@app.route('/grapher/<string:type>/<string:stock>/<string:start_date>/<string:end_date>', methods=['GET'])
 def grapher(type, stock, start_date, end_date):
     return {
         'world': get_plot([stock], indicies=['world'],start=start_date, finish=end_date),
@@ -345,7 +321,7 @@ def grapher(type, stock, start_date, end_date):
         'chaikin': get_plot([stock], chaikin=1, size=(12, 2), start=start_date, finish=end_date),
         'mom': get_plot([stock], mom=1, size=(12, 2), start=start_date, finish=end_date),
         'dp_pb': get_plot([stock], dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
-    }.get(graph_type,get_plot([stock], closing=1, start=start_date, finish=end_date))
+    }.get(type,get_plot([stock], closing=1, start=start_date, finish=end_date))
 
 
 @app.route('/logout')
