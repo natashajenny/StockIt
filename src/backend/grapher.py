@@ -5,8 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from model import Company, StockLog, IndexLog, PerformanceLog
-from model import start_engine
+from model import *
 from datetime import date, datetime
 
 warnings.filterwarnings("ignore")
