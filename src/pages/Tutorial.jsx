@@ -7,6 +7,7 @@ import  tut2 from '../static/images/tut2.png';
 import  tut3 from '../static/images/tut3.png';
 import  tut4 from '../static/images/tut4.png';
 import  tut5 from '../static/images/tut5.png';
+import {Grapher} from '../components/Grapher/Grapher';
 import { StockRank } from "../components/StockRank/StockRank";
  class PureTutorial extends React.Component {
 
@@ -21,7 +22,8 @@ import { StockRank } from "../components/StockRank/StockRank";
         return (
        
             <div text-align='center' >
-                <StockRank />
+                    <Grapher/>
+                {/* <StockRank /> */}
                 <h1> Tutorial </h1>
                 <h1> How do we predict stock prices? </h1>
                     <h2 >1. Calculate Technical Indicators </h2>
@@ -39,6 +41,7 @@ import { StockRank } from "../components/StockRank/StockRank";
                     <h2 >5. Predicted Data vs Stock Performance </h2>
                     <p>write some stuff</p>
                         <img src={tut5} alt='heatmap'/>
+                        <Grapher />
                 {/* <Stocklist  items={items}/> */}
                 {/* <StockDrawer /> */}
                 {/* <AddStocks />    */}

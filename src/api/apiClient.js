@@ -113,6 +113,10 @@ class APIClient {
       return resp.data ? resp.data : [];
     });
   }
+
+  getGraph(type, stocks, start_date, end_date){
+    return this.perform("get","/grapher",type, stocks, start_date, end_date );
+  }
 }
 
 export default APIClient;
