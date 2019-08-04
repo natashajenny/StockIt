@@ -7,6 +7,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
 from functions import *
+from grapher import *
 
 app = Flask(__name__)
 CORS(app)
@@ -47,7 +48,6 @@ class PortfolioLogSchema(ma.ModelSchema):
 class WatchlistSchema(ma.ModelSchema):
     class Meta:
         model = Watchlist
-
 
 @app.route('/')
 def welcome():
@@ -330,6 +330,26 @@ def watchlist_delete(user_id, code):
     wl_schema = WatchlistSchema(many=True)
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
+
+@app.route('/grapher', methods=['GET'])
+def grapher(type, stocks, start_date, end_date):
+    return {
+        'world': get_plot([stock], indicies=['world'],start=start_date, finish=end_date),
+        'sma': get_plot([stock], closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date),
+        'ema': get_plot([stock], closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date),
+        'percentage_change': get_plot([stock], size=(12, 2), change=1, start=start_date, finish=end_date),
+        'volume_change': get_plot([stock], volume=1, size=(12, 2), start=start_date, finish=end_date),
+        'macd': get_plot([stock], macd=1, size=(12, 2), start=start_date, finish=end_date),
+        'bb': get_plot([stock], bb=1, size=(12, 2), start=start_date, finish=end_date),
+        'stoch': get_plot([stock], stoch=1, size=(12, 2), start=start_date, finish=end_date),
+        'rsi': get_plot([stock], rsi=1, size=(12, 2), start=start_date, finish=end_date),
+        'adx': get_plot([stock], adx=1, size=(12, 2), start=start_date, finish=end_date),
+        'cci': get_plot([stock], cci=1, size=(12, 2), start=start_date, finish=end_date),
+        'aroon': get_plot([stock], aroon=1, size=(12, 2), start=start_date, finish=end_date),
+        'chaikin': get_plot([stock], chaikin=1, size=(12, 2), start=start_date, finish=end_date),
+        'mom': get_plot([stock], mom=1, size=(12, 2), start=start_date, finish=end_date),
+        'dp_pb': get_plot([stock], dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+    }.get(type,get_plot([stock], start=start_date, finish=end_date))
 
 @app.route('/logout')
 def logout():
