@@ -324,12 +324,9 @@ def grapher(type, stock, start_date, end_date):
         'mom': get_plot([stock], mom=1, size=(12, 2), start=start_date, finish=end_date),
         'dp_pb': get_plot([stock], dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
     }.get(type,get_plot([stock], closing=1, start=start_date, finish=end_date))
-<<<<<<< HEAD
-=======
 
     return render_template('graph.html', result=graph)
 
->>>>>>> 0d05554ad291674a9cf5e5164f3d33bb4f2f1ad2
 
 
 @app.route('/logout')
