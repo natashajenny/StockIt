@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   IconButton,
   Table,
   TableBody,
@@ -17,6 +18,7 @@ import { styles } from "./styles";
 import { DeleteModal } from "../forms";
 import { UserContext } from "../../UserContext";
 import APIClient from "../../api/apiClient.js";
+import { Grapher } from "../Grapher";
 
 class PurePortfolioTable extends React.Component {
   constructor(props) {
@@ -28,7 +30,9 @@ class PurePortfolioTable extends React.Component {
       stocks: null,
       portfolio_data: null,
       portfolioId: "",
-      netGain: 0
+      netGain: 0,
+      openPrediction: false,
+      graphData: ""
     };
   }
 
@@ -77,15 +81,36 @@ class PurePortfolioTable extends React.Component {
       isEditable: true
     });
   };
+
+  handleOpenPrediction = row => {
+    const dates = this.getPredictionDates(new Date());
+    this.apiClient
+      .getGraph("else", 0, row.company, dates[0], dates[1])
+      .then(data => {
+        this.setState({
+          selectedStock: row,
+          openPrediction: true,
+          graphData: data.result
+        });
+      });
+  };
+
+  handleClosePrediction = () => {
+    this.setState({
+      selectedStock: null,
+      openPrediction: false,
+      graphData: ""
+    });
+  };
+
   openDeleteModal = row => {
-    // console.log("::openDeleteModal::");
     this.setState({
       isDeleteModalOpen: true,
       selectedStock: row
     });
   };
+
   delete = () => {
-    // console.log("in delete!");
     this.apiClient
       .deletePortfolioStock(
         this.context.user.user_id,
@@ -121,8 +146,30 @@ class PurePortfolioTable extends React.Component {
     });
   };
 
+  getPredictionDates = calendar_date => {
+    var month = calendar_date.getMonth();
+    var start_month = "";
+    var end_month = "";
+    if (month < 10) {
+      start_month = ("0" + month).slice(-2);
+      if (month < 9) end_month = ("0" + (month + 1)).slice(-2);
+      else end_month = month + 1;
+    } else start_month = month;
+
+    var date = calendar_date.getDate();
+    if (date < 10) date = ("0" + date).slice(-2);
+
+    const start_year = calendar_date.getFullYear();
+    var end_year = start_year;
+    if (month === 12) end_year = end_year + 1;
+
+    return [
+      start_year + "-" + start_month + "-" + date,
+      end_year + "-" + end_month + "-" + date
+    ];
+  };
+
   shouldComponentUpdate = (nextProps, nextState) => {
-    // nextProps.portfolio_data && console.log(nextProps.portfolio_data.length);
     if (nextProps.portfolioId === this.state.portfolioId) {
       if (nextState.isDeleteModalOpen !== this.state.isDeleteModalOpen) {
         return true;
@@ -136,6 +183,9 @@ class PurePortfolioTable extends React.Component {
       ) {
         return true;
       }
+      if (nextState.graphData !== this.state.graphData) {
+        return true;
+      }
       return false;
     } else {
       return true;
@@ -143,12 +193,10 @@ class PurePortfolioTable extends React.Component {
   };
 
   componentDidUpdate = () => {
-    // console.log("componentdidupdate");
     this.context.user &&
       this.apiClient
         .getPortfolioStocks(this.context.user.user_id, this.props.portfolioId)
         .then(data => {
-          // console.log(data.portfolio_stocks);
           data.portfolio_stocks !== {} &&
             this.setState({
               portfolio_data: data.portfolio_stocks,
@@ -165,35 +213,61 @@ class PurePortfolioTable extends React.Component {
   render() {
     const { classes } = this.props;
     const { selectedStock, portfolio_data, isEditable } = this.state;
-    // console.log(portfolio_data);
     return (
       <React.Fragment>
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Actions</TableCell>
-                <TableCell align="center">Code</TableCell>
-                <TableCell align="center">Purchase Price&nbsp;($)</TableCell>
-                <TableCell align="center">Current Price&nbsp;($)</TableCell>
-                <TableCell align="center">Daily Change&nbsp;($)</TableCell>
-                <TableCell align="center">Daily Change&nbsp;(%)</TableCell>
-                <TableCell align="center">Daily High&nbsp;($)</TableCell>
-                <TableCell align="center">Daily Low&nbsp;($)</TableCell>
-                <TableCell align="center">Unit Gain(Loss)&nbsp;($)</TableCell>
-                <TableCell align="center">Total Gain(Loss)&nbsp;($)</TableCell>
-                <TableCell align="center">Quantity&nbsp;</TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Actions
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Code
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Purchase Price&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Current Price&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Daily Change&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Daily Change&nbsp;(%)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Daily High&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Daily Low&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Unit Gain&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Total Gain&nbsp;($)
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Quantity&nbsp;
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Trend
+                </TableCell>
+                <TableCell align="center" className={classes.cell}>
+                  Prediction
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {console.log(portfolio_data)} */}
               {portfolio_data &&
                 portfolio_data.length !== 0 &&
                 portfolio_data.map(row => (
-                  <TableRow key={row.company}>
-                    <TableCell className={classes.row}>
+                  <TableRow className={classes.row} key={row.company}>
+                    <TableCell className={classes.cell}>
                       {isEditable && row.company === selectedStock.company ? (
-                        <div>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
                           <IconButton onClick={this.handleSubmitChange}>
                             <Check />
                           </IconButton>
@@ -202,7 +276,7 @@ class PurePortfolioTable extends React.Component {
                           </IconButton>
                         </div>
                       ) : (
-                        <div>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
                           <IconButton
                             onClick={() => this.handleRowEditClick(row)}
                           >
@@ -214,8 +288,10 @@ class PurePortfolioTable extends React.Component {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell align="center">{row.company}</TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.cell} align="center">
+                      {row.company}
+                    </TableCell>
+                    <TableCell className={classes.cell} align="center">
                       {isEditable && row.company === selectedStock.company ? (
                         <Input
                           defaultValue={row.bought_price}
@@ -227,8 +303,10 @@ class PurePortfolioTable extends React.Component {
                         row.bought_price
                       )}
                     </TableCell>
-                    <TableCell align="center">{row.adjusted}</TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.cell} align="center">
+                      {row.adjusted}
+                    </TableCell>
+                    <TableCell className={classes.cell} align="center">
                       {row.change >= 0 ? (
                         <Typography variant="body2" style={{ color: "green" }}>
                           {row.change}
@@ -239,7 +317,7 @@ class PurePortfolioTable extends React.Component {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.cell} align="center">
                       {row.change_pct >= 0 ? (
                         <Typography variant="body2" style={{ color: "green" }}>
                           {(row.change_pct * 100).toFixed(2)}
@@ -250,9 +328,13 @@ class PurePortfolioTable extends React.Component {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell align="center">{row.high}</TableCell>
-                    <TableCell align="center">{row.low}</TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.cell} align="center">
+                      {row.high}
+                    </TableCell>
+                    <TableCell className={classes.cell} align="center">
+                      {row.low}
+                    </TableCell>
+                    <TableCell className={classes.cell} align="center">
                       {row.unit_gain >= 0 ? (
                         <Typography variant="body2" style={{ color: "green" }}>
                           {row.unit_gain}
@@ -263,7 +345,7 @@ class PurePortfolioTable extends React.Component {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.cell} align="center">
                       {row.stock_gain >= 0 ? (
                         <Typography variant="body2" style={{ color: "green" }}>
                           {row.stock_gain}
@@ -274,7 +356,7 @@ class PurePortfolioTable extends React.Component {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell className={classes.cell} align="center">
                       {isEditable && row.StockID === selectedStock.StockID ? (
                         <Input
                           defaultValue={row.quantity}
@@ -284,11 +366,42 @@ class PurePortfolioTable extends React.Component {
                         row.quantity
                       )}
                     </TableCell>
+                    <TableCell className={classes.cell} align="center">
+                      <Grapher data={row.trend} />
+                    </TableCell>
+                    <TableCell className={classes.cell} align="center">
+                      <Button
+                        color="primary"
+                        onClick={() => this.handleOpenPrediction(row)}
+                      >
+                        Show
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
         </Paper>
+        {this.state.openPrediction && this.state.graphData !== "" && (
+          <div>
+            <div
+              className={classes.darkBackdrop}
+              onClick={this.handleClosePrediction}
+            />
+            <Paper className={classes.predictionGraphContainer}>
+              <h1 style={{ margin: 0 }}>
+                {selectedStock.company} Future Prediction
+              </h1>
+              <IconButton
+                className={classes.closeButton}
+                onClick={this.handleClosePrediction}
+              >
+                <Close />
+              </IconButton>
+              <Grapher data={this.state.graphData} />
+            </Paper>
+          </div>
+        )}
         {this.state.isDeleteModalOpen && (
           <DeleteModal
             onClose={this.closeDeleteModal}
