@@ -130,5 +130,10 @@ export const styles = createStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center"
+  },
+  metricsDateTextField: {
+    marginRight: 10,
+    marginLeft: theme.spacing(1),
+    width: 200
   }
 }));

@@ -307,41 +307,42 @@ def watchlist_delete(user_id, code):
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
 
-@app.route('/grapher/<string:type>/<string:stock>/<string:start_date>/<string:end_date>', methods=['GET'])
-def grapher(type, stock, start_date, end_date):
+@app.route('/grapher/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
+def grapher(type, stocks, start_date, end_date):
+    stock = stocks.split(",")
     if type == "world":
-        graph = get_plot([stock], indicies=['world'],start=start_date, finish=end_date)
+        graph = get_plot(stock, indicies=['world'],start=start_date, finish=end_date)
     elif type == "sma":
-        graph = get_plot([stock], closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date)
     elif type == "ema":
-        graph = get_plot([stock], closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date)
     elif type == "percentage_change":
-        graph = get_plot([stock], size=(12, 2), change=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, size=(12, 2), change=1, start=start_date, finish=end_date)
     elif type == "volume_change":
-        graph = get_plot([stock], volume=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, volume=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "macd":
-        graph = get_plot([stock], macd=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, macd=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "bb":
-        graph = get_plot([stock], bb=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, bb=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "stoch":
-        graph = get_plot([stock], stoch=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, stoch=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "rsi":
-        graph = get_plot([stock], rsi=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, rsi=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "adx":
-        graph = get_plot([stock], adx=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, adx=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "cci":
-        graph = get_plot([stock], cci=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, cci=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "aroon":
-        graph = get_plot([stock], aroon=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, aroon=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "chaikin":
-        graph = get_plot([stock], chaikin=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "mom":
-        graph = get_plot([stock], mom=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, mom=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "dp_pb":
-        graph = get_plot([stock], dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
     else:
-        graph = get_plot([stock], closing=1, start=start_date, finish=end_date)
-    return render_template('graph.html', result=graph)
+        graph = get_plot(stock, closing=1, start=start_date, finish=end_date)
+    return jsonify({'result': graph})
 
 @app.route('/logout')
 def logout():
