@@ -138,13 +138,14 @@ def portfolio(user_id):
 def delete_portfolio(portfolio_id, code):
     delete_portfolio(portfolio_id)
 
-@app.route('/update_ticks/<string:portfolio_id>', methods=['GET'])
-def update_ticks(portfolio_id):
-    stocks = get_portfolio_codes(portfolio_id)
-    update_last_ticks(stocks)
-    last_data = get_last_ticks(stocks)
+@app.route('/user/<int:user_id>/update_ticks/<string:stocks>', methods=['GET'])
+def update_ticks(user_id, stocks):
+    stock_list = stocks.split(",")
+    update_last_ticks(stock_list)
+    last_data = get_last_ticks(stock_list)
     company_schema = CompanySchema(many=True)
     output = company_schema.dump(last_data).data
+    print(output)
     return jsonify({'last_ticks': output})
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
@@ -319,16 +320,6 @@ def watchlist_delete(user_id, code):
     wl_schema = WatchlistSchema(many=True)
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
-
-@app.route('/intraday_grapher/<string:type>/<string:stocks>', methods=['GET'])
-def intraday_grapher(type, stocks):
-    stock = stocks.split(",")
-    if type == "default":
-        graph = get_intraday_graph(stock)
-    elif type == "candle":
-        graph = get_intraday_candle(stock)
-    # return jsonify({'result': graph})
-    return render_template('graph.html', result=graph)
 
 @app.route('/grapher/<int:micro_int>/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
 def grapher(micro_int, type, stocks, start_date, end_date):
