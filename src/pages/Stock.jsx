@@ -1,131 +1,109 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-// import {newsGrid} from '../components/NewsGrid/NewsGrid';
-// import {Stocklist} from '../components/Stocklist/Stocklist';
-// import {StockDrawer} from '../components/StockDrawer/StockDrawer';
-import { styles } from './styles';
-import { PerformanceChart } from '../components/PerformanceChart/PerformanceChart';
-import {  Table, TableCell, TableHead, TableRow, TableBody} from '@material-ui/core';
-// import { StockDrawer } from '../components/StockDrawer/StockDrawer';
-import APIClient from '../api/apiClient.js';
-import { AddStocks } from '../components/AddStocks/AddStocks';
+import React from "react";
+import { withStyles } from "@material-ui/core/styles";
+import { Typography, Fab } from "@material-ui/core";
+import { Add } from "@material-ui/icons";
+
+import { styles } from "./styles";
+import { PerformanceChart } from "../components/PerformanceChart/PerformanceChart";
+import { StockDrawer } from "../components/StockDrawer/StockDrawer";
+import APIClient from "../api/apiClient.js";
+import * as stockCodes from "../mock/stock_code.js";
+import { UserContext } from "../UserContext";
 
 export class SingleStock extends React.Component {
-    
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: [],
+      openDrawer: false,
+      isLoaded: false
+    };
+  }
 
- 
-    constructor(props) {
-        super(props);
-        console.log(props);
-        this.state = {
-            items: [],
-            isLoaded: false,
-            company:'',
+  handleDrawerOpen = () => {
+    this.setState({
+      openDrawer: true
+    });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({
+      openDrawer: false
+    });
+  };
+
+  componentDidMount = () => {
+    this.apiClient = new APIClient();
+    this.apiClient
+      .getStockDetails(this.props.match.params.stockId)
+      .then(json => {
+        this.setState({
+          items: json.details,
+          isLoaded: true
+        });
+      })
+      .then(res => {
+        const company = stockCodes.suggestions.filter(code => {
+          return code.label === this.props.match.params.stockId;
+        });
+        this.setState({
+          items: {
+            ...this.state.items,
+            name: company[0].value
           }
-        }
-        
-      
-    componentDidMount(){
-        this.apiClient = new APIClient();
-        console.log("In componentDidMount: " + this.company);
-        this.apiClient.getStockDetails(this.company)
-            .then(json =>{
-                this.setState({
-                    items: json.details,
-                    isLoaded: true,
-                    company: json.details.company,
+        });
+      });
+  };
 
-                })
-            });
-            
-    }
-    
-
-    
-    render() {
-        var {items, isLoaded, company } = this.state;
-        const {stockId} = this.props.match.params;
-        const { classes } = this.props;
-        this.company = stockId;
-        // console.log("stock id is " + stockId)
-        console.log(isLoaded);
-        console.log("this.company: " + company);
-        console.log(items);
-        return (
-            
-           
-    <div className={classes.root}>
-        <h1> Stock Performance: {stockId} </h1>
-        <PerformanceChart />
-            <Table  >
-              <TableHead>
-                <TableRow>
-                    <TableCell  align="center">company</TableCell>
-                    <TableCell align="center">closing</TableCell>
-                    <TableCell align="center">date</TableCell>
-                    <TableCell align="center">eps</TableCell>
-                    <TableCell align="center">high</TableCell>
-                    <TableCell align="center">low</TableCell>
-                    <TableCell align="center">interest_cover</TableCell>
-                    <TableCell align="center">profit_margin</TableCell>
-                    <TableCell align="center">roa</TableCell>
-                    <TableCell align="center">roe</TableCell>
-                    <TableCell align="center">volume</TableCell>
-                    
-                    <TableCell> <AddStocks items={items.company}/> </TableCell>     
-                    </TableRow>
-              </TableHead> 
-                <TableBody>
-                    <TableRow key={items.company}>
-                    <TableCell align="center">{items.company}</TableCell>
-                        <TableCell align="center">{items.closing}</TableCell>
-                        <TableCell align="center">{items.date}</TableCell>
-                        <TableCell align="center">{items.eps}</TableCell>
-                        <TableCell align="center" style={{color:'green'}}>{items.high}</TableCell>
-                        <TableCell align="center" style={{color: 'red'}}>{items.low}</TableCell>
-                        <TableCell align="center">{items.interest_cover}</TableCell>
-                        <TableCell align="center">{items.profit_margin}</TableCell>
-                        <TableCell align="center">{items.roa}</TableCell>
-                        <TableCell align="center">{items.roe}</TableCell>
-                        <TableCell align="center">{items.volume}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+  render() {
+    var { items } = this.state;
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Typography variant="h4"> {items.company} </Typography>
+          <div style={{ flex: "1" }} />
+          {this.context.user && (
+            <Fab color="secondary" onClick={this.handleDrawerOpen}>
+              <Add />
+            </Fab>
+          )}
         </div>
-    );  
+        <Typography variant="h5"> {items.name} </Typography>
+        <Typography variant="h6"> Details </Typography>
+        <Typography variant="body1"> Date: {items.date} </Typography>
+        <Typography variant="body1">
+          Yesterday closing: ${items.closing}
+        </Typography>
+        <Typography variant="body1">
+          Earnings per share: ${items.eps}
+        </Typography>
+        <Typography variant="body1"> Daily high: ${items.high}</Typography>
+        <Typography variant="body1"> Daily low: ${items.low}</Typography>
+        <Typography variant="body1">
+          Interest cover: ${items.interest_cover}
+        </Typography>
+        <Typography variant="body1">
+          Profit margin: {items.profit_margin}
+        </Typography>
+        <Typography variant="body1"> Return on asset: ${items.roa} </Typography>
+        <Typography variant="body1">Return on equity: ${items.roe}</Typography>
+        <Typography variant="body1"> Volume: {items.volume}</Typography>
+
+        <PerformanceChart />
+        {this.state.openDrawer && (
+          <StockDrawer
+            onClose={this.handleDrawerClose}
+            isOpen={this.state.openDrawer}
+            stock={items}
+          />
+        )}
+      </div>
+    );
     // }
-    }
+  }
 }
 
-export const Stock= withStyles(styles)(SingleStock);
+SingleStock.contextType = UserContext;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "asset_turnover": 0.7845, 
-//       "assets": 2078100000.0, 
-//       "company": "ABC", 
-//       "eps": 28.4, 
-//       "expenses": -1287600000.0, 
-//       "gross_dividend": 40.0, 
-//       "interest_cover": 18.8125, 
-//       "inventory_turnover": 9.2415, 
-//       "liabilities": 832500000.0, 
-//       "net_gearing": 0.341, 
-//       "profit": 256500000.0, 
-//       "profit_margin": 0.1161, 
-//       "revenue": 1645900000.0, 
-//       "roa": 0.0967, 
-//       "roe": 0.1522, 
-//       "year": "2018-12-31"
+export const Stock = withStyles(styles)(SingleStock);
