@@ -19,6 +19,7 @@ import { DeleteModal } from "../forms";
 import { UserContext } from "../../UserContext";
 import APIClient from "../../api/apiClient.js";
 import { Grapher } from "../Grapher";
+// import { LoadingBar } from "../LoadingBar";
 
 class PurePortfolioTable extends React.Component {
   constructor(props) {
@@ -33,10 +34,12 @@ class PurePortfolioTable extends React.Component {
       netGain: 0,
       openPrediction: false,
       graphData: ""
+      // openLoader: false
     };
   }
 
   handleSubmitChange = () => {
+    // this.handleOpenLoader();
     this.apiClient
       .updatePortfolioStock(
         this.context.user.user_id,
@@ -56,6 +59,7 @@ class PurePortfolioTable extends React.Component {
           data.net_gain
         );
       });
+    // this.handleCloseLoader();
   };
 
   handleCancelChange = () => {
@@ -83,7 +87,8 @@ class PurePortfolioTable extends React.Component {
   };
 
   handleOpenPrediction = row => {
-    const dates = this.getPredictionDates(new Date());
+    // this.handleOpenLoader();
+    const dates = this.getPredictionDates();
     this.apiClient
       .getGraph("else", 0, row.company, dates[0], dates[1])
       .then(data => {
@@ -93,6 +98,7 @@ class PurePortfolioTable extends React.Component {
           graphData: data.result
         });
       });
+    // this.handleCloseLoader();
   };
 
   handleClosePrediction = () => {
@@ -111,6 +117,7 @@ class PurePortfolioTable extends React.Component {
   };
 
   delete = () => {
+    // this.handleOpenLoader();
     this.apiClient
       .deletePortfolioStock(
         this.context.user.user_id,
@@ -129,6 +136,7 @@ class PurePortfolioTable extends React.Component {
           data.net_gain
         );
       });
+    // this.handleCloseLoader();
   };
 
   closeDeleteModal = () => {
@@ -136,6 +144,18 @@ class PurePortfolioTable extends React.Component {
       isDeleteModalOpen: false
     });
   };
+
+  // handleOpenLoader = () => {
+  //   this.setState({
+  //     openLoader: true
+  //   });
+  // };
+
+  // handleCloseLoader = () => {
+  //   this.setState({
+  //     openLoader: false
+  //   });
+  // };
 
   componentDidMount = () => {
     this.apiClient = new APIClient();
@@ -146,23 +166,27 @@ class PurePortfolioTable extends React.Component {
     });
   };
 
-  getPredictionDates = calendar_date => {
-    var month = calendar_date.getMonth();
+  getPredictionDates = () => {
+    const current_date = new Date().toLocaleDateString().split("/");
+    var month = parseInt(current_date[0]);
     var start_month = "";
     var end_month = "";
-    if (month < 10) {
-      start_month = ("0" + month).slice(-2);
-      if (month < 9) end_month = ("0" + (month + 1)).slice(-2);
-      else end_month = month + 1;
-    } else start_month = month;
+    if (month < 10) start_month = ("0" + month).slice(-2);
+    else start_month = month;
+    if (month < 9) end_month = ("0" + (month + 1)).slice(-2);
+    else end_month = month + 1;
 
-    var date = calendar_date.getDate();
+    var date = parseInt(current_date[1]);
     if (date < 10) date = ("0" + date).slice(-2);
 
-    const start_year = calendar_date.getFullYear();
+    const start_year = current_date[2];
     var end_year = start_year;
     if (month === 12) end_year = end_year + 1;
 
+    console.log([
+      start_year + "-" + start_month + "-" + date,
+      end_year + "-" + end_month + "-" + date
+    ]);
     return [
       start_year + "-" + start_month + "-" + date,
       end_year + "-" + end_month + "-" + date
@@ -193,6 +217,7 @@ class PurePortfolioTable extends React.Component {
   };
 
   componentDidUpdate = () => {
+    // this.handleOpenLoader();
     this.context.user &&
       this.apiClient
         .getPortfolioStocks(this.context.user.user_id, this.props.portfolioId)
@@ -202,6 +227,7 @@ class PurePortfolioTable extends React.Component {
               portfolio_data: data.portfolio_stocks,
               portfolioId: this.props.portfolioId,
               netGain: data.net_gain
+              // openLoader: false
             });
           this.props.handleChangePortfolioData(
             data.portfolio_stocks,
@@ -409,6 +435,7 @@ class PurePortfolioTable extends React.Component {
             onDelete={this.delete}
           />
         )}
+        {/* {this.state.openLoader && <LoadingBar />} */}
       </React.Fragment>
     );
   }

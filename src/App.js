@@ -12,7 +12,6 @@ import {
   AboutUs,
   Profile,
   Settings,
-  Tutorial,
   Watchlist,
   Stocks,
   Stock,
@@ -63,7 +62,7 @@ class App extends React.Component {
       logIn: this.logIn,
       logOut: this.logOut,
       handleChangeNotification: this.handleChangeNotification,
-      // user: null,
+      // user: null
       user: {
         balance: 0,
         dob: null,
@@ -96,14 +95,13 @@ class App extends React.Component {
                 </div>
               )}
               {/* <Redirect from="/" to="/Home" /> */}
-              <Redirect from="/" to="/Portfolio" />
+              <Redirect from="/" to="/Metrics" />
               <Route path="/Home" component={Home} />
               <Route path="/Portfolio" component={Portfolio} />
               <Route path="/Metrics" component={Metrics} />
               <Route path="/AboutUs" component={AboutUs} />
               <Route path="/Profile" component={Profile} />
               <Route path="/Settings" component={Settings} />
-              <Route path="/Tutorial" component={Tutorial} />
               <Route path="/Watchlist" component={Watchlist} />
               <Route path="/search" component={SearchResult} />
               <Route path="/Stocks" exact component={Stocks} />
