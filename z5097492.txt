@@ -145,3 +145,15 @@ Wednesday
 Thursday
 -Updated Watchlist functionality
 -Updated endpoints for watchlist
+-Merge current progress to Master
+
+Saturday
+-Make easy fixes to tables and modals based on meet up with Seung Ryu
+
+Week 10
+Sunday
+-Updated StockDrawer UI and functionality to add to portfolio or watchlist
+
+Monday
+-Added Metrics and Grapher UI and functionality
+-Added Graph to Stock and Portfolio pages
