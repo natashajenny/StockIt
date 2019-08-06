@@ -62,7 +62,7 @@ class App extends React.Component {
       logIn: this.logIn,
       logOut: this.logOut,
       handleChangeNotification: this.handleChangeNotification,
-      user: null
+      user: null,
       // user: {
       //   balance: 0,
       //   dob: null,

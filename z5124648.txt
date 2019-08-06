@@ -52,3 +52,13 @@ Work to be done next sprint:
 1. adding stock to watchlist and portfolio and making sure it correctly saves for each user (wiped every sessioned) 
 2. Improve the stocks adding interface
 3. Overlaying prediction graph with the current selected portfolio total assets . 
+
+Week 8: 
+worked on adding stock from watchlist to portfolio with help from alina
+worked on getting the graphs to be displayed from back end, created a graphing component to do so 
+
+week 9: 
+Implemented twitter feed from the stock companies 
+continue working on getting graphs from back end 
+countinued changing the ui to make it better
+added more graphic elements

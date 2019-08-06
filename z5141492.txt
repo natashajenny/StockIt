@@ -25,3 +25,18 @@ For this week I tried to use Flask Marshmallow to jsonify SQLAlchemy objects fro
 Week 6
 
 Created backend routes for adding, updating stocks in a portfolio and watchlist. Added delete functionalities for portfolio, portfolio logs and watchlist.
+
+
+Week 7
+
+Tested all the functions and fixed bugs, wrong SQLAlchemy queries. Finalised stock log and watchlist functionality to be used by the front-end developers.
+
+
+Week 8
+
+Added the top and bottom performing stocks based on Slava's stock prediction ranking. This week we updated the tables with more information about the stocks, so we updated our models and functions accordingly as well.
+
+
+Week 9
+
+Added graphing functionality for the various graphs. We encountered issues with the generated matplotlib PNG graph, so I used base64 encoding to render the graph.
