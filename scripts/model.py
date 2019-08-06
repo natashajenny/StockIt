@@ -99,6 +99,8 @@ class Company(Model, Base):
     abn = Column('abn', String(11))
     directors = Column('directors', String)
     recommendation = Column('recommendation', String)
+    last_dt = Column('last_dt', DateTime(timezone=True))
+    last_tick = Column('last_tick', Float)
 
 class EmissionLog(Model, Base):
     __tablename__ = 'emission_logs'
