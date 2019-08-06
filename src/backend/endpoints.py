@@ -123,7 +123,6 @@ def portfolio(user_id):
         portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
-        print(output)
         return jsonify({'portfolios': output})
     else :
         portfolios = get_portfolios(user_id)
@@ -340,10 +339,12 @@ def grapher(micro_int, type, stocks, start_date, end_date):
         graph = get_plot(stock, micro=micro, aroon=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "chaikin":
         graph = get_plot(stock, micro=micro, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "mom":
+    elif type == "month-to-month":
         graph = get_plot(stock, micro=micro, mom=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "dp_pb":
         graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "correlation":
+        graph = get_corr(stock, start=start_date, finish=end_date)
     else:
         graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
     return jsonify({'result': graph})
