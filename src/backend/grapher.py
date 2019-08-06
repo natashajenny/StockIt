@@ -274,6 +274,7 @@ def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
     for stock in stocks:
         (col1, col2) = colors.pop(0)
         df = pd.read_csv(CSV+stock+'.AX', parse_dates=['timestamp'])
+        print(df)
         df['timestamp'] = df['timestamp'].dt.tz_localize('Australia/Sydney')
         df['timestamp'] = df['timestamp'].dt.tz_convert(None)
         cut_off = max(df['timestamp']).date()
@@ -288,8 +289,12 @@ def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
                                decreasing_line_color=col2,
                                name=stock)
         fig.add_trace(trace)
-    fig.update_layout(title=go.layout.Title(text='Intraday Trade Chart' % stock, xref="paper", x=0))
+    fig.update_layout(title=go.layout.Title(text='Intraday Trade Chart %s' % stock, xref="paper", x=0))
     fig.update_layout(xaxis_rangeslider_visible=False)
-    fig.write_image('candle.png')
-    img = PIL.Image.open('candle.png')
-    return img
+
+    fig_file = BytesIO()
+    fig.write_image(fig_file, format='png')
+    fig_file.seek(0)
+    fig_png = base64.b64encode(fig_file.getvalue())
+    result = str(fig_png)[2:-1]
+    return result

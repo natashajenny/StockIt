@@ -307,12 +307,14 @@ def watchlist_delete(user_id, code):
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
 
-@app.route('/intraday_grapher/<string:stocks>', methods=['GET'])
-def intraday_grapher(stocks):
+@app.route('/intraday_grapher/<string:type>/<string:stocks>', methods=['GET'])
+def intraday_grapher(type, stocks):
     stock = stocks.split(",")
-    graph = get_intraday_graph(stock)
-    # return jsonify({'result': graph})
-    return render_template('graph.html', result=graph)
+    if type == "default":
+        graph = get_intraday_graph(stock)
+    elif type == "candle":
+        graph = get_intraday_candle(stock)
+    return jsonify({'result': graph})
 
 
 @app.route('/grapher/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
