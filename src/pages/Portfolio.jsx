@@ -1,12 +1,14 @@
 import React from "react";
 import { Button, Select, Typography } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { Refresh, Add } from "@material-ui/icons";
+import { Add, SaveAlt } from "@material-ui/icons";
+import { CSVLink } from "react-csv";
 
 import {
   AddStockModal,
   PortfolioTable,
   CreatePortfolioModal
+  // LoadingBar
 } from "../components";
 import { styles } from "./styles";
 
@@ -23,8 +25,21 @@ export class PurePortfolio extends React.Component {
       openAddStockModal: false,
       isAddingStock: false,
       netGain: 0,
-      portfolio_data: null
+      portfolio_data: null,
+      // openLoader: false
     };
+    this.fieldNames = [
+      {label: "Code", key: "company"},
+      {label: "Purchase Price($)", key: "bought_price"},
+      {label: "Current Price($)", key: "adjusted"},
+      {label: "Daily Change($)", key: "change"},
+      {label: "Daily Change(%)", key: "change_pct"},
+      {label: "Daily High($)", key: "high"},
+      {label: "Daily Low ($)", key: "low"},
+      {label: "Unit Gain ($)", key: "unit_gain"},
+      {label: "Total Gain ($)", key: "stock_gain"},
+      {label: "Quantity", key: "quantity"}
+    ]
   }
 
   handleSelectChange = event => {
@@ -42,7 +57,7 @@ export class PurePortfolio extends React.Component {
 
   handleAddStock = (e, stock) => {
     e.preventDefault();
-    // console.log("add stock");
+    // this.handleOpenLoader();
     this.apiClient
       .addPortfolioStock(
         this.context.user.user_id,
@@ -55,6 +70,7 @@ export class PurePortfolio extends React.Component {
           netGain: data.net_gain
         });
         this.closeAddStockModal();
+        // this.handleCloseLoader();
       });
   };
 
@@ -83,18 +99,21 @@ export class PurePortfolio extends React.Component {
   };
 
   handleSubmitPorfolio = (e, formData) => {
+    // this.handleOpenLoader();
     e.preventDefault();
     this.apiClient
       .addPortfolio(this.context.user.user_id, formData)
       .then(data => {
         this.setState({
           portfolios: data.portfolios
+          // openLoader: false
         });
       })
       .then(this.closeCreatePortfolioModal());
   };
 
-  handleRefreshClick = () => {
+  handleDownloadClick = () => {
+    // this.handleOpenLoader();
     this.apiClient
       .getPortfolioStocks(
         this.context.user.user_id,
@@ -104,6 +123,7 @@ export class PurePortfolio extends React.Component {
         this.setState({
           portfolio_data: data.portfolio_stocks,
           netGain: data.net_gain
+          // openLoader: false
         });
       });
   };
@@ -115,8 +135,21 @@ export class PurePortfolio extends React.Component {
     });
   };
 
+  // handleOpenLoader = () => {
+  //   this.setState({
+  //     openLoader: true
+  //   });
+  // };
+
+  // handleCloseLoader = () => {
+  //   this.setState({
+  //     openLoader: false
+  //   });
+  // };
+
   componentDidMount = () => {
     this.apiClient = new APIClient();
+    // this.handleOpenLoader();
     this.context.user &&
       this.apiClient.getPortfolios(this.context.user.user_id).then(data => {
         this.setState({
@@ -132,13 +165,27 @@ export class PurePortfolio extends React.Component {
             this.context.user.user_id,
             data.portfolios[0].portfolio_id
           )
-          .then(data => {
+          .then(data =>
             this.setState({
               portfolio_data: data.portfolio_stocks,
-              netGain: data.net_gain
-            });
-          });
+              netGain: data.net_gain,
+              // openLoader: false
+            })
+          );
       });
+  };
+
+  getCurrentDate = () => {
+    const current_date = new Date().toLocaleDateString().split("/");
+
+    var month = current_date[0];
+    if (month < 10) month = ("0" + month).slice(-2);
+
+    var date = current_date[1];
+    if (date < 10) date = ("0" + date).slice(-2);
+
+    const year = current_date[2];
+    return year + "-" + month + "-" + date;
   };
 
   render() {
@@ -195,14 +242,16 @@ export class PurePortfolio extends React.Component {
                     </option>
                   ))}
               </Select>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.refreshButton}
-                onClick={this.handleRefreshClick}
-              >
-                <Refresh />
-              </Button>
+              {this.state.portfolio_data && <CSVLink filename={"my-portfolio.csv"} data={this.state.portfolio_data} headers={this.fieldNames} >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.refreshButton}
+                  onClick={this.handleDownloadClick}
+                >
+                  <SaveAlt />
+                </Button>
+              </CSVLink>}
               <div style={{ flex: "1" }} />
               <Button
                 variant="contained"
@@ -243,6 +292,7 @@ export class PurePortfolio extends React.Component {
             onSubmit={this.handleAddStock}
           />
         )}
+        {/* {this.state.openLoader && <LoadingBar />} */}
       </div>
     );
   }

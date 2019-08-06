@@ -12,7 +12,6 @@ import {
   AboutUs,
   Profile,
   Settings,
-  Tutorial,
   Watchlist,
   Stocks,
   Stock,
@@ -103,7 +102,6 @@ class App extends React.Component {
               <Route path="/AboutUs" component={AboutUs} />
               <Route path="/Profile" component={Profile} />
               <Route path="/Settings" component={Settings} />
-              <Route path="/Tutorial" component={Tutorial} />
               <Route path="/Watchlist" component={Watchlist} />
               <Route path="/search" component={SearchResult} />
               <Route path="/Stocks" exact component={Stocks} />

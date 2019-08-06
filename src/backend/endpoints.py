@@ -1,4 +1,6 @@
 import json
+import csv
+# import pandas as pd
 from datetime import datetime, timedelta
 from flask import Flask, g, request, jsonify, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -8,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from functions import *
 from grapher import *
+from loader import *
 
 app = Flask(__name__)
 CORS(app)
@@ -111,6 +114,7 @@ def all_companies():
     return jsonify({'stocks': output})
 
 
+
 @app.route('/user/<int:user_id>/portfolio', methods=['GET','POST'])
 def portfolio(user_id):
     if request.method == 'POST':
@@ -123,7 +127,6 @@ def portfolio(user_id):
         portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
-        print(output)
         return jsonify({'portfolios': output})
     else :
         portfolios = get_portfolios(user_id)
@@ -135,13 +138,23 @@ def portfolio(user_id):
 def delete_portfolio(portfolio_id, code):
     delete_portfolio(portfolio_id)
 
+@app.route('/user/<int:user_id>/update_ticks/<string:stocks>', methods=['GET'])
+def update_ticks(user_id, stocks):
+    stock_list = stocks.split(",")
+    update_last_ticks(stock_list)
+    last_data = get_last_ticks(stock_list)
+    company_schema = CompanySchema(many=True)
+    output = company_schema.dump(last_data).data
+    print(output)
+    return jsonify({'last_ticks': output})
+
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
 def stock(user_id, portfolio_id):
     # add stock to portfolio
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        print(data_dict)
+        # print(data_dict)
         code = data_dict['code']['data']
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
@@ -340,12 +353,17 @@ def grapher(micro_int, type, stocks, start_date, end_date):
         graph = get_plot(stock, micro=micro, aroon=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "chaikin":
         graph = get_plot(stock, micro=micro, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "mom":
+    elif type == "month-to-month":
         graph = get_plot(stock, micro=micro, mom=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "dp_pb":
         graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "correlation":
+        graph = get_corr(stock, start=start_date, finish=end_date)
+    elif type == "intraday":
+        graph = get_intraday_candle(stock)
     else:
         graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
+
     return jsonify({'result': graph})
 
 @app.route('/logout')

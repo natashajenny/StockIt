@@ -1,6 +1,15 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Select, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  Select,
+  TextField,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+  FormGroup
+} from "@material-ui/core";
+import update from "react-addons-update";
 
 import { Grapher } from "../components";
 import { styles } from "./styles";
@@ -16,7 +25,8 @@ export class PureMetrics extends React.Component {
       type: "world",
       start_date: "2009-07-01",
       end_date: "2019-07-01",
-      graphData: ""
+      graphData: "",
+      stocks: null
     };
     this.metricsType = [
       "world",
@@ -32,8 +42,10 @@ export class PureMetrics extends React.Component {
       "cci",
       "aroon",
       "chaikin",
-      "mom",
+      "month-to-month",
       "dp_pb",
+      "correlation",
+      "intraday",
       "trend"
     ];
   }
@@ -46,7 +58,37 @@ export class PureMetrics extends React.Component {
             portfolio => portfolio.title === event.target.value
           )[0]
         });
+        this.getStocks(event.target.value);
       }
+    }
+  };
+
+  getStocks = value => {
+    if (value === "Watchlist") {
+      this.apiClient
+        .getWatchlistStocks(this.context.user.user_id)
+        .then(data => {
+          this.setState({
+            stocks: data.wl_stocks.map(stock => {
+              const val = { name: stock.company, selected: true };
+              return val;
+            })
+          });
+        });
+    } else {
+      this.apiClient
+        .getPortfolioStocks(
+          this.context.user.user_id,
+          this.state.selectedPortfolio.portfolio_id
+        )
+        .then(data => {
+          this.setState({
+            stocks: data.portfolio_stocks.map(stock => {
+              const val = { name: stock.company, selected: true };
+              return val;
+            })
+          });
+        });
     }
   };
 
@@ -62,48 +104,41 @@ export class PureMetrics extends React.Component {
     this.setState({ end_date: event.target.value });
   };
 
+  handleStocksChange = (stock, i) => {
+    const newStock = { name: stock.name, selected: !stock.selected };
+    this.setState({
+      stocks: update(this.state.stocks, { [i]: {$set: newStock }})
+    });
+  };
+
   handleSubmit = e => {
     const { type, selectedPortfolio, start_date, end_date } = this.state;
+    const stocks = this.state.stocks.filter(stock => stock.selected)
+    const stocks_name = stocks.map(stock => stock.name)
+    console.log(stocks_name)
     if (selectedPortfolio.title === "Watchlist") {
       this.apiClient
-        .getWatchlistStocks(this.context.user.user_id)
-        .then(data => {
-          const stocks = data.wl_stocks.map(stock => {
-            return stock.company;
-          });
-          this.apiClient
-            .getGraph(
-              type === "trend" ? "else" : type,
-              0,
-              stocks,
-              start_date,
-              end_date
-            )
-            .then(response => {
-              this.setState({ graphData: response.result });
-            });
+        .getGraph(
+          type === "trend" ? "else" : type,
+          0,
+          stocks_name,
+          start_date,
+          end_date
+        )
+        .then(response => {
+          this.setState({ graphData: response.result });
         });
     } else {
       this.apiClient
-        .getPortfolioStocks(
-          this.context.user.user_id,
-          selectedPortfolio.portfolio_id
+        .getGraph(
+          type === "trend" ? "else" : type,
+          0,
+          stocks_name,
+          start_date,
+          end_date
         )
-        .then(data => {
-          const stocks = data.portfolio_stocks.map(stock => {
-            return stock.company;
-          });
-          this.apiClient
-            .getGraph(
-              type === "trend" ? "else" : type,
-              0,
-              stocks,
-              start_date,
-              end_date
-            )
-            .then(response => {
-              this.setState({ graphData: response.result });
-            });
+        .then(response => {
+          this.setState({ graphData: response.result });
         });
     }
   };
@@ -116,13 +151,14 @@ export class PureMetrics extends React.Component {
         portfolios: data.portfolios,
         selectedPortfolio: data.portfolios[0]
       });
+      this.getStocks(data.portfolios[0]);
     });
   };
 
   render() {
     const { classes } = this.props;
     const { portfolios } = this.state;
-
+    console.log(this.state.stocks);
     return (
       <div className={classes.root}>
         <h1> Metrics </h1>
@@ -158,6 +194,7 @@ export class PureMetrics extends React.Component {
             <div />
             <Typography variant="body1">Start Date: </Typography>
             <TextField
+              disabled={this.state.type === "intraday"}
               id="start_date"
               type="date"
               value={this.state.start_date}
@@ -181,6 +218,7 @@ export class PureMetrics extends React.Component {
             <div />
             <Typography variant="body1">End Date: </Typography>
             <TextField
+              disabled={this.state.type === "intraday"}
               id="end_date"
               type="date"
               value={this.state.end_date}
@@ -189,6 +227,24 @@ export class PureMetrics extends React.Component {
               onChange={this.onEndDateChange}
             />
           </div>
+          <FormGroup row>
+            {this.state.stocks &&
+              this.state.stocks.map((stock, i) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={stock.selected}
+                      onChange={() => this.handleStocksChange(stock, i)}
+                      value={stock.name}
+                      inputProps={{
+                        "aria-label": "primary checkbox"
+                      }}
+                    />
+                  }
+                  label={stock.name}
+                />
+              ))}
+          </FormGroup>
           <Button
             type="submit"
             color="primary"
@@ -200,7 +256,13 @@ export class PureMetrics extends React.Component {
           </Button>
         </div>
         {this.state.graphData !== "" && (
-          <div style={{ maxWidth: "100%", height: "auto" }}>
+          <div
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+              justifyContent: "center"
+            }}
+          >
             <Grapher data={this.state.graphData} />
           </div>
         )}

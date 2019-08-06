@@ -44,7 +44,6 @@ export class PureStocks extends React.Component {
             return (
                 <div className = {classes.root}>
                     <h1> Stocks </h1>
-                    {newsGrid()}
                     <Stocklist  items={items}/>
                 </div>
             );  
