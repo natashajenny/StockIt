@@ -1,4 +1,6 @@
 import json
+import csv
+# import pandas as pd
 from datetime import datetime, timedelta
 from flask import Flask, g, request, jsonify, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -8,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from functions import *
 from grapher import *
+from loader import *
 
 app = Flask(__name__)
 CORS(app)
@@ -111,6 +114,7 @@ def all_companies():
     return jsonify({'stocks': output})
 
 
+
 @app.route('/user/<int:user_id>/portfolio', methods=['GET','POST'])
 def portfolio(user_id):
     if request.method == 'POST':
@@ -134,13 +138,22 @@ def portfolio(user_id):
 def delete_portfolio(portfolio_id, code):
     delete_portfolio(portfolio_id)
 
+@app.route('/update_ticks/<string:portfolio_id>', methods=['GET'])
+def update_ticks(portfolio_id):
+    stocks = get_portfolio_codes(portfolio_id)
+    update_last_ticks(stocks)
+    last_data = get_last_ticks(stocks)
+    company_schema = CompanySchema(many=True)
+    output = company_schema.dump(last_data).data
+    return jsonify({'last_ticks': output})
+
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
 def stock(user_id, portfolio_id):
     # add stock to portfolio
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        print(data_dict)
+        # print(data_dict)
         code = data_dict['code']['data']
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
@@ -307,6 +320,16 @@ def watchlist_delete(user_id, code):
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
 
+@app.route('/intraday_grapher/<string:type>/<string:stocks>', methods=['GET'])
+def intraday_grapher(type, stocks):
+    stock = stocks.split(",")
+    if type == "default":
+        graph = get_intraday_graph(stock)
+    elif type == "candle":
+        graph = get_intraday_candle(stock)
+    # return jsonify({'result': graph})
+    return render_template('graph.html', result=graph)
+
 @app.route('/grapher/<int:micro_int>/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
 def grapher(micro_int, type, stocks, start_date, end_date):
     stock = stocks.split(",")
@@ -345,8 +368,11 @@ def grapher(micro_int, type, stocks, start_date, end_date):
         graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "correlation":
         graph = get_corr(stock, start=start_date, finish=end_date)
+    elif type == "intraday":
+        graph = get_intraday_candle(stock)
     else:
         graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
+
     return jsonify({'result': graph})
 
 @app.route('/logout')

@@ -38,7 +38,6 @@ def validate_login(login, password):
 
 def get_company(code):
     company = Company().query().get(code)
-#     print(company.__dict__)
     return company
 
 def get_stock_logs(code):
@@ -60,12 +59,16 @@ def get_companies_like(keyword):
     companies = Company().query().filter(Company.name.like('%keyword%'))
     return companies.all()
 
+def get_last_ticks(stocks):
+    db = Db.instance()
+    q = db.session.query(Company.code, Company.last_dt, Company.last_tick).filter(Company.code.in_(stocks))
+    return q.all()
+
 
 ## Stock Log
 
 def get_stock_details(code):
     q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
-    print(q.__dict__)
     return q        
 
 ## Performance Log
@@ -75,8 +78,6 @@ def get_summary():
     subq = db.session.query(PerformanceLog.code, func.max(PerformanceLog.year).label('maxyear')).group_by(PerformanceLog.code).subquery('t2')
     q = db.session.query(PerformanceLog).\
     join(subq, and_(PerformanceLog.code == subq.c.code, PerformanceLog.year == subq.c.maxyear))
-#     for l in q.all():
-#             print(l.__dict__)
     return q.all()
 
 def get_pl_details(code):
@@ -86,14 +87,10 @@ def get_pl_details(code):
 
 def get_top_ten():
     q = StockLog().query().order_by(asc(StockLog.rank)).limit(10)
-#     for l in q.all():
-#         print(l.__dict__)
     return q.all()
 
 def get_bottom_ten():
     q = StockLog().query().filter(StockLog.rank.isnot(None)).order_by(desc(StockLog.rank)).limit(10)
-#     for l in q.all():
-#         print(l.__dict__)
     return q.all()
 
 ## Portfolio
@@ -126,9 +123,16 @@ def get_logs(portfolio_id):
 
 def get_portfolio_stocks(portfolio_id):
     q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
-#     for l in q.all():
-#        print(l.__dict__)
+    # for l in q.all():
+    #    print(l.code)
     return q.all()
+
+def get_portfolio_codes(portfolio_id):
+    q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
+    companies = []
+    for l in q.all():
+       companies.append(l.code)
+    return companies
 
 def get_log_date(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()

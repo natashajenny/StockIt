@@ -242,7 +242,7 @@ export class PurePortfolio extends React.Component {
                     </option>
                   ))}
               </Select>
-              <CSVLink data={this.state.portfolio_data} headers={this.fieldNames} >
+              {this.state.portfolio_data && <CSVLink filename={"my-portfolio.csv"} data={this.state.portfolio_data} headers={this.fieldNames} >
                 <Button
                   variant="contained"
                   color="primary"
@@ -251,7 +251,7 @@ export class PurePortfolio extends React.Component {
                 >
                   <SaveAlt />
                 </Button>
-              </CSVLink>
+              </CSVLink>}
               <div style={{ flex: "1" }} />
               <Button
                 variant="contained"

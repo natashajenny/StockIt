@@ -5,10 +5,13 @@ import warnings
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import seaborn as sns
 from model import *
 from datetime import date, datetime
 from io import BytesIO
+import plotly as py
+import plotly.graph_objs as go
 
 warnings.filterwarnings("ignore")
 sns.set()
@@ -185,12 +188,12 @@ def get_plot(
             else:
                 new[idx] = (new[idx] - new[idx].mean()) / new[idx].std()
             plt.plot(new.index.values, new[idx], label='%s index' % idx.capitalize())
-        if len(companies) > 0:
-            if norm == 'minmax':
-                df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
-            else:
-                df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-            plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
+        # if len(companies) > 0:
+        #     if norm == 'minmax':
+        #         df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
+        #     else:
+        #         df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
+        #     plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if not micro:
         plt.legend()
@@ -201,7 +204,6 @@ def get_plot(
     fig_png = base64.b64encode(fig_file.getvalue())
     result = str(fig_png)[2:-1]
     return result
-
 
 def get_corr(
     stocks = [],                # list of stocks 
@@ -215,6 +217,7 @@ def get_corr(
     
     if (len(stocks) == 0) and (len(indicies) == 0) and not sector:
         raise Exception('Empty list')
+
     
     if not engine:
         engine = start_engine()
@@ -244,9 +247,101 @@ def get_corr(
         table = table.merge(df[company.code], how='outer', left_index=True, right_index=True)
     corr = table.corr()
     sns.heatmap(corr, cmap='coolwarm', center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5})
+    fig_file = BytesIO()
+    plt.savefig(fig_file, format='png')
+    fig_file.seek(0)
+    fig_png = base64.b64encode(fig_file.getvalue())
+    result = str(fig_png)[2:-1]
+    return result
+
+def get_intraday_graph(stocks, norm=None, size=(12,8), engine=engine):
+    CSV = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY'\
+          '&interval=1min'\
+          '&outputsize=full'\
+          '&datatype=csv'\
+          '&apikey=OW4NZBLAQU5EBFEV'\
+          '&symbol='
+    
+    if len(stocks) > 5:
+        raise Exception("Only 5 stocks supported")
+    if not engine:
+        engine = start_engine()
+
+    (x, y) = size
+    fig = plt.figure(figsize=(x, y), dpi=100)
+    ax = fig.add_subplot()
+
+    for stock in stocks:
+        df = pd.read_csv(CSV+stock+'.AX', parse_dates=['timestamp'])
+        df['timestamp'] = df['timestamp'].dt.tz_localize('Australia/Sydney')
+        df['timestamp'] = df['timestamp'].dt.tz_convert(None)
+        cut_off = max(df['timestamp']).date()
+        df = df[df['timestamp'] > cut_off]
+        cut_off += pd.Timedelta(days=1)
+        if norm == 'minmax':
+            df['close'] = (df['close'] - df['close'].min()) / (df['close'].max() - df['close'].min())
+        elif norm == 'mean':
+            df['close'] = (df['close'] - df['close'].mean()) / df['close'].std()
+        plt.plot(df['timestamp'], df['close'], label='%s Stock Price'% stock) 
+
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+    plt.legend()
+    plt.title('Intraday Results for %s' % str(cut_off))
 
     fig_file = BytesIO()
     plt.savefig(fig_file, format='png')
+    fig_file.seek(0)
+    fig_png = base64.b64encode(fig_file.getvalue())
+    result = str(fig_png)[2:-1]
+    return result
+
+
+def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
+    CSV = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY'\
+          '&interval=1min'\
+          '&outputsize=full'\
+          '&datatype=csv'\
+          '&apikey=OW4NZBLAQU5EBFEV'\
+          '&symbol='
+    
+    if len(stocks) > 5:
+        raise Exception("Only 5 stocks supported")
+    
+    if not engine:
+        engine = start_engine()
+        
+    colors = [
+        ['red', 'green'],
+        ['blue', 'yellow'],
+        ['cyan', 'gray'],
+        ['magenta', 'orange'],
+        ['pink', 'purple']       
+    ]        
+        
+    fig = go.Figure()
+    for stock in stocks:
+        (col1, col2) = colors.pop(0)
+        df = pd.read_csv(CSV+stock+'.AX', parse_dates=['timestamp'])
+        print(df)
+        df['timestamp'] = df['timestamp'].dt.tz_localize('Australia/Sydney')
+        df['timestamp'] = df['timestamp'].dt.tz_convert(None)
+        cut_off = max(df['timestamp']).date()
+        df = df[df['timestamp'] > cut_off]
+        cut_off += pd.Timedelta(days=1)
+        trace = go.Candlestick(x=df['timestamp'],
+                               open=df['open'],
+                               high=df['high'],
+                               low=df['low'],
+                               close=df['close'],
+                               increasing_line_color=col1,
+                               decreasing_line_color=col2,
+                               name=stock)
+        fig.add_trace(trace)
+    fig.update_layout(title=go.layout.Title(text='Intraday Trade Chart %s' % stock, xref="paper", x=0))
+    fig.update_layout(xaxis_rangeslider_visible=False)
+
+    fig_file = BytesIO()
+    fig.write_image(fig_file, format='png')
     fig_file.seek(0)
     fig_png = base64.b64encode(fig_file.getvalue())
     result = str(fig_png)[2:-1]

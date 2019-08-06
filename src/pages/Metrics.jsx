@@ -45,6 +45,7 @@ export class PureMetrics extends React.Component {
       "month-to-month",
       "dp_pb",
       "correlation",
+      "intraday",
       "trend"
     ];
   }
@@ -106,21 +107,21 @@ export class PureMetrics extends React.Component {
   handleStocksChange = (stock, i) => {
     const newStock = { name: stock.name, selected: !stock.selected };
     this.setState({
-      stocks: update(this.state.stocks, { [i]: newStock })
+      stocks: update(this.state.stocks, { [i]: {$set: newStock }})
     });
   };
 
   handleSubmit = e => {
     const { type, selectedPortfolio, start_date, end_date } = this.state;
-    const stocks = this.state.stocks.map(stock => (
-      stock.selected && stock.name
-    ))
+    const stocks = this.state.stocks.filter(stock => stock.selected)
+    const stocks_name = stocks.map(stock => stock.name)
+    console.log(stocks_name)
     if (selectedPortfolio.title === "Watchlist") {
       this.apiClient
         .getGraph(
           type === "trend" ? "else" : type,
           0,
-          stocks,
+          stocks_name,
           start_date,
           end_date
         )
@@ -132,7 +133,7 @@ export class PureMetrics extends React.Component {
         .getGraph(
           type === "trend" ? "else" : type,
           0,
-          stocks,
+          stocks_name,
           start_date,
           end_date
         )
@@ -193,6 +194,7 @@ export class PureMetrics extends React.Component {
             <div />
             <Typography variant="body1">Start Date: </Typography>
             <TextField
+              disabled={this.state.type === "intraday"}
               id="start_date"
               type="date"
               value={this.state.start_date}
@@ -216,6 +218,7 @@ export class PureMetrics extends React.Component {
             <div />
             <Typography variant="body1">End Date: </Typography>
             <TextField
+              disabled={this.state.type === "intraday"}
               id="end_date"
               type="date"
               value={this.state.end_date}
