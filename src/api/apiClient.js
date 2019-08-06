@@ -80,11 +80,11 @@ class APIClient {
   }
 
   gettopten() {
-    return this.perform("get","/top_ten" );
+    return this.perform("get", "/top_ten");
   }
 
   getbotten() {
-    return this.perform("get","/bottom_ten" );
+    return this.perform("get", "/bottom_ten");
   }
 
   updateWatchlistStock(userId, code, stock) {
@@ -110,6 +110,16 @@ class APIClient {
     }).then(resp => {
       return resp.data ? resp.data : [];
     });
+  }
+
+  getGraph(type, micro, stocks, start_date, end_date) {
+    console.log(
+      `/grapher/${micro}/${type}/${stocks}/${start_date}/${end_date}`
+    );
+    return this.perform(
+      "get",
+      `/grapher/${micro}/${type}/${stocks}/${start_date}/${end_date}`
+    );
   }
 }
 

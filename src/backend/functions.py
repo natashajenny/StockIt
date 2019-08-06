@@ -216,8 +216,7 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
     wl.sell_high = sell_high
     wl.sell_low = sell_low
     wl.update()
-
-
+    
 
 ## Functions for testing
 

@@ -7,6 +7,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
 from functions import *
+from grapher import *
 
 app = Flask(__name__)
 CORS(app)
@@ -47,7 +48,6 @@ class PortfolioLogSchema(ma.ModelSchema):
 class WatchlistSchema(ma.ModelSchema):
     class Meta:
         model = Watchlist
-
 
 @app.route('/')
 def welcome():
@@ -160,33 +160,10 @@ def stock(user_id, portfolio_id):
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
         data['unit_gain'] = round(data['closing']-data['bought_price'], 2)
+        data['trend'] = get_plot([data['company']], micro=True, closing=1, finish=datetime.today().strftime('%Y-%m-%d'))
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
-    return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
-
-
-# @app.route('/test', methods=['GET'])
-# def testok():
-#     logs = get_logs(16)
-#     log_schema = StockLogSchema(many=True)
-#     output = log_schema.dump(logs).data
-#     net_gain = 0
-#     for data in output:
-#         data['bought_price'] = get_bought_price(16, data['company'])
-#         data['quantity'] = get_quantity(16, data['company'])
-#         prev_date = datetime.today() - timedelta(days=1)
-#         prev_price = get_stock_price(prev_date, data['company'])
-#         data['prev_price'] = prev_price
-#         data['change'] = round(data['closing'] - prev_price, 2)
-#         data['percentage_change'] = round(data['change']/prev_price * 100, 2) # this is in %
-#         data['value_bought'] = data['bought_price'] * data['quantity']
-#         data['value_if_sell'] = data['closing'] * data['quantity']
-#         data['stock_gain'] = round(data['value_if_sell'] - data['value_bought'], 2)
-#         net_gain += data['value_if_sell'] - data['value_bought']
-#         data['net_gain'] = net_gain
-#     net_gain = round(net_gain, 2)
-#     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
-   
+    return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})   
 
 @app.route('/company/<string:code>', methods=['GET'])
 def stock_details(code):
@@ -330,6 +307,46 @@ def watchlist_delete(user_id, code):
     wl_schema = WatchlistSchema(many=True)
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
+
+@app.route('/grapher/<int:micro_int>/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
+def grapher(micro_int, type, stocks, start_date, end_date):
+    stock = stocks.split(",")
+    micro = False
+    if (micro_int == 1):
+        micro = True
+    if type == "world":
+        graph = get_plot(stock, micro=micro, indicies=['world'],start=start_date, finish=end_date)
+    elif type == "sma":
+        graph = get_plot(stock, micro=micro, closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date)
+    elif type == "ema":
+        graph = get_plot(stock, micro=micro, closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date)
+    elif type == "percentage_change":
+        graph = get_plot(stock, micro=micro, size=(12, 2), change=1, start=start_date, finish=end_date)
+    elif type == "volume_change":
+        graph = get_plot(stock, micro=micro, volume=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "macd":
+        graph = get_plot(stock, micro=micro, macd=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "bb":
+        graph = get_plot(stock, micro=micro, bb=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "stoch":
+        graph = get_plot(stock, micro=micro, stoch=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "rsi":
+        graph = get_plot(stock, micro=micro, rsi=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "adx":
+        graph = get_plot(stock, micro=micro, adx=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "cci":
+        graph = get_plot(stock, micro=micro, cci=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "aroon":
+        graph = get_plot(stock, micro=micro, aroon=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "chaikin":
+        graph = get_plot(stock, micro=micro, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "mom":
+        graph = get_plot(stock, micro=micro, mom=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "dp_pb":
+        graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+    else:
+        graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
+    return jsonify({'result': graph})
 
 @app.route('/logout')
 def logout():

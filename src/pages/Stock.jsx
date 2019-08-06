@@ -4,8 +4,7 @@ import { Typography, Fab } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 
 import { styles } from "./styles";
-import { PerformanceChart } from "../components/PerformanceChart/PerformanceChart";
-import { StockDrawer } from "../components/StockDrawer/StockDrawer";
+import { StockDrawer, Grapher } from "../components";
 import APIClient from "../api/apiClient.js";
 import * as stockCodes from "../mock/stock_code.js";
 import { UserContext } from "../UserContext";
@@ -16,7 +15,8 @@ export class SingleStock extends React.Component {
     this.state = {
       items: [],
       openDrawer: false,
-      isLoaded: false
+      isLoaded: false,
+      graphData: ""
     };
   }
 
@@ -32,7 +32,30 @@ export class SingleStock extends React.Component {
     });
   };
 
-  componentDidMount = () => {
+  getPredictionDates = calendar_date => {
+    var month = calendar_date.getMonth();
+    var start_month = "";
+    var end_month = "";
+    if (month < 10) {
+      start_month = ("0" + month).slice(-2);
+      if (month < 9) end_month = ("0" + (month + 1)).slice(-2);
+      else end_month = month + 1;
+    } else start_month = month;
+
+    var date = calendar_date.getDate();
+    if (date < 10) date = ("0" + date).slice(-2);
+
+    const start_year = calendar_date.getFullYear();
+    var end_year = start_year;
+    if (month === 12) end_year = end_year + 1;
+
+    return [
+      start_year + "-" + start_month + "-" + date,
+      end_year + "-" + end_month + "-" + date
+    ];
+  };
+
+  componentWillMount = () => {
     this.apiClient = new APIClient();
     this.apiClient
       .getStockDetails(this.props.match.params.stockId)
@@ -41,17 +64,21 @@ export class SingleStock extends React.Component {
           items: json.details,
           isLoaded: true
         });
-      })
-      .then(res => {
         const company = stockCodes.suggestions.filter(code => {
           return code.label === this.props.match.params.stockId;
         });
-        this.setState({
-          items: {
-            ...this.state.items,
-            name: company[0].value
-          }
-        });
+        const dates = this.getPredictionDates(new Date());
+        this.apiClient
+          .getGraph("else", 0, json.details.company, dates[0], dates[1])
+          .then(data =>
+            this.setState({
+              items: {
+                ...this.state.items,
+                name: company[0].value
+              },
+              graphData: data.result
+            })
+          );
       });
   };
 
@@ -89,8 +116,11 @@ export class SingleStock extends React.Component {
         <Typography variant="body1"> Return on asset: ${items.roa} </Typography>
         <Typography variant="body1">Return on equity: ${items.roe}</Typography>
         <Typography variant="body1"> Volume: {items.volume}</Typography>
-
-        <PerformanceChart />
+        {this.state.graphData !== "" && (
+          <div style={{ maxWidth: "100%", height: "auto" }}>
+            <Grapher data={this.state.graphData} />
+          </div>
+        )}
         {this.state.openDrawer && (
           <StockDrawer
             onClose={this.handleDrawerClose}
@@ -100,7 +130,6 @@ export class SingleStock extends React.Component {
         )}
       </div>
     );
-    // }
   }
 }
 
