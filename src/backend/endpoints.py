@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from functions import *
 from grapher import *
+from loader import *
 
 app = Flask(__name__)
 CORS(app)
@@ -131,13 +132,20 @@ def portfolio(user_id):
         portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
-        print(output)
         return jsonify({'portfolios': output})
 
 @app.route('/user/<int:user_id>/delete/<int:portfolio_id>', methods=['DELETE'])        
 def delete_portfolio(portfolio_id, code):
     delete_portfolio(portfolio_id)
 
+@app.route('/update_ticks/<string:portfolio_id>', methods=['GET'])
+def update_ticks(portfolio_id):
+    stocks = get_portfolio_codes(portfolio_id)
+    update_last_ticks(stocks)
+    last_data = get_last_ticks(stocks)
+    company_schema = CompanySchema(many=True)
+    output = company_schema.dump(last_data).data
+    return jsonify({'last_ticks': output})
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
 def stock(user_id, portfolio_id):
