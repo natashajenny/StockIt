@@ -1,4 +1,6 @@
 import json
+import csv
+# import pandas as pd
 from datetime import datetime, timedelta
 from flask import Flask, g, request, jsonify, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -111,6 +113,7 @@ def all_companies():
     return jsonify({'stocks': output})
 
 
+
 @app.route('/user/<int:user_id>/portfolio', methods=['GET','POST'])
 def portfolio(user_id):
     if request.method == 'POST':
@@ -123,17 +126,18 @@ def portfolio(user_id):
         portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
-        print(output)
         return jsonify({'portfolios': output})
     else :
         portfolios = get_portfolios(user_id)
         portfolio_schema = PortfolioSchema(many=True)
         output = portfolio_schema.dump(portfolios).data
+        print(output)
         return jsonify({'portfolios': output})
 
 @app.route('/user/<int:user_id>/delete/<int:portfolio_id>', methods=['DELETE'])        
 def delete_portfolio(portfolio_id, code):
     delete_portfolio(portfolio_id)
+
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
 def stock(user_id, portfolio_id):
@@ -141,7 +145,7 @@ def stock(user_id, portfolio_id):
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        print(data_dict)
+        # print(data_dict)
         code = data_dict['code']['data']
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
@@ -314,7 +318,8 @@ def intraday_grapher(type, stocks):
         graph = get_intraday_graph(stock)
     elif type == "candle":
         graph = get_intraday_candle(stock)
-    return jsonify({'result': graph})
+    # return jsonify({'result': graph})
+    return render_template('graph.html', result=graph)
 
 
 @app.route('/grapher/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
