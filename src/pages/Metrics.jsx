@@ -10,7 +10,7 @@ import {
   FormGroup
 } from "@material-ui/core";
 import update from "react-addons-update";
-
+// import update from 'immutability-helper';
 import { Grapher } from "../components";
 import { styles } from "./styles";
 import APIClient from "../api/apiClient.js";
@@ -107,7 +107,7 @@ export class PureMetrics extends React.Component {
   handleStocksChange = (stock, i) => {
     const newStock = { name: stock.name, selected: !stock.selected };
     this.setState({
-      stocks: update(this.state.stocks, { [i]: {$set: newStock }})
+      stocks: update(this.state.stocks, { [i]: { $set: newStock } })
     });
   };
 

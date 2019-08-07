@@ -1,7 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import {newsGrid} from '../components/NewsGrid/NewsGrid';
-import {Stocklist} from '../components/Stocklist/Stocklist';
+import { Stocklist } from '../components/Stocklist/Stocklist';
 // import {StockDrawer} from '../components/StockDrawer/StockDrawer';
 import { styles } from './styles';
 import APIClient from '../api/apiClient.js';
@@ -12,18 +11,18 @@ export class PureStocks extends React.Component {
     // handleClick = (address) => {
     //     history.push('/Stocks/${address}')
     // }
- 
-    constructor(props){
+
+    constructor(props) {
         super(props);
         this.state = {
-          items: [],
-          isLoaded: false,
+            items: [],
+            isLoaded: false,
         }
-      }
-    componentDidMount(){
+    }
+    componentDidMount() {
         this.apiClient = new APIClient();
         this.apiClient.getStocks()
-            .then(json =>{
+            .then(json => {
                 this.setState({
                     isLoaded: true,
                     items: json.stocks,
@@ -35,18 +34,18 @@ export class PureStocks extends React.Component {
         var { isLoaded, items } = this.state;
         const { classes } = this.props;
         // {newsGrid()}
-        if(!isLoaded){
+        if (!isLoaded) {
             return <div>Loading....</div>
         } else {
             // newsGrid()
             console.log(isLoaded);
             console.log(items);
             return (
-                <div className = {classes.root}>
+                <div className={classes.root}>
                     <h1> Stocks </h1>
-                    <Stocklist  items={items}/>
+                    <Stocklist items={items} />
                 </div>
-            );  
+            );
         }
     }
 }

@@ -17,7 +17,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { styles } from "./styles";
 import { ResponsiveDrawer, RegisterModal, LoginModal } from "../";
-import { Notification } from "./Notification";
+// import { Notification } from "./Notification";
 import { SearchBar } from "../";
 import { UserContext } from "../../UserContext";
 import history from "../../history";
@@ -104,14 +104,14 @@ class PureNavBar extends React.Component {
         open={this.state.isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
-        <MenuItem>
+        {/* <MenuItem>
           <IconButton aria-label="Show 11 new notifications" color="inherit">
             <Badge badgeContent={11} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
           <p>Notifications</p>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton
             aria-label="Account of current user"
@@ -154,11 +154,11 @@ class PureNavBar extends React.Component {
             {isLoggedIn ? (
               <div>
                 <div className={classes.sectionDesktop}>
-                  <IconButton aria-label="notifications" color="inherit">
+                  {/* <IconButton aria-label="notifications" color="inherit">
                     <Badge badgeContent={17} color="secondary">
                       <NotificationsIcon />
                     </Badge>
-                  </IconButton>
+                  </IconButton> */}
                   <IconButton
                     edge="end"
                     aria-label="Account of current user"
@@ -183,19 +183,19 @@ class PureNavBar extends React.Component {
                 </div>
               </div>
             ) : (
-              <div>
-                <Button onClick={this.openRegisterModal}>
-                  <Typography className={classes.title} variant="button" noWrap>
-                    Register
+                <div>
+                  <Button onClick={this.openRegisterModal}>
+                    <Typography className={classes.title} variant="button" noWrap>
+                      Register
                   </Typography>
-                </Button>
-                <Button onClick={this.openLoginModal}>
-                  <Typography className={classes.title} variant="button" noWrap>
-                    Login
+                  </Button>
+                  <Button onClick={this.openLoginModal}>
+                    <Typography className={classes.title} variant="button" noWrap>
+                      Login
                   </Typography>
-                </Button>
-              </div>
-            )}
+                  </Button>
+                </div>
+              )}
           </Toolbar>
         </AppBar>
         {/* <Notification /> */}
