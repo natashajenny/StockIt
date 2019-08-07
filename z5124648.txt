@@ -60,3 +60,5 @@ worked on getting the graphs to be displayed from back end, created a graphing c
 week 9: 
 Implemented twitter feed from the stock companies 
 continue working on getting graphs from back end 
+countinued changing the ui to make it better
+added more graphic elements

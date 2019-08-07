@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-import talib as ta
+# import talib as ta
 from functions import *
 from model import Company, StockLog, IndexLog, PerformanceLog
 from model import start_engine

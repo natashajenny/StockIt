@@ -99,6 +99,11 @@ class APIClient {
     return this.perform("delete", `/user/${userId}/delete_wl/${code}`);
   }
 
+  updateTicks(userId, stocks) {
+    console.log(`/user/${userId}/update_ticks/${stocks}`)
+    return this.perform("get", `/user/${userId}/update_ticks/${stocks}`)
+  }
+
   async perform(method, resource, data) {
     return client({
       method,
@@ -113,9 +118,6 @@ class APIClient {
   }
 
   getGraph(type, micro, stocks, start_date, end_date) {
-    console.log(
-      `/grapher/${micro}/${type}/${stocks}/${start_date}/${end_date}`
-    );
     return this.perform(
       "get",
       `/grapher/${micro}/${type}/${stocks}/${start_date}/${end_date}`

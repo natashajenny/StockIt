@@ -157,3 +157,10 @@ Sunday
 Monday
 -Added Metrics and Grapher UI and functionality
 -Added Graph to Stock and Portfolio pages
+
+Tuesday
+-Added Checkboxes to Metrics
+-Added export csv functionality and UI
+
+Wednesday
+-Clean up code

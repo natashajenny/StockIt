@@ -12,3 +12,4 @@ export * from "./StockDrawer";
 export * from "./SearchAutoFill";
 export * from "./StockRank";
 export * from "./Grapher";
+export * from "./LoadingBar";

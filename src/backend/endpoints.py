@@ -138,13 +138,14 @@ def portfolio(user_id):
 def delete_portfolio(portfolio_id, code):
     delete_portfolio(portfolio_id)
 
-@app.route('/update_ticks/<string:portfolio_id>', methods=['GET'])
-def update_ticks(portfolio_id):
-    stocks = get_portfolio_codes(portfolio_id)
-    update_last_ticks(stocks)
-    last_data = get_last_ticks(stocks)
+@app.route('/user/<int:user_id>/update_ticks/<string:stocks>', methods=['GET'])
+def update_ticks(user_id, stocks):
+    stock_list = stocks.split(",")
+    update_last_ticks(stock_list)
+    last_data = get_last_ticks(stock_list)
     company_schema = CompanySchema(many=True)
     output = company_schema.dump(last_data).data
+    print(output)
     return jsonify({'last_ticks': output})
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
@@ -153,7 +154,6 @@ def stock(user_id, portfolio_id):
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        # print(data_dict)
         code = data_dict['code']['data']
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
@@ -166,6 +166,7 @@ def stock(user_id, portfolio_id):
     output = log_schema.dump(logs).data
     net_gain = 0
     for data in output:
+        print(data)
         data['bought_price'] = get_bought_price(portfolio_id, data['company'])
         data['quantity'] = get_quantity(portfolio_id, data['company'])
         value_bought = data['bought_price'] * data['quantity']
@@ -352,12 +353,17 @@ def grapher(micro_int, type, stocks, start_date, end_date):
         graph = get_plot(stock, micro=micro, aroon=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "chaikin":
         graph = get_plot(stock, micro=micro, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "mom":
+    elif type == "month-to-month":
         graph = get_plot(stock, micro=micro, mom=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "dp_pb":
         graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+    elif type == "correlation":
+        graph = get_corr(stock, start=start_date, finish=end_date)
+    elif type == "intraday":
+        graph = get_intraday_candle(stock)
     else:
         graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
+
     return jsonify({'result': graph})
 
 @app.route('/logout')

@@ -32,26 +32,24 @@ export class SingleStock extends React.Component {
     });
   };
 
-  getPredictionDates = calendar_date => {
-    var month = calendar_date.getMonth();
-    var start_month = "";
-    var end_month = "";
-    if (month < 10) {
-      start_month = ("0" + month).slice(-2);
-      if (month < 9) end_month = ("0" + (month + 1)).slice(-2);
-      else end_month = month + 1;
-    } else start_month = month;
-
-    var date = calendar_date.getDate();
+  getHistoricalDate = () => {
+    const current_date = new Date().toLocaleDateString().split("/");
+    var month = parseInt(current_date[0]);
+    if (month < 10) month = ("0" + month).slice(-2);
+    
+    var date = parseInt(current_date[1]);
     if (date < 10) date = ("0" + date).slice(-2);
 
-    const start_year = calendar_date.getFullYear();
-    var end_year = start_year;
-    if (month === 12) end_year = end_year + 1;
+    const end_year = parseInt(current_date[2]);
+    var start_year = end_year - 1;
 
+    console.log([
+      start_year + "-" + month + "-" + date,
+      end_year + "-" + month + "-" + date
+    ]);
     return [
-      start_year + "-" + start_month + "-" + date,
-      end_year + "-" + end_month + "-" + date
+      start_year + "-" + month + "-" + date,
+      end_year + "-" + month + "-" + date
     ];
   };
 
@@ -67,7 +65,7 @@ export class SingleStock extends React.Component {
         const company = stockCodes.suggestions.filter(code => {
           return code.label === this.props.match.params.stockId;
         });
-        const dates = this.getPredictionDates(new Date());
+        const dates = this.getHistoricalDate(new Date());
         this.apiClient
           .getGraph("else", 0, json.details.company, dates[0], dates[1])
           .then(data =>
@@ -85,6 +83,7 @@ export class SingleStock extends React.Component {
   render() {
     var { items } = this.state;
     const { classes } = this.props;
+    console.log(items)
     return (
       <div className={classes.root}>
         <div style={{ display: "flex", flexDirection: "row" }}>

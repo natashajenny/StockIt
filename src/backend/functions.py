@@ -118,7 +118,7 @@ def find_portfolio(portfolio_id):
 def get_logs(portfolio_id):
     db = Db.instance()
     subq = db.session.query(StockLog.code.label('stock_code'), func.max(StockLog.date).label('recent_date')).group_by(StockLog.code).subquery('t2')
-    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code)).\
+    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code, StockLog.opening != None)).\
         join(PortfolioLog, PortfolioLog.code == StockLog.code).filter(PortfolioLog.portfolio_id == portfolio_id)
     return q.all()
 

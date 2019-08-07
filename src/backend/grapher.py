@@ -87,7 +87,7 @@ def get_plot(
                 df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
             else:
                 df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-            plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
+            # plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if opening:
         plt.plot(df.index.values, df['opening'], label='Opening of %s' % company.code)
@@ -205,6 +205,55 @@ def get_plot(
     result = str(fig_png)[2:-1]
     return result
 
+def get_corr(
+    stocks = [],                # list of stocks 
+    indicies = [],              # list of fundamental indicies
+    sector = None,
+    size = (8, 8),              # graph (length, height)
+    start = '2009-07-01',       # start date in 'YYYY-MM-DD' format
+    finish = None,              # finish date in 'YYYY-MM-DD' format
+    title = None,               # graph title
+    engine = engine):
+    
+    if (len(stocks) == 0) and (len(indicies) == 0) and not sector:
+        raise Exception('Empty list')
+
+    
+    if not engine:
+        engine = start_engine()
+
+    (x, y) = size
+    plt.figure(figsize=(x, y), dpi=100)
+      
+    start = datetime.strptime(start, '%Y-%m-%d').date()
+    if finish:
+        finish = datetime.strptime(finish, '%Y-%m-%d').date()
+    else:
+        finish = datetime.today()        
+     
+    table = pd.DataFrame()
+    if sector:
+        companies = Company().query().filter(Company.sector == sector).all()
+    else:
+        companies = [Company().query().get(stock) for stock in stocks]
+    for company in companies:
+        stock_log = StockLog().query().filter((StockLog.company == company) &
+                                              (StockLog.date >= start) &
+                                              (StockLog.date <= finish))
+        df = pd.read_sql(stock_log.statement, engine)
+        df.sort_values(by='date', inplace=True)
+        df.set_index('date', inplace=True)
+        df.rename(columns={'closing': company.code}, inplace=True)
+        table = table.merge(df[company.code], how='outer', left_index=True, right_index=True)
+    corr = table.corr()
+    sns.heatmap(corr, cmap='coolwarm', center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5})
+    fig_file = BytesIO()
+    plt.savefig(fig_file, format='png')
+    fig_file.seek(0)
+    fig_png = base64.b64encode(fig_file.getvalue())
+    result = str(fig_png)[2:-1]
+    return result
+
 def get_intraday_graph(stocks, norm=None, size=(12,8), engine=engine):
     CSV = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY'\
           '&interval=1min'\
@@ -215,7 +264,6 @@ def get_intraday_graph(stocks, norm=None, size=(12,8), engine=engine):
     
     if len(stocks) > 5:
         raise Exception("Only 5 stocks supported")
-    
     if not engine:
         engine = start_engine()
 
