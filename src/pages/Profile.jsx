@@ -16,7 +16,7 @@ export class PureProfile extends React.Component {
         <div className={classes.topCard}>
           <div className={classes.userCard}>
             <div className={classes.photoContainer}>
-              <img className={classes.userPhoto} src={userPhoto} />
+              <img className={classes.userPhoto} src={userPhoto} alt='cuteface' />
             </div>
             <div className={classes.userNameContainer}>
               <div className={classes.userName}>
