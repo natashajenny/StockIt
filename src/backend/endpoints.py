@@ -154,7 +154,6 @@ def stock(user_id, portfolio_id):
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        # print(data_dict)
         code = data_dict['code']['data']
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
@@ -167,6 +166,7 @@ def stock(user_id, portfolio_id):
     output = log_schema.dump(logs).data
     net_gain = 0
     for data in output:
+        print(data)
         data['bought_price'] = get_bought_price(portfolio_id, data['company'])
         data['quantity'] = get_quantity(portfolio_id, data['company'])
         value_bought = data['bought_price'] * data['quantity']

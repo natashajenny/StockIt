@@ -68,7 +68,8 @@ def get_last_ticks(stocks):
 ## Stock Log
 
 def get_stock_details(code):
-    q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
+    c = Company().query().get(code)
+    q = StockLog().query().filter(and_(StockLog.company == c, StockLog.opening != None)).order_by(desc(StockLog.date)).first()
     return q        
 
 ## Performance Log
@@ -117,7 +118,7 @@ def find_portfolio(portfolio_id):
 def get_logs(portfolio_id):
     db = Db.instance()
     subq = db.session.query(StockLog.code.label('stock_code'), func.max(StockLog.date).label('recent_date')).group_by(StockLog.code).subquery('t2')
-    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code)).\
+    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code, StockLog.opening != None)).\
         join(PortfolioLog, PortfolioLog.code == StockLog.code).filter(PortfolioLog.portfolio_id == portfolio_id)
     return q.all()
 
