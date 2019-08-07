@@ -74,6 +74,7 @@ export class PureMetrics extends React.Component {
           this.apiClient
             .getGraph(
               type === "trend" ? "else" : type,
+              0,
               stocks,
               start_date,
               end_date
@@ -95,6 +96,7 @@ export class PureMetrics extends React.Component {
           this.apiClient
             .getGraph(
               type === "trend" ? "else" : type,
+              0,
               stocks,
               start_date,
               end_date

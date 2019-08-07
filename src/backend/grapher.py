@@ -14,7 +14,7 @@ import plotly as py
 import plotly.graph_objs as go
 
 warnings.filterwarnings("ignore")
-sns.set(style='whitegrid')
+sns.set()
 
 engine = start_engine()
 
@@ -22,7 +22,7 @@ def get_plot(
     stocks = [],                # list of stocks 
     indicies = [],              # list of fundamental indicies
     size = (12, 4),             # graph (length, height)
-    start = '2009-07-01',       # start date in 'YYYY-MM-DD' format
+    start = '2019-06-01',       # start date in 'YYYY-MM-DD' format
     finish = None,              # finish date in 'YYYY-MM-DD' format
     title = None,               # graph title
     change = False,             # daily percentage change

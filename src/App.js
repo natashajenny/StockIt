@@ -56,27 +56,27 @@ class App extends React.Component {
       }
     };
     this.state = {
-      isLoggedIn: true,
+      isLoggedIn: false,
       settings: {
         notification: true
       },
       logIn: this.logIn,
       logOut: this.logOut,
       handleChangeNotification: this.handleChangeNotification,
-      // user: null,
-      user: {
-        balance: 0,
-        dob: null,
-        email: "alina.aldhytha@gmail.com",
-        gender: null,
-        login: "alina",
-        name: "Alina Young",
-        password: "Hahaha123",
-        phone: "450314388",
-        portfolios: [16, 17, 19],
-        salt: "\xe385c2b0387a1fbfb61e9122b69870e0",
-        user_id: 16
-      }
+      user: null,
+      // user: {
+      //   balance: 0,
+      //   dob: null,
+      //   email: "alina.aldhytha@gmail.com",
+      //   gender: null,
+      //   login: "alina",
+      //   name: "Alina Young",
+      //   password: "Hahaha123",
+      //   phone: "450314388",
+      //   portfolios: [16, 17, 19],
+      //   salt: "\xe385c2b0387a1fbfb61e9122b69870e0",
+      //   user_id: 16
+      // }
     };
   }
 
@@ -95,8 +95,8 @@ class App extends React.Component {
                   <Redirect from="/Watchlist" to="/Home" />
                 </div>
               )}
-              {/* <Redirect from="/" to="/Home" /> */}
-              <Redirect from="/" to="/Portfolio" />
+              <Redirect from="/" to="/Home" />
+              {/* <Redirect from="/" to="/Portfolio" /> */}
               <Route path="/Home" component={Home} />
               <Route path="/Portfolio" component={Portfolio} />
               <Route path="/Metrics" component={Metrics} />

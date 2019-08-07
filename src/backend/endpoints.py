@@ -172,6 +172,7 @@ def stock(user_id, portfolio_id):
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
         data['unit_gain'] = round(data['closing']-data['bought_price'], 2)
+        data['trend'] = get_plot([data['company']], micro=True, closing=1, finish=datetime.today().strftime('%Y-%m-%d'))
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})   
@@ -319,52 +320,44 @@ def watchlist_delete(user_id, code):
     output = wl_schema.dump(wl).data
     return jsonify({'wl_stocks': output})
 
-@app.route('/intraday_grapher/<string:type>/<string:stocks>', methods=['GET'])
-def intraday_grapher(type, stocks):
+@app.route('/grapher/<int:micro_int>/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
+def grapher(micro_int, type, stocks, start_date, end_date):
     stock = stocks.split(",")
-    if type == "default":
-        graph = get_intraday_graph(stock)
-    elif type == "candle":
-        graph = get_intraday_candle(stock)
-    # return jsonify({'result': graph})
-    return render_template('graph.html', result=graph)
-
-
-@app.route('/grapher/<string:type>/<string:stocks>/<string:start_date>/<string:end_date>', methods=['GET'])
-def grapher(type, stocks, start_date, end_date):
-    stock = stocks.split(",")
+    micro = False
+    if (micro_int == 1):
+        micro = True
     if type == "world":
-        graph = get_plot(stock, indicies=['world'],start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, indicies=['world'],start=start_date, finish=end_date)
     elif type == "sma":
-        graph = get_plot(stock, closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date)
     elif type == "ema":
-        graph = get_plot(stock, closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date)
     elif type == "percentage_change":
-        graph = get_plot(stock, size=(12, 2), change=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, size=(12, 2), change=1, start=start_date, finish=end_date)
     elif type == "volume_change":
-        graph = get_plot(stock, volume=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, volume=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "macd":
-        graph = get_plot(stock, macd=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, macd=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "bb":
-        graph = get_plot(stock, bb=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, bb=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "stoch":
-        graph = get_plot(stock, stoch=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, stoch=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "rsi":
-        graph = get_plot(stock, rsi=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, rsi=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "adx":
-        graph = get_plot(stock, adx=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, adx=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "cci":
-        graph = get_plot(stock, cci=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, cci=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "aroon":
-        graph = get_plot(stock, aroon=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, aroon=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "chaikin":
-        graph = get_plot(stock, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "mom":
-        graph = get_plot(stock, mom=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, mom=1, size=(12, 2), start=start_date, finish=end_date)
     elif type == "dp_pb":
-        graph = get_plot(stock, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
     else:
-        graph = get_plot(stock, closing=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
     return jsonify({'result': graph})
 
 @app.route('/logout')

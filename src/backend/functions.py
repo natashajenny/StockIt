@@ -68,7 +68,8 @@ def get_last_ticks(stocks):
 ## Stock Log
 
 def get_stock_details(code):
-    q = StockLog().query().filter(StockLog.code == code).order_by(desc(StockLog.date)).first()
+    q = StockLog().query().filter(and_(StockLog.code == code, StockLog.opening.isnot(None))).order_by(desc(StockLog.date)).first()
+    print(q.__dict__)
     return q        
 
 ## Performance Log
