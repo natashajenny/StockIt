@@ -117,15 +117,17 @@ def find_portfolio(portfolio_id):
 
 def get_logs(portfolio_id):
     db = Db.instance()
-    subq = db.session.query(StockLog.code.label('stock_code'), func.max(StockLog.date).label('recent_date')).group_by(StockLog.code).subquery('t2')
-    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code, StockLog.opening != None)).\
+    subq = db.session.query(StockLog.code.label('stock_code'), func.max(StockLog.date).filter(StockLog.opening.isnot(None)).label('recent_date')).group_by(StockLog.code).subquery('t2')
+    q = db.session.query(StockLog).join(subq, and_(StockLog.date == subq.c.recent_date, StockLog.code == subq.c.stock_code)).\
         join(PortfolioLog, PortfolioLog.code == StockLog.code).filter(PortfolioLog.portfolio_id == portfolio_id)
+    for p in q.all():
+        print(p.__dict__)
     return q.all()
 
 def get_portfolio_stocks(portfolio_id):
     q = PortfolioLog().query().filter(PortfolioLog.portfolio_id == portfolio_id)
-    # for l in q.all():
-    #    print(l.code)
+    for l in q.all():
+       print(l.code)
     return q.all()
 
 def get_portfolio_codes(portfolio_id):
