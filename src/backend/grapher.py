@@ -87,7 +87,7 @@ def get_plot(
                 df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
             else:
                 df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-            plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
+            # plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if opening:
         plt.plot(df.index.values, df['opening'], label='Opening of %s' % company.code)
@@ -188,12 +188,12 @@ def get_plot(
             else:
                 new[idx] = (new[idx] - new[idx].mean()) / new[idx].std()
             plt.plot(new.index.values, new[idx], label='%s index' % idx.capitalize())
-        # if len(companies) > 0:
-        #     if norm == 'minmax':
-        #         df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
-        #     else:
-        #         df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-        #     plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
+        if len(companies) > 0:
+            if norm == 'minmax':
+                df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
+            else:
+                df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
+            plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if not micro:
         plt.legend()
