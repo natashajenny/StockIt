@@ -26,9 +26,7 @@ export class PureProfile extends React.Component {
                   <br />
                   User name: {user.login}
                   <br />
-                  Password: {user.password}
-                  <br />
-                  Phone: 0{user.phone}
+                  Phone: {user.phone}
                   <br />
                 </Typography>
               </div>

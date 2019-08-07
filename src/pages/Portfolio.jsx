@@ -158,9 +158,8 @@ export class PurePortfolio extends React.Component {
         data.portfolios &&
           this.setState({
             selectedPortfolio: data.portfolios[0]
-          });
-
-        this.apiClient
+          })
+        data.portfolios && data.portfolios[0] && this.apiClient
           .getPortfolioStocks(
             this.context.user.user_id,
             data.portfolios[0].portfolio_id

@@ -8,7 +8,7 @@ export const styles = createStyles(theme => ({
   },
   welcome: {
     textAlign: "center",
-    paddingBottom: "10vh",
+    paddingBottom: "15vh",
     paddingTop: "15vh"
   },
   refreshButton: {
@@ -40,8 +40,8 @@ export const styles = createStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     display: "flex",
-    width: "250px",
-    padding: "40px"
+    width: 350,
+    padding: "70px 50px 70px 50px"
   },
   title: {
     textAlign: "center",

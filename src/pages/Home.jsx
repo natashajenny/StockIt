@@ -27,7 +27,7 @@ export class PureHome extends React.Component {
                             <Paper>
                                 <div className = {classes.panel}>
                                     <TableChart fontSize='large'/>
-                                    <Typography variant='caption' className={classes.title}>
+                                    <Typography variant='body1' className={classes.title}>
                                         Manage your stock portfolios and watchlist
                                         with ease.
                                     </Typography>
@@ -41,7 +41,7 @@ export class PureHome extends React.Component {
                             <Paper>
                                 <div className = {classes.panel}>
                                     <Timeline fontSize='large'/>
-                                    <Typography variant='caption' className={classes.title}>
+                                    <Typography variant='body1' className={classes.title}>
                                         Analyse the performance of your portfolios through
                                         the metrics page.
                                     </Typography>
@@ -55,7 +55,7 @@ export class PureHome extends React.Component {
                             <Paper>
                                 <div className = {classes.panel}>
                                     <AttachMoney fontSize='large'/>
-                                    <Typography variant='caption' className={classes.title}>
+                                    <Typography variant='body1' className={classes.title}>
                                         Provide future prediction of stock prices and
                                         returns.
                                     </Typography>

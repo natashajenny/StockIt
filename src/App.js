@@ -57,7 +57,7 @@ class App extends React.Component {
     this.state = {
       isLoggedIn: false,
       settings: {
-        notification: true
+        notification: false
       },
       logIn: this.logIn,
       logOut: this.logOut,

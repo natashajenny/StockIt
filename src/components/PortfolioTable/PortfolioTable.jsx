@@ -239,6 +239,7 @@ class PurePortfolioTable extends React.Component {
   render() {
     const { classes } = this.props;
     const { selectedStock, portfolio_data, isEditable } = this.state;
+    console.log(portfolio_data)
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -425,6 +426,17 @@ class PurePortfolioTable extends React.Component {
                 <Close />
               </IconButton>
               <Grapher data={this.state.graphData} />
+              {selectedStock.prediction && 
+                <div>
+                  <Typography variant="body1">Predicted Price = ${selectedStock.prediction}</Typography>
+                  {selectedStock.prediction < selectedStock.closing ? 
+                      <Typography variant="body1">Predicted Loss = -${selectedStock.closing - selectedStock.prediction}</Typography>
+                    :
+                      <Typography variant="body1">Predicted Gain = +${selectedStock.prediction - selectedStock.closing}</Typography>
+                  }
+                </div>
+              }
+              
             </Paper>
           </div>
         )}
