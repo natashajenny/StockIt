@@ -203,6 +203,8 @@ def get_plot(
     fig_file.seek(0)
     fig_png = base64.b64encode(fig_file.getvalue())
     result = str(fig_png)[2:-1]
+    fig_file.close()
+    plt.close()
     return result
 
 def get_corr(
@@ -249,9 +251,11 @@ def get_corr(
     sns.heatmap(corr, cmap='coolwarm', center=0, square=True, linewidths=.5, cbar_kws={"shrink": .5})
     fig_file = BytesIO()
     plt.savefig(fig_file, format='png')
+    plt.close()
     fig_file.seek(0)
     fig_png = base64.b64encode(fig_file.getvalue())
     result = str(fig_png)[2:-1]
+    fig_file.close()
     return result
 
 def get_intraday_graph(stocks, norm=None, size=(12,8), engine=engine):
@@ -290,9 +294,11 @@ def get_intraday_graph(stocks, norm=None, size=(12,8), engine=engine):
 
     fig_file = BytesIO()
     plt.savefig(fig_file, format='png')
+    plt.close()
     fig_file.seek(0)
     fig_png = base64.b64encode(fig_file.getvalue())
     result = str(fig_png)[2:-1]
+    fig_file.close()
     return result
 
 
@@ -345,4 +351,5 @@ def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
     fig_file.seek(0)
     fig_png = base64.b64encode(fig_file.getvalue())
     result = str(fig_png)[2:-1]
+    fig_file.close()
     return result
