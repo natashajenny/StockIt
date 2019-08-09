@@ -10,8 +10,8 @@ Out stock portfolio management system consists of three main components:
 ## Running our project:
 
 ### Frontend
-> yarn install
-> yarn build
+> yarn install <br>
+> yarn build <br>
 > yarn start
 
 ### Backend
