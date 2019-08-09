@@ -9,8 +9,8 @@ import {
   FormControlLabel,
   FormGroup
 } from "@material-ui/core";
-import update from "react-addons-update";
-// import update from 'immutability-helper';
+// import update from "react-addons-update";
+import update from 'immutability-helper';
 import { Grapher } from "../components";
 import { styles } from "./styles";
 import APIClient from "../api/apiClient.js";
