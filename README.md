@@ -4,13 +4,13 @@ Stock It is a stock portfolio management system which allows users to create mul
 To run our project:
 
 ### Frontend
->> yarn install
->> yarn build
->> yarn start
+> yarn install
+> yarn build
+> yarn start
 
 ### Backend
->> cd capstone-project-scrubs/src/backend
->> FLASK_APP=$PWD/app/http/api/endpoints.py FLASK_ENV=development python3 -m flask run --port 4000
+> cd capstone-project-scrubs/src/backend
+> FLASK_APP=$PWD/app/http/api/endpoints.py FLASK_ENV=development python3 -m flask run --port 4000
 
 
 ### Source Code Structure
