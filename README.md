@@ -15,7 +15,7 @@ Out stock portfolio management system consists of three main components:
 > yarn start
 
 ### Backend
-> cd capstone-project-scrubs/src/backend
+> cd capstone-project-scrubs/src/backend <br>
 > FLASK_APP=$PWD/app/http/api/endpoints.py FLASK_ENV=development python3 -m flask run --port 4000
 
 
