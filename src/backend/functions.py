@@ -101,7 +101,10 @@ def create_portfolio(user_id, title, description):
     portfolio.save()
     return portfolio.portfolio_id
 
-def delete_portfolio(portfolio_id):
+def delete_portfolio(user_id, portfolio_id):
+    codes = get_portfolio_codes(portfolio_id)
+    for c in codes:
+       delete_log(user_id, portfolio_id, c)
     portfolio = Portfolio().query().get(portfolio_id)
     portfolio.delete()
 
@@ -154,7 +157,7 @@ def get_bought_price(portfolio_id, code):
 # only save 1 log to portfolio
 def save_log(portfolio_id, code, number, bought_price):
     check = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
-    if exists is not None:
+    if exists is None:
         p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number, bought_price=bought_price)
         p.save()
     else:
@@ -169,7 +172,10 @@ def update_log(portfolio_id, code, number, bought_price):
 
 def delete_log(user_id, portfolio_id, code):
     p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
-    q.delete()
+    p.delete()
+    # p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code))
+    # for q in p.all():
+    #     q.delete()
 
 def get_quantity(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
@@ -233,8 +239,8 @@ def update_alerts(user_id, code, alert_high, alert_low, buy_high, buy_low, sell_
 
 def get_all_users():
     users = User().query()
-#     for l in users.all():
-#         print(l.__dict__)
+    for l in users.all():
+        print(l.__dict__)
     return users.all()
 
 def get_all_portfolios():

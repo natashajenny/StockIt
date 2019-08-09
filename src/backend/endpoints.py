@@ -52,9 +52,6 @@ class WatchlistSchema(ma.ModelSchema):
     class Meta:
         model = Watchlist
 
-@app.route('/')
-def welcome():
-    return render_template('welcome.html')
 
 # manually delete users
 @app.route('/delete/<int:user_id>', methods=['DELETE'])
@@ -135,8 +132,8 @@ def portfolio(user_id):
         return jsonify({'portfolios': output})
 
 @app.route('/user/<int:user_id>/delete/<int:portfolio_id>', methods=['DELETE'])        
-def delete_portfolio(portfolio_id, code):
-    delete_portfolio(portfolio_id)
+def delete_portfolio(user_id, portfolio_id):
+    delete_portfolio(user_id, portfolio_id)
 
 @app.route('/user/<int:user_id>/update_ticks/<string:stocks>', methods=['GET'])
 def update_ticks(user_id, stocks):
