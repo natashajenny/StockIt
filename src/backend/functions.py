@@ -157,7 +157,7 @@ def get_bought_price(portfolio_id, code):
 # only save 1 log to portfolio
 def save_log(portfolio_id, code, number, bought_price):
     check = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
-    if exists is None:
+    if check is None:
         p = PortfolioLog(datetime=datetime.now(), portfolio_id=portfolio_id, code=code, number=number, bought_price=bought_price)
         p.save()
     else:
@@ -171,11 +171,11 @@ def update_log(portfolio_id, code, number, bought_price):
     p.update()
 
 def delete_log(user_id, portfolio_id, code):
-    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
-    p.delete()
-    # p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code))
-    # for q in p.all():
-    #     q.delete()
+    # p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    # p.delete()
+    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code))
+    for q in p.all():
+        q.delete()
 
 def get_quantity(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
