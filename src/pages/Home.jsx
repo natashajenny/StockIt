@@ -28,8 +28,8 @@ export class PureHome extends React.Component {
                                 <div className = {classes.panel}>
                                     <TableChart fontSize='large'/>
                                     <Typography variant='body1' className={classes.title}>
-                                        Manage your stock portfolios and watchlist
-                                        with ease.
+                                        Manage your stock portfolios
+                                         and easily make decision with the future price prediction.
                                     </Typography>
                                     <Button onClick={() => this.handleClick('Portfolio')}>
                                         <Typography variant='button' noWrap>
@@ -56,10 +56,9 @@ export class PureHome extends React.Component {
                                 <div className = {classes.panel}>
                                     <AttachMoney fontSize='large'/>
                                     <Typography variant='body1' className={classes.title}>
-                                        Provide future prediction of stock prices and
-                                        returns.
+                                        Add stocks into your watchlist to observe their price trend.
                                     </Typography>
-                                    <Button onClick={() => this.handleClick('Stocks')}>
+                                    <Button onClick={() => this.handleClick('Watchlist')}>
                                         <Typography variant='button' noWrap>
                                             Explore More
                                         </Typography>

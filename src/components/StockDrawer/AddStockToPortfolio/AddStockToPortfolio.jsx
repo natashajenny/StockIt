@@ -14,7 +14,8 @@ class PureAddStockToPortfolio extends React.Component {
         price: emptyData,
         quantity: emptyData
       },
-      currentPrice: ""
+      currentPrice: "",
+      processing: false,
     };
     this.fieldNames = ["current_price", "price", "quantity"];
   }
@@ -32,6 +33,13 @@ class PureAddStockToPortfolio extends React.Component {
       }
     });
   };
+
+  handleSubmit = (e, formData, onSubmit) => {
+    this.setState({
+      processing: true
+    })
+    onSubmit(e, formData)
+  }
 
   componentDidMount = () => {
     this.setState({
@@ -52,7 +60,7 @@ class PureAddStockToPortfolio extends React.Component {
     return (
       <React.Fragment>
         <div style={{ width: "57%", marginTop: "10px" }}>
-          <form onSubmit={e => onSubmit(e, formData)}>
+          <form onSubmit={e => this.handleSubmit(e, formData, onSubmit)}>
             {this.fieldNames.map((fieldName, i) => (
               <TextField
                 required={i !== 0}
@@ -79,7 +87,7 @@ class PureAddStockToPortfolio extends React.Component {
               />
             ))}
             <div className={classes.buttons}>
-              <Button type="submit" color="primary" variant="contained">
+              <Button disabled={this.state.processing} type="submit" color="primary" variant="contained">
                 <Typography variant="button">Submit</Typography>
               </Button>
             </div>

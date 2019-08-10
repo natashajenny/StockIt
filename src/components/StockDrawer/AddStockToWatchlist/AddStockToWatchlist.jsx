@@ -19,7 +19,8 @@ class PureAddStockToWatchlist extends React.Component {
         sell_low: emptyData,
         quantity: emptyData
       },
-      currentPrice: ""
+      currentPrice: "",
+      processing: false
     };
     this.fieldNames = [
       "current_price",
@@ -54,6 +55,13 @@ class PureAddStockToWatchlist extends React.Component {
     if (i === 5) return 1.5 * currentPrice;
     if (i === 6) return 1.4 * currentPrice;
   };
+
+  handleSubmit = (e, formData, onSubmit) => {
+    this.setState({
+      processing: true
+    })
+    onSubmit(e, formData)
+  }
 
   componentDidMount = () => {
     const { formData } = this.state;
@@ -105,7 +113,7 @@ class PureAddStockToWatchlist extends React.Component {
               flexDirection: "column",
               alignItems: "center"
             }}
-            onSubmit={e => onSubmit(e, formData)}
+            onSubmit={e => this.handleSubmit(e, formData, onSubmit)}
           >
             <TextField
               disabled
@@ -167,7 +175,7 @@ class PureAddStockToWatchlist extends React.Component {
               )}
             </div>
             <div className={classes.buttons}>
-              <Button type="submit" color="primary" variant="contained">
+              <Button disabled={this.state.processing} type="submit" color="primary" variant="contained">
                 <Typography variant="button">Submit</Typography>
               </Button>
             </div>

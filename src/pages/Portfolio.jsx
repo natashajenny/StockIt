@@ -8,7 +8,6 @@ import {
   AddStockModal,
   PortfolioTable,
   CreatePortfolioModal
-  // LoadingBar
 } from "../components";
 import { styles } from "./styles";
 
@@ -99,17 +98,16 @@ export class PurePortfolio extends React.Component {
   };
 
   handleSubmitPorfolio = (e, formData) => {
-    // this.handleOpenLoader();
     e.preventDefault();
     this.apiClient
       .addPortfolio(this.context.user.user_id, formData)
       .then(data => {
         this.setState({
-          portfolios: data.portfolios
-          // openLoader: false
+          portfolios: data.portfolios,
+          openCreatePortfolioModal: false
         });
       })
-      .then(this.closeCreatePortfolioModal());
+      // .then(this.closeCreatePortfolioModal());
   };
 
   handleDownloadClick = () => {

@@ -26,27 +26,28 @@ export class PureMetrics extends React.Component {
       start_date: "2009-07-01",
       end_date: "2019-07-01",
       graphData: "",
-      stocks: null
+      stocks: null,
+      processing: false,
     };
     this.metricsType = [
-      "world",
-      "sma",
-      "mma",
-      "percentage change",
-      "volume change",
-      "macd",
-      "bb",
-      "stoch",
-      "rsi",
-      "adx",
-      "cci",
-      "aroon",
-      "chaikin",
-      "month-to-month",
-      "dp_pb",
-      "correlation",
-      "intraday",
-      "trend"
+      "Trend",
+      "World",
+      "Simple Moving Average(SMA)",
+      "Exponential Moving Average(EMA)",
+      "Percentage Change",
+      "Volume Change",
+      "Moving Average Convergence Divergence(MACD)",
+      "Bollinger Bands(BB)",
+      "Stochastic Oscillator(STOCH)",
+      "Relative Strength Index(RSI)",
+      "Average Directional Movement Index(ADX)",
+      "Commodity Channel Index(CCI)",
+      "AROON",
+      "Chaikin",
+      "Momentum",
+      "Dividend Yield and Price to Book Value(DP_PB)",
+      "Intraday",
+      "Correlation"
     ];
   }
 
@@ -115,7 +116,9 @@ export class PureMetrics extends React.Component {
     const { type, selectedPortfolio, start_date, end_date } = this.state;
     const stocks = this.state.stocks.filter(stock => stock.selected)
     const stocks_name = stocks.map(stock => stock.name)
-    console.log(stocks_name)
+    this.setState({
+      processing: true
+    })
     if (selectedPortfolio.title === "Watchlist") {
       this.apiClient
         .getGraph(
@@ -126,7 +129,10 @@ export class PureMetrics extends React.Component {
           end_date
         )
         .then(response => {
-          this.setState({ graphData: response.result });
+          this.setState({ 
+            graphData: response.result,
+            processing: false,
+          });
         });
     } else {
       this.apiClient
@@ -138,7 +144,10 @@ export class PureMetrics extends React.Component {
           end_date
         )
         .then(response => {
-          this.setState({ graphData: response.result });
+          this.setState({ 
+            graphData: response.result,
+            processing: false, 
+          });
         });
     }
   };
@@ -194,7 +203,7 @@ export class PureMetrics extends React.Component {
             <div />
             <Typography variant="body1">Start Date: </Typography>
             <TextField
-              disabled={this.state.type === "intraday"}
+              disabled={this.state.type === "Intraday"}
               id="start_date"
               type="date"
               value={this.state.start_date}
@@ -218,7 +227,7 @@ export class PureMetrics extends React.Component {
             <div />
             <Typography variant="body1">End Date: </Typography>
             <TextField
-              disabled={this.state.type === "intraday"}
+              disabled={this.state.type === "Intraday"}
               id="end_date"
               type="date"
               value={this.state.end_date}
@@ -246,6 +255,7 @@ export class PureMetrics extends React.Component {
               ))}
           </FormGroup>
           <Button
+            disabled={this.state.processing}
             type="submit"
             color="primary"
             variant="contained"

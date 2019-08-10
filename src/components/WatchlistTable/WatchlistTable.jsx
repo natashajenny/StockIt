@@ -7,7 +7,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Input
+  Input,
+  Button,
+  Typography
 } from "@material-ui/core";
 import { Check, Close, Edit, Delete } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
@@ -16,6 +18,7 @@ import { styles } from "./styles";
 import { DeleteModal } from "../forms";
 import { UserContext } from "../../UserContext";
 import APIClient from "../../api/apiClient.js";
+import { Grapher } from "../Grapher";
 
 class PureWatchlistTable extends React.Component {
   constructor(props) {
@@ -25,7 +28,11 @@ class PureWatchlistTable extends React.Component {
       selectedStock: null,
       isEditable: false,
       stocks: null,
-      watchlist_data: null
+      watchlist_data: null,
+      openPrediction: false,
+      prediction: null,
+      processingUpdate: false,
+      processingPrediction: false,
     };
     this.formConfig = [
       "alert_high",
@@ -78,6 +85,33 @@ class PureWatchlistTable extends React.Component {
       isEditable: true
     });
   };
+
+  handleOpenPrediction = row => {
+    this.setState({
+      processingPrediction: true
+    })
+    const date = this.getCurrentDate();
+    this.apiClient
+      .getPredictionGraph(row.company, date)
+      .then(data => {
+        this.setState({
+          selectedStock: row,
+          openPrediction: true,
+          prediction: data,
+          processingPrediction: false,
+        });
+      });
+  };
+
+  handleClosePrediction = () => {
+    this.setState({
+      selectedStock: null,
+      openPrediction: false,
+      prediction: null,
+      processingPrediction: false,
+    });
+  };
+
   openDeleteModal = row => {
     this.setState({
       isDeleteModalOpen: true,
@@ -85,6 +119,7 @@ class PureWatchlistTable extends React.Component {
     });
     console.log(row);
   };
+  
   delete = () => {
     //TODO: apiclient delete param: stock key
     this.apiClient
@@ -101,6 +136,7 @@ class PureWatchlistTable extends React.Component {
         this.props.handleChangeWatchlistData(data.wl_stocks);
       });
   };
+
   closeDeleteModal = () => {
     this.setState({
       isDeleteModalOpen: false
@@ -114,6 +150,19 @@ class PureWatchlistTable extends React.Component {
     });
   };
 
+  getCurrentDate = () => {
+    const current_date = new Date().toLocaleDateString().split("/");
+    var month = parseInt(current_date[0]);
+    if (month < 10) month = ("0" + month).slice(-2);
+
+    var date = parseInt(current_date[1]);
+    if (date < 10) date = ("0" + date).slice(-2);
+
+    const year = current_date[2];
+
+    return year + "-" + month + "-" + date;
+  };
+
   shouldComponentUpdate = (nextProps, nextState) => {
     if (
       nextProps.watchlist_data &&
@@ -124,6 +173,13 @@ class PureWatchlistTable extends React.Component {
         return true;
       }
       if (nextState.isEditable !== this.state.isEditable) {
+        return true;
+      }
+      if (nextState.prediction !== this.state.prediction) {
+        return true;
+      }
+      if (nextState.prediction && this.state.prediction &&
+          nextState.prediction.graph !== this.state.prediction.graph) {
         return true;
       }
       return false;
@@ -160,6 +216,7 @@ class PureWatchlistTable extends React.Component {
                 <TableCell align="center">Buy Low&nbsp;($)</TableCell>
                 <TableCell align="center">Sell High&nbsp;($)</TableCell>
                 <TableCell align="center">Sell Low&nbsp;($)</TableCell>
+                <TableCell align="center">Prediction</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -203,11 +260,44 @@ class PureWatchlistTable extends React.Component {
                         )}
                       </TableCell>
                     ))}
+                    <TableCell className={classes.cell} align="center">
+                      <Button
+                        disabled={this.state.processingPrediction}
+                        color="primary"
+                        onClick={() => this.handleOpenPrediction(row)}
+                      >
+                        Show
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
         </Paper>
+        {this.state.openPrediction && this.state.prediction && (
+          <div>
+            <div
+              className={classes.darkBackdrop}
+              onClick={this.handleClosePrediction}
+            />
+            <Paper className={classes.predictionGraphContainer}>
+              <h1 style={{ margin: 0 }}>
+                {selectedStock.company} Future Prediction
+              </h1>
+              <IconButton
+                className={classes.closeButton}
+                onClick={this.handleClosePrediction}
+              >
+                <Close />
+              </IconButton>
+              <Grapher data={this.state.prediction.graph} />
+              {this.state.prediction.price && 
+                <Typography variant="body1">Predicted Price in 20 days = ${this.state.prediction.price.toFixed(2)}</Typography>
+              }
+              
+            </Paper>
+          </div>
+        )}
         {this.state.isDeleteModalOpen && (
           <DeleteModal
             onClose={this.closeDeleteModal}

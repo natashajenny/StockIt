@@ -19,7 +19,6 @@ import { DeleteModal } from "../forms";
 import { UserContext } from "../../UserContext";
 import APIClient from "../../api/apiClient.js";
 import { Grapher } from "../Grapher";
-// import { LoadingBar } from "../LoadingBar";
 
 class PurePortfolioTable extends React.Component {
   constructor(props) {
@@ -33,13 +32,16 @@ class PurePortfolioTable extends React.Component {
       portfolioId: "",
       netGain: 0,
       openPrediction: false,
-      graphData: ""
-      // openLoader: false
+      prediction: null,
+      processingUpdate: false,
+      processingPrediction: false,
     };
   }
 
   handleSubmitChange = () => {
-    // this.handleOpenLoader();
+    this.setState({
+      processingUpdate: true
+    })
     this.apiClient
       .updatePortfolioStock(
         this.context.user.user_id,
@@ -51,6 +53,7 @@ class PurePortfolioTable extends React.Component {
         this.setState({
           portfolio_data: data.portfolio_stocks,
           isEditable: false,
+          processingUpdate: false,
           selectedStock: null,
           netGain: data.net_gain
         });
@@ -59,7 +62,6 @@ class PurePortfolioTable extends React.Component {
           data.net_gain
         );
       });
-    // this.handleCloseLoader();
   };
 
   handleCancelChange = () => {
@@ -82,30 +84,34 @@ class PurePortfolioTable extends React.Component {
   handleRowEditClick = row => {
     this.setState({
       selectedStock: row,
-      isEditable: true
+      isEditable: true,
+      processing: false,
     });
   };
 
   handleOpenPrediction = row => {
-    // this.handleOpenLoader();
-    const dates = this.getPredictionDates();
+    this.setState({
+      processingPrediction: true
+    })
+    const date = this.getCurrentDate();
     this.apiClient
-      .getGraph("else", 0, row.company, dates[0], dates[1])
+      .getPredictionGraph(row.company, date)
       .then(data => {
         this.setState({
           selectedStock: row,
           openPrediction: true,
-          graphData: data.result
+          prediction: data,
+          processingPrediction: false,
         });
       });
-    // this.handleCloseLoader();
   };
 
   handleClosePrediction = () => {
     this.setState({
       selectedStock: null,
       openPrediction: false,
-      graphData: ""
+      prediction: null,
+      processingPrediction: false,
     });
   };
 
@@ -117,7 +123,6 @@ class PurePortfolioTable extends React.Component {
   };
 
   delete = () => {
-    // this.handleOpenLoader();
     this.apiClient
       .deletePortfolioStock(
         this.context.user.user_id,
@@ -136,7 +141,6 @@ class PurePortfolioTable extends React.Component {
           data.net_gain
         );
       });
-    // this.handleCloseLoader();
   };
 
   closeDeleteModal = () => {
@@ -144,18 +148,6 @@ class PurePortfolioTable extends React.Component {
       isDeleteModalOpen: false
     });
   };
-
-  // handleOpenLoader = () => {
-  //   this.setState({
-  //     openLoader: true
-  //   });
-  // };
-
-  // handleCloseLoader = () => {
-  //   this.setState({
-  //     openLoader: false
-  //   });
-  // };
 
   componentDidMount = () => {
     this.apiClient = new APIClient();
@@ -166,31 +158,17 @@ class PurePortfolioTable extends React.Component {
     });
   };
 
-  getPredictionDates = () => {
+  getCurrentDate = () => {
     const current_date = new Date().toLocaleDateString().split("/");
     var month = parseInt(current_date[0]);
-    var start_month = "";
-    var end_month = "";
-    if (month < 10) start_month = ("0" + month).slice(-2);
-    else start_month = month;
-    if (month < 9) end_month = ("0" + (month + 1)).slice(-2);
-    else end_month = month + 1;
+    if (month < 10) month = ("0" + month).slice(-2);
 
     var date = parseInt(current_date[1]);
     if (date < 10) date = ("0" + date).slice(-2);
 
-    const start_year = current_date[2];
-    var end_year = start_year;
-    if (month === 12) end_year = end_year + 1;
+    const year = current_date[2];
 
-    console.log([
-      start_year + "-" + start_month + "-" + date,
-      end_year + "-" + end_month + "-" + date
-    ]);
-    return [
-      start_year + "-" + start_month + "-" + date,
-      end_year + "-" + end_month + "-" + date
-    ];
+    return year + "-" + month + "-" + date;
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -207,7 +185,11 @@ class PurePortfolioTable extends React.Component {
       ) {
         return true;
       }
-      if (nextState.graphData !== this.state.graphData) {
+      if (nextState.prediction !== this.state.prediction) {
+        return true;
+      }
+      if (nextState.prediction && this.state.prediction &&
+          nextState.prediction.graph !== this.state.prediction.graph) {
         return true;
       }
       return false;
@@ -217,7 +199,6 @@ class PurePortfolioTable extends React.Component {
   };
 
   componentDidUpdate = () => {
-    // this.handleOpenLoader();
     this.context.user &&
       this.apiClient
         .getPortfolioStocks(this.context.user.user_id, this.props.portfolioId)
@@ -227,7 +208,6 @@ class PurePortfolioTable extends React.Component {
               portfolio_data: data.portfolio_stocks,
               portfolioId: this.props.portfolioId,
               netGain: data.net_gain
-              // openLoader: false
             });
           this.props.handleChangePortfolioData(
             data.portfolio_stocks,
@@ -279,9 +259,6 @@ class PurePortfolioTable extends React.Component {
                 <TableCell align="center" className={classes.cell}>
                   Quantity&nbsp;
                 </TableCell>
-                {/* <TableCell align="center" className={classes.cell}>
-                  Trend
-                </TableCell> */}
                 <TableCell align="center" className={classes.cell}>
                   Prediction
                 </TableCell>
@@ -295,10 +272,10 @@ class PurePortfolioTable extends React.Component {
                     <TableCell className={classes.cell}>
                       {isEditable && row.company === selectedStock.company ? (
                         <div style={{ display: "flex", flexDirection: "row" }}>
-                          <IconButton onClick={this.handleSubmitChange}>
+                          <IconButton disabled={this.state.processingUpdate} onClick={this.handleSubmitChange}>
                             <Check />
                           </IconButton>
-                          <IconButton onClick={this.handleCancelChange}>
+                          <IconButton disabled={this.state.processingUpdate} onClick={this.handleCancelChange}>
                             <Close />
                           </IconButton>
                         </div>
@@ -393,11 +370,9 @@ class PurePortfolioTable extends React.Component {
                         row.quantity
                       )}
                     </TableCell>
-                    {/* <TableCell className={classes.cell} align="center">
-                      <Grapher data={row.trend} />
-                    </TableCell> */}
                     <TableCell className={classes.cell} align="center">
                       <Button
+                        disabled={this.state.processingPrediction}
                         color="primary"
                         onClick={() => this.handleOpenPrediction(row)}
                       >
@@ -409,7 +384,7 @@ class PurePortfolioTable extends React.Component {
             </TableBody>
           </Table>
         </Paper>
-        {this.state.openPrediction && this.state.graphData !== "" && (
+        {this.state.openPrediction && this.state.prediction && (
           <div>
             <div
               className={classes.darkBackdrop}
@@ -425,14 +400,18 @@ class PurePortfolioTable extends React.Component {
               >
                 <Close />
               </IconButton>
-              <Grapher data={this.state.graphData} />
-              {selectedStock.prediction && 
+              <Grapher data={this.state.prediction.graph} />
+              {this.state.prediction.price && 
                 <div>
-                  <Typography variant="body1">Predicted Price = ${selectedStock.prediction}</Typography>
-                  {selectedStock.prediction < selectedStock.closing ? 
-                      <Typography variant="body1">Predicted Loss = -${selectedStock.closing - selectedStock.prediction}</Typography>
+                  <Typography variant="body1">Predicted Price in 20 days = ${this.state.prediction.price.toFixed(2)}</Typography>
+                  {this.state.prediction.price < selectedStock.closing ? 
+                      <Typography variant="body1" style={{color: "red"}}>
+                        Predicted Loss = -${(selectedStock.closing - this.state.prediction).toFixed(2)}
+                      </Typography>
                     :
-                      <Typography variant="body1">Predicted Gain = +${selectedStock.prediction - selectedStock.closing}</Typography>
+                      <Typography variant="body1" style={{color: "green"}}>
+                        Predicted Gain = +${(this.state.prediction.price - selectedStock.closing).toFixed(2)}
+                      </Typography>
                   }
                 </div>
               }
@@ -447,7 +426,6 @@ class PurePortfolioTable extends React.Component {
             onDelete={this.delete}
           />
         )}
-        {/* {this.state.openLoader && <LoadingBar />} */}
       </React.Fragment>
     );
   }

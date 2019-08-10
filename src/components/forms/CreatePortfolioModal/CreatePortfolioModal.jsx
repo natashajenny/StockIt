@@ -13,7 +13,8 @@ class PureCreatePortfolioModal extends React.Component {
             formData: {
                 title: emptyData,
                 description: emptyData,
-            }
+            },
+            processing: false,
         }; 
         this.formConfig =  {
             title: { label: 'Title' },
@@ -33,6 +34,13 @@ class PureCreatePortfolioModal extends React.Component {
             },
         });
     }
+
+    handleSubmit = (e, formData) => {
+        this.setState({
+            processing: true,
+        })
+        this.props.onSubmit(e, formData)
+    }
      
     render() {
         const { onClose, onSubmit, classes } = this.props;
@@ -42,7 +50,7 @@ class PureCreatePortfolioModal extends React.Component {
         return (
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>
-                <form onSubmit={(e) => onSubmit(e, formData)}>
+                <form onSubmit={(e) => this.handleSubmit(e, formData)}>
                     <Paper className={classes.modal}>
                         <IconButton className={classes.closeButton} onClick={onClose}>
                             <Close />
@@ -67,12 +75,12 @@ class PureCreatePortfolioModal extends React.Component {
                             />
                         ))}
                         <div className={classes.buttons}>
-                            <Button color='secondary' variant='contained' onClick={onClose}>
+                            <Button disabled={this.state.processing} color='secondary' variant='contained' onClick={onClose}>
                                 <Typography variant='button'>
                                     Cancel
                                 </Typography>
                             </Button>
-                            <Button type='submit' color='primary' variant='contained'>
+                            <Button disabled={this.state.processing} type='submit' color='primary' variant='contained'>
                                 <Typography variant='button'>
                                     Submit
                                 </Typography>

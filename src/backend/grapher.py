@@ -87,7 +87,8 @@ def get_plot(
                 df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
             else:
                 df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-            # plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
+            print('plot')
+            plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if opening:
         plt.plot(df.index.values, df['opening'], label='Opening of %s' % company.code)
@@ -188,12 +189,12 @@ def get_plot(
             else:
                 new[idx] = (new[idx] - new[idx].mean()) / new[idx].std()
             plt.plot(new.index.values, new[idx], label='%s index' % idx.capitalize())
-        if len(companies) > 0:
-            if norm == 'minmax':
-                df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
-            else:
-                df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-            plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
+        # if len(companies) > 0:
+        #     if norm == 'minmax':
+        #         df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
+        #     else:
+        #         df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
+        #     plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if not micro:
         plt.legend()
@@ -290,7 +291,6 @@ def get_intraday_graph(stocks, norm=None, size=(12,8), engine=engine):
 
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
     plt.legend()
-    plt.title('Intraday Results for %s' % str(cut_off))
 
     fig_file = BytesIO()
     plt.savefig(fig_file, format='png')
@@ -343,7 +343,6 @@ def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
                                decreasing_line_color=col2,
                                name=stock)
         fig.add_trace(trace)
-    fig.update_layout(title=go.layout.Title(text='Intraday Trade Chart %s' % stock, xref="paper", x=0))
     fig.update_layout(xaxis_rangeslider_visible=False)
 
     fig_file = BytesIO()
@@ -353,3 +352,38 @@ def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
     result = str(fig_png)[2:-1]
     fig_file.close()
     return result
+
+def get_prediction(stock, start='2019-06-01', size=(12,4), engine=engine):
+    if not engine:
+        engine = start_engine()
+    start = datetime.strptime(start, '%Y-%m-%d').date()
+    (x, y) = size
+    
+    company = Company().query().get(stock)
+    predictions = Prediction().query().filter(Prediction.code == stock)
+    sls = StockLog().query().filter(StockLog.code == company.code, StockLog.date >= start)
+    pr = pd.read_sql(predictions.statement, engine)
+    sl = pd.read_sql(sls.statement, engine)
+    sl = sl[['date', 'closing']]
+    pr = pr[['date', 'prediction']]
+    df = sl.merge(pr, how='outer', left_on='date', right_on='date')
+    first_prediction = df['prediction'].first_valid_index()
+    last_prediction = df['prediction'].last_valid_index()
+
+    if first_prediction != 0:
+        df['prediction'][first_prediction - 1] = df['closing'][first_prediction - 1] 
+
+    fig, ax = plt.subplots(figsize=(x, y))
+    if (first_prediction != 0): 
+        plt.plot(df['date'], df['closing'], label='Historic Stock Price')
+    plt.plot(df['date'], df['prediction'], label='Predicted Stock Price')
+    plt.legend()
+
+    fig_file = BytesIO()
+    plt.savefig(fig_file, format='png')
+    fig_file.seek(0)
+    fig_png = base64.b64encode(fig_file.getvalue())
+    result = str(fig_png)[2:-1]
+    fig_file.close()
+    plt.close()
+    return [result, df['prediction'][last_prediction]]

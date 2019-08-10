@@ -6,9 +6,24 @@ import { withStyles } from "@material-ui/core/styles";
 import { styles } from "./styles";
 
 class PureDeleteModal extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      processing: false,
+    }
+  }
+
+  handleDelete = () => {
+    this.setState({
+      processing: true,
+    })
+    this.props.onDelete()
+  }
+
   render() {
-    const { onClose, onDelete, name, classes } = this.props;
-    // console.log("in delete modal");
+    const { onClose, name, classes } = this.props;
+
     return (
       <React.Fragment>
         <div className={classes.darkBackdrop} onClick={onClose} />
@@ -21,10 +36,10 @@ class PureDeleteModal extends React.Component {
               Are you sure you want to delete {name}?
             </Typography>
             <div className={classes.buttons}>
-              <Button color="primary" variant="contained" onClick={onDelete}>
+              <Button disabled={this.state.processing} color="primary" variant="contained" onClick={this.handleDelete}>
                 <Typography variant="button">Yes</Typography>
               </Button>
-              <Button color="secondary" variant="contained" onClick={onClose}>
+              <Button disabled={this.state.processing} color="secondary" variant="contained" onClick={onClose}>
                 <Typography variant="button">No</Typography>
               </Button>
             </div>

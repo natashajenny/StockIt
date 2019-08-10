@@ -32,25 +32,23 @@ export class SingleStock extends React.Component {
     });
   };
 
-  getHistoricalDate = () => {
+  getStartingDate = () => {
     const current_date = new Date().toLocaleDateString().split("/");
-    var month = parseInt(current_date[0]);
-    if (month < 10) month = ("0" + month).slice(-2);
-    
-    var date = parseInt(current_date[1]);
+    var date = parseInt(current_date[0]);
     if (date < 10) date = ("0" + date).slice(-2);
+    
+    var month = parseInt(current_date[1]);
+    const year = parseInt(current_date[2]);
 
-    const end_year = parseInt(current_date[2]);
-    var start_year = end_year - 1;
+    var start_month = month - 2;
+    if (start_month < 0) {
+      start_month = start_month + 12
+      year = year - 1
+    }
+    if (start_month < 10) start_month = ("0" + start_month).slice(-2);
 
-    console.log([
-      start_year + "-" + month + "-" + date,
-      end_year + "-" + month + "-" + date
-    ]);
-    return [
-      start_year + "-" + month + "-" + date,
-      end_year + "-" + month + "-" + date
-    ];
+    console.log(year + "-" + start_month + "-" + date)
+    return year + "-" + start_month + "-" + date;
   };
 
   componentWillMount = () => {
@@ -65,16 +63,16 @@ export class SingleStock extends React.Component {
         const company = stockCodes.suggestions.filter(code => {
           return code.label === this.props.match.params.stockId;
         });
-        const dates = this.getHistoricalDate(new Date());
+        const date = this.getStartingDate();
         this.apiClient
-          .getGraph("else", 0, json.details.company, dates[0], dates[1])
+          .getPredictionGraph(json.details.company, date)
           .then(data =>
             this.setState({
               items: {
                 ...this.state.items,
                 name: company[0].value
               },
-              graphData: data.result
+              graphData: data.graph
             })
           );
       });

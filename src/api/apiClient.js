@@ -104,6 +104,20 @@ class APIClient {
     return this.perform("get", `/user/${userId}/update_ticks/${stocks}`)
   }
 
+  getGraph(type, micro, stocks, start_date, end_date) {
+    return this.perform(
+      "get",
+      `/grapher/${micro}/${type}/${stocks}/${start_date}/${end_date}`
+    );
+  }
+
+  getPredictionGraph(stocks, start_date) {
+    return this.perform(
+      "get",
+      `/grapher/prediction/${stocks}/${start_date}`
+    )
+  }
+
   async perform(method, resource, data) {
     return client({
       method,
@@ -115,13 +129,6 @@ class APIClient {
     }).then(resp => {
       return resp.data ? resp.data : [];
     });
-  }
-
-  getGraph(type, micro, stocks, start_date, end_date) {
-    return this.perform(
-      "get",
-      `/grapher/${micro}/${type}/${stocks}/${start_date}/${end_date}`
-    );
   }
 }
 

@@ -28,7 +28,8 @@ class PureAddWatchlistStockModal extends React.Component {
         sell_low: emptyData,
         quantity: emptyData
       },
-      currentPrice: ""
+      currentPrice: "",
+      processing: false,
     };
     this.fieldNames = [
       "code",
@@ -104,6 +105,13 @@ class PureAddWatchlistStockModal extends React.Component {
     if (i === 7) return 1.4 * currentPrice;
   };
 
+  handleSubmit = (e, formData, onSubmit) => {
+    this.setState({
+      processing: true,
+    })
+    onSubmit(e, formData)
+  }
+
   componentDidMount = () => {
     this.apiClient = new APIClient();
   };
@@ -115,7 +123,7 @@ class PureAddWatchlistStockModal extends React.Component {
     return (
       <React.Fragment>
         <div className={classes.darkBackdrop} onClick={onClose} />
-        <form onSubmit={e => onSubmit(e, formData)}>
+        <form onSubmit={e => this.handleSubmit(e, formData, onSubmit)}>
           <Paper className={classes.modal}>
             <IconButton className={classes.closeButton} onClick={onClose}>
               <Close />
@@ -186,10 +194,10 @@ class PureAddWatchlistStockModal extends React.Component {
               )}
             </div>
             <div className={classes.buttons}>
-              <Button color="secondary" variant="contained" onClick={onClose}>
+              <Button disabled={this.state.processing} color="secondary" variant="contained" onClick={onClose}>
                 <Typography variant="button">Cancel</Typography>
               </Button>
-              <Button type="submit" color="primary" variant="contained">
+              <Button disabled={this.state.processing} type="submit" color="primary" variant="contained">
                 <Typography variant="button">Submit</Typography>
               </Button>
             </div>

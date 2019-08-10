@@ -74,7 +74,6 @@ def register():
         user = create_user(username, password, name, email, phone)
         user_schema = UserSchema()
         output = user_schema.dump(user).data
-        print(output)
         # returns json object of registered User
         return jsonify({'user': output})
     else :
@@ -85,19 +84,16 @@ def login():
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
         data_dict = json.loads(data)
-        print(data_dict)
         username = data_dict['username']['data']
         password = data_dict['password']['data']
         user = validate_login(username, password)
 
         if user is None:
-            print('user is false')
             return redirect(url_for('welcome'))
         else:
             user_schema = UserSchema()
             output = user_schema.dump(user).data
             # returns json object of registered User
-            print(output)
             return jsonify({'user': output})
             # return render_template('home.html')
     return render_template('login.html')
@@ -142,7 +138,6 @@ def update_ticks(user_id, stocks):
     last_data = get_last_ticks(stock_list)
     company_schema = CompanySchema(many=True)
     output = company_schema.dump(last_data).data
-    print(output)
     return jsonify({'last_ticks': output})
 
 @app.route('/user/<int:user_id>/portfolio/<int:portfolio_id>', methods=['GET','POST'])
@@ -163,14 +158,12 @@ def stock(user_id, portfolio_id):
     output = log_schema.dump(logs).data
     net_gain = 0
     for data in output:
-        print(data)
         data['bought_price'] = get_bought_price(portfolio_id, data['company'])
         data['quantity'] = get_quantity(portfolio_id, data['company'])
         value_bought = data['bought_price'] * data['quantity']
         value_if_sell = data['closing'] * data['quantity']
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
         data['unit_gain'] = round(data['closing']-data['bought_price'], 2)
-        data['trend'] = get_plot([data['company']], micro=True, closing=1, finish=datetime.today().strftime('%Y-%m-%d'))
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})   
@@ -202,7 +195,6 @@ def stocklist_to_portfolio(code, portfolio_id):
 def update_stock(user_id, portfolio_id, code):
     data = list(request.form.to_dict().keys())[0]
     data_dict = json.loads(data)
-    print(data_dict['quantity'])
     num = data_dict['quantity']
     bought_price = data_dict['bought_price']
     update_log(portfolio_id, code, num, bought_price)
@@ -238,7 +230,6 @@ def delete_stock(user_id, portfolio_id, code):
         data['stock_gain'] = round(value_if_sell - value_bought, 2)
         net_gain += value_if_sell - value_bought
     net_gain = round(net_gain, 2)
-    print(output)
     return jsonify({'portfolio_stocks': output, 'net_gain': net_gain})
 
 @app.route('/user/<int:user_id>/watchlist', methods=['GET'])
@@ -324,44 +315,49 @@ def grapher(micro_int, type, stocks, start_date, end_date):
     micro = False
     if (micro_int == 1):
         micro = True
-    if type == "world":
+    if type == "World":
         graph = get_plot(stock, micro=micro, indicies=['world'],start=start_date, finish=end_date)
-    elif type == "sma":
+    elif type == "Simple Moving Average(SMA)":
         graph = get_plot(stock, micro=micro, closing=1, sma15=1, sma50=1, sma200=1, start=start_date, finish=end_date)
-    elif type == "ema":
+    elif type == "Exponential Moving Average(EMA)":
         graph = get_plot(stock, micro=micro, closing=1, ema15=1, ema50=1, ema200=1, start=start_date, finish=end_date)
-    elif type == "percentage_change":
-        graph = get_plot(stock, micro=micro, size=(12, 2), change=1, start=start_date, finish=end_date)
-    elif type == "volume_change":
+    elif type == "Percentage Change":
+        graph = get_plot(stock, micro=micro, size=(12, 3), change=1, start=start_date, finish=end_date)
+    elif type == "Volume Change":
         graph = get_plot(stock, micro=micro, volume=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "macd":
+    elif type == "Moving Average Convergence Divergence(MACD)":
         graph = get_plot(stock, micro=micro, macd=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "bb":
+    elif type == "Bollinger Bands(BB)":
         graph = get_plot(stock, micro=micro, bb=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "stoch":
+    elif type == "Stochastic Oscillator(STOCH)":
         graph = get_plot(stock, micro=micro, stoch=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "rsi":
+    elif type == "Relative Strength Index(RSI)":
         graph = get_plot(stock, micro=micro, rsi=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "adx":
+    elif type == "Average Directional Movement Index(ADX)":
         graph = get_plot(stock, micro=micro, adx=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "cci":
+    elif type == "Commodity Channel Index(CCI)":
         graph = get_plot(stock, micro=micro, cci=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "aroon":
+    elif type == "AROON":
         graph = get_plot(stock, micro=micro, aroon=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "chaikin":
+    elif type == "Chaikin":
         graph = get_plot(stock, micro=micro, chaikin=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "month-to-month":
+    elif type == "Momentum":
         graph = get_plot(stock, micro=micro, mom=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "dp_pb":
+    elif type == "Dividend Yield and Price to Book Value(DP_PB)":
         graph = get_plot(stock, micro=micro, dp_ratio=1, pb_ratio=1, size=(12, 2), start=start_date, finish=end_date)
-    elif type == "correlation":
+    elif type == "Correlation":
         graph = get_corr(stock, start=start_date, finish=end_date)
-    elif type == "intraday":
+    elif type == "Intraday":
         graph = get_intraday_candle(stock)
     else:
-        graph = get_plot(stock, micro=micro, closing=1, start=start_date, finish=end_date)
+        graph = get_plot(stock, micro=micro, start=start_date, finish=end_date)
 
     return jsonify({'result': graph})
+
+@app.route('/grapher/prediction/<string:stock>/<string:start_date>')
+def prediction_graph(stock, start_date):
+    result = get_prediction(stock, start=start_date)
+    return jsonify({'graph': result[0], 'price': result[1]})
 
 @app.route('/logout')
 def logout():
