@@ -27,3 +27,31 @@ Week 05
 =======
 Importing data from MorningStar
 Building a test LSTM model
+
+Week 06
+=======
+Discrete Wavelet Transform
+Started working on graphs
+
+Week 07
+=======
+Finishing the grapher module
+Updating ORM model
+New stock features
+
+Week 08
+=======
+Working with annual reports
+Building tabs module
+
+Week 09
+=======
+Intraday data reader
+Casdlestick graphs
+Training prediction models
+
+Week 10
+=======
+Cleaning and reuploading all data
+Evaluating prediction results
+Prediction graph
