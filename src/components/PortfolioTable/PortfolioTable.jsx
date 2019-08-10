@@ -279,9 +279,9 @@ class PurePortfolioTable extends React.Component {
                 <TableCell align="center" className={classes.cell}>
                   Quantity&nbsp;
                 </TableCell>
-                <TableCell align="center" className={classes.cell}>
+                {/* <TableCell align="center" className={classes.cell}>
                   Trend
-                </TableCell>
+                </TableCell> */}
                 <TableCell align="center" className={classes.cell}>
                   Prediction
                 </TableCell>
@@ -393,9 +393,9 @@ class PurePortfolioTable extends React.Component {
                         row.quantity
                       )}
                     </TableCell>
-                    <TableCell className={classes.cell} align="center">
+                    {/* <TableCell className={classes.cell} align="center">
                       <Grapher data={row.trend} />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell className={classes.cell} align="center">
                       <Button
                         color="primary"
