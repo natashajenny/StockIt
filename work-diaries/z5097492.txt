@@ -164,3 +164,14 @@ Tuesday
 
 Wednesday
 -Clean up code
+
+Saturday
+-Fixed bug in Metrics
+-Fixed bug in Portfolio prediction
+-Added prediction to watchlist
+-Removed idle files
+-Tested functionalities
+-Removed micro trend graphs from portfolio table
+-Removed commented out and debugging lines
+-Added top 10 and bottom 10 stocks into stocks page
+-Added backend requirement script (to be tested tomorrow)
