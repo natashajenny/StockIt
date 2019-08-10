@@ -259,6 +259,12 @@ class StockLog(Model, Base):
     rank = Column('rank', Integer)
     company = relationship('Company', backref='stock_logs')
 
+class Prediction(Model, Base):
+    __tablename__ = 'predictions'
+    date = Column('date', Date, primary_key=True)
+    code = Column('code', String(3), ForeignKey("companies.code"), primary_key=True)
+    prediction = Column('prediction', Float)    
+    
 class TestTable(Model, Base):
     __tablename__ = 'test_table'
     date = Column('date', Date, primary_key=True)
