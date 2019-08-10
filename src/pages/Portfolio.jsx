@@ -25,7 +25,6 @@ export class PurePortfolio extends React.Component {
       isAddingStock: false,
       netGain: 0,
       portfolio_data: null,
-      // openLoader: false
     };
     this.fieldNames = [
       {label: "Code", key: "company"},
@@ -42,7 +41,6 @@ export class PurePortfolio extends React.Component {
   }
 
   handleSelectChange = event => {
-    // console.log(event.target.children);
     for (let node of event.target.children) {
       if (node.value === event.target.value) {
         this.setState({
@@ -56,7 +54,6 @@ export class PurePortfolio extends React.Component {
 
   handleAddStock = (e, stock) => {
     e.preventDefault();
-    // this.handleOpenLoader();
     this.apiClient
       .addPortfolioStock(
         this.context.user.user_id,
@@ -69,7 +66,6 @@ export class PurePortfolio extends React.Component {
           netGain: data.net_gain
         });
         this.closeAddStockModal();
-        // this.handleCloseLoader();
       });
   };
 
@@ -107,11 +103,9 @@ export class PurePortfolio extends React.Component {
           openCreatePortfolioModal: false
         });
       })
-      // .then(this.closeCreatePortfolioModal());
   };
 
   handleDownloadClick = () => {
-    // this.handleOpenLoader();
     this.apiClient
       .getPortfolioStocks(
         this.context.user.user_id,
@@ -121,7 +115,6 @@ export class PurePortfolio extends React.Component {
         this.setState({
           portfolio_data: data.portfolio_stocks,
           netGain: data.net_gain
-          // openLoader: false
         });
       });
   };
@@ -133,21 +126,8 @@ export class PurePortfolio extends React.Component {
     });
   };
 
-  // handleOpenLoader = () => {
-  //   this.setState({
-  //     openLoader: true
-  //   });
-  // };
-
-  // handleCloseLoader = () => {
-  //   this.setState({
-  //     openLoader: false
-  //   });
-  // };
-
   componentDidMount = () => {
     this.apiClient = new APIClient();
-    // this.handleOpenLoader();
     this.context.user &&
       this.apiClient.getPortfolios(this.context.user.user_id).then(data => {
         this.setState({
@@ -166,7 +146,6 @@ export class PurePortfolio extends React.Component {
             this.setState({
               portfolio_data: data.portfolio_stocks,
               netGain: data.net_gain,
-              // openLoader: false
             })
           );
       });

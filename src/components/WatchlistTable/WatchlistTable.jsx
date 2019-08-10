@@ -45,7 +45,6 @@ class PureWatchlistTable extends React.Component {
   }
 
   handleSubmitChange = () => {
-    //TODO: apiClient update db with data from selectedStock
     this.apiClient
       .updateWatchlistStock(
         this.context.user.user_id,
@@ -117,11 +116,9 @@ class PureWatchlistTable extends React.Component {
       isDeleteModalOpen: true,
       selectedStock: row
     });
-    console.log(row);
   };
   
   delete = () => {
-    //TODO: apiclient delete param: stock key
     this.apiClient
       .deleteWatchlistStock(
         this.context.user.user_id,

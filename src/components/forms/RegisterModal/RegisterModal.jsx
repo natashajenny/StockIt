@@ -49,7 +49,6 @@ export class UserRegister extends React.Component {
         const { classes, onClose, onSubmit } = this.props;
         const { formData } = this.state;
         const { formConfig } = this;
-        console.log(this.state.formData);
         return (
             <React.Fragment>
                 <div className={classes.darkBackdrop} onClick={onClose}/>
@@ -169,7 +168,6 @@ export class UserRegister extends React.Component {
 
     handleRegister = (event) => {
         event.preventDefault();
-        console.log('Registered!'); // TODO: Path for successful registration goes here
     }
 }
 

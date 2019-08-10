@@ -119,7 +119,6 @@ class PureAddWatchlistStockModal extends React.Component {
   render() {
     const { onClose, onSubmit, classes } = this.props;
     const { formData, currentPrice } = this.state;
-    console.log(formData);
     return (
       <React.Fragment>
         <div className={classes.darkBackdrop} onClick={onClose} />

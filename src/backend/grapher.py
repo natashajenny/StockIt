@@ -87,7 +87,6 @@ def get_plot(
                 df['closing'] = (df['closing'] - df['closing'].min()) / (df['closing'].max() - df['closing'].min())
             else:
                 df['closing'] = (df['closing'] - df['closing'].mean()) / df['closing'].std()
-            print('plot')
             plt.plot(df.index.values, df['closing'], label='Closing of %s'% company.code)  
 
     if opening:
@@ -328,7 +327,6 @@ def get_intraday_candle(stocks, norm=None, size=(12,4), engine=engine):
     for stock in stocks:
         (col1, col2) = colors.pop(0)
         df = pd.read_csv(CSV+stock+'.AX', parse_dates=['timestamp'])
-        print(df)
         df['timestamp'] = df['timestamp'].dt.tz_localize('Australia/Sydney')
         df['timestamp'] = df['timestamp'].dt.tz_convert(None)
         cut_off = max(df['timestamp']).date()

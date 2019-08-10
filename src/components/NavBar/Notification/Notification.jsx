@@ -53,6 +53,4 @@ export class PureNotification extends React.Component {
   }
 }
 
-// PureNotification.contextType = UserContext;
-
 export const Notification = withStyles(styles)(PureNotification);

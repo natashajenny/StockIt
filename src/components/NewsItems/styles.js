@@ -16,8 +16,5 @@ export const styles = makeStyles(theme => ({
     },
     img: {
         margin: 'auto',
-        // display: 'block',
-        // maxWidth: '50%',
-        // maxHeight: '50%',
     },
 }));

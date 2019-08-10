@@ -31,7 +31,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.logIn = user => {
-      console.log(user);
       this.setState({
         isLoggedIn: true,
         user: user

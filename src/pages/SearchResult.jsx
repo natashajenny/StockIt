@@ -28,7 +28,6 @@ export class PureSearchResult extends React.Component {
 
     shouldComponentUpdate = (nextProps) => {
         const searchInput = nextProps.location.search.split('?')[1];
-        console.log(searchInput);
         if (searchInput === this.state.searchInput) return false;
         return true;
     }

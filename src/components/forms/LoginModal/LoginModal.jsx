@@ -51,7 +51,6 @@ class PureLoginModal extends React.Component {
 
   handleSubmit = (e, formData, onSubmit, onClose) => {
     e.preventDefault();
-    console.log("in handle submit");
     this.apiClient = new APIClient();
     this.handleOpenLoader();
     this.apiClient
@@ -78,7 +77,6 @@ class PureLoginModal extends React.Component {
     const { classes, onClose, onSubmit } = this.props;
     const { formData } = this.state;
     const { formConfig } = this;
-    console.log(formData);
     return (
       <React.Fragment>
         <div className={classes.darkBackdrop} onClick={onClose} />

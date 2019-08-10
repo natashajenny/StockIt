@@ -100,7 +100,6 @@ class APIClient {
   }
 
   updateTicks(userId, stocks) {
-    console.log(`/user/${userId}/update_ticks/${stocks}`)
     return this.perform("get", `/user/${userId}/update_ticks/${stocks}`)
   }
 

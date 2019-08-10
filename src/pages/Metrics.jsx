@@ -9,8 +9,8 @@ import {
   FormControlLabel,
   FormGroup
 } from "@material-ui/core";
-// import update from "react-addons-update";
 import update from 'immutability-helper';
+
 import { Grapher } from "../components";
 import { styles } from "./styles";
 import APIClient from "../api/apiClient.js";
@@ -167,7 +167,6 @@ export class PureMetrics extends React.Component {
   render() {
     const { classes } = this.props;
     const { portfolios } = this.state;
-    console.log(this.state.stocks);
     return (
       <div className={classes.root}>
         <h1> Metrics </h1>

@@ -23,6 +23,4 @@ export class PureNotificationMenu extends React.Component {
   }
 }
 
-// PureNotification.contextType = UserContext;
-
 export const NotificationMenu = withStyles(styles)(PureNotificationMenu);

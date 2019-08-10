@@ -33,7 +33,6 @@ class PureAddStockModal extends React.Component {
     const { formData } = this.state;
     if (name === "code") {
       this.apiClient.getStockDetails(value).then(data => {
-        console.log(data.details)
         this.setState({
           formData: {
             ...formData,

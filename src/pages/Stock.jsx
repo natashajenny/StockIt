@@ -37,8 +37,8 @@ export class SingleStock extends React.Component {
     var date = parseInt(current_date[0]);
     if (date < 10) date = ("0" + date).slice(-2);
     
-    var month = parseInt(current_date[1]);
-    const year = parseInt(current_date[2]);
+    const month = parseInt(current_date[1]);
+    var year = parseInt(current_date[2]);
 
     var start_month = month - 2;
     if (start_month < 0) {
@@ -47,7 +47,6 @@ export class SingleStock extends React.Component {
     }
     if (start_month < 10) start_month = ("0" + start_month).slice(-2);
 
-    console.log(year + "-" + start_month + "-" + date)
     return year + "-" + start_month + "-" + date;
   };
 
@@ -81,7 +80,6 @@ export class SingleStock extends React.Component {
   render() {
     var { items } = this.state;
     const { classes } = this.props;
-    console.log(items)
     return (
       <div className={classes.root}>
         <div style={{ display: "flex", flexDirection: "row" }}>

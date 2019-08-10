@@ -219,7 +219,6 @@ class PurePortfolioTable extends React.Component {
   render() {
     const { classes } = this.props;
     const { selectedStock, portfolio_data, isEditable } = this.state;
-    console.log(portfolio_data)
     return (
       <React.Fragment>
         <Paper className={classes.root}>
