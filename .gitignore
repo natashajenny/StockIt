@@ -2,3 +2,4 @@ node_modules
 build
 __pycache__/
 *.py[cod]
+scripts/all_stock_logs.csv
