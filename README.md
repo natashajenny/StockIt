@@ -7,17 +7,19 @@ Out stock portfolio management system consists of three main components:
 * a neural network stock forecasting model assisting users in their  decisions.
 
 
-## Running our project:
-
+## To install our project:
 ### Frontend
-> yarn install <br>
-> yarn build <br>
-> yarn start
+> cd capstone-project-scrubs <br>
+> yarn install
 
 ### Backend
+> chmod +x installBackend.sh <br>
+> ./installBackend.sh
+
+## To run our project:
+> yarn start <br>
 > cd capstone-project-scrubs/src/backend <br>
 > FLASK_APP=$PWD/app/http/api/endpoints.py FLASK_ENV=development python3 -m flask run --port 4000
-
 
 ## Source Code Structure
 [ to - do ]
