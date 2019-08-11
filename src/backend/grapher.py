@@ -365,11 +365,15 @@ def get_prediction(stock, start='2019-06-01', size=(12,4), engine=engine):
     sl = sl[['date', 'closing']]
     pr = pr[['date', 'prediction']]
     df = sl.merge(pr, how='outer', left_on='date', right_on='date')
+    
     first_prediction = df['prediction'].first_valid_index()
     last_prediction = df['prediction'].last_valid_index()
+    last_closing = df['closing'].last_valid_index()
 
-    if first_prediction != 0:
-        df['prediction'][first_prediction - 1] = df['closing'][first_prediction - 1] 
+    df['prediction'][:last_closing] = np.NaN        
+    
+    if last_closing != 0:
+        df['prediction'][last_closing] = df['closing'][last_closing] 
 
     fig, ax = plt.subplots(figsize=(x, y))
     if (first_prediction != 0): 
