@@ -157,11 +157,8 @@ def update_log(portfolio_id, code, number, bought_price):
     p.update()
 
 def delete_log(user_id, portfolio_id, code):
-    # p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
-    # p.delete()
-    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code))
-    for q in p.all():
-        q.delete()
+    p = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
+    p.delete()
 
 def get_quantity(portfolio_id, code):
     d = PortfolioLog().query().filter(and_(PortfolioLog.portfolio_id == portfolio_id, PortfolioLog.code == code)).scalar()
