@@ -41,6 +41,7 @@ Week 9
 
 Added graphing functionality for the various graphs. We encountered issues with the generated matplotlib PNG graph, so I used base64 encoding to render the graph.
 
+
 Week 10
 
-Fixed demo errors including adding the same stocks to the portfolio and wrote the final report. Cleaned up some of the code and removed empty files. 
+Fixed demo errors including adding the same stocks to the portfolio and wrote the final report. Cleaned up some of the code and removed empty files. Updated system architecture diagram.
