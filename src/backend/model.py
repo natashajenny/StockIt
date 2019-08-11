@@ -9,7 +9,8 @@ from flask_login import UserMixin
 
 USER  = 'comp3900'
 PASS  = 'comp9900'
-HOST  = 'portfolio.c6khp9ert7ew.us-east-1.rds.amazonaws.com'
+# HOST  = 'portfolio.c6khp9ert7ew.us-east-1.rds.amazonaws.com'
+HOST  = 'portfolio.cpgc32sxvqfp.ap-southeast-2.rds.amazonaws.com'
 DBASE = 'portfolio'
 TEST  = False
 
