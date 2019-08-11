@@ -1,6 +1,5 @@
 import json
 import csv
-# import pandas as pd
 from datetime import datetime, timedelta
 from flask import Flask, g, request, jsonify, render_template, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -44,7 +43,6 @@ class PerformanceLogSchema(ma.ModelSchema):
         model = PerformanceLog
 
 class PortfolioLogSchema(ma.ModelSchema):
-    # details = ma.Nested(StockLogSchema)
     class Meta:
         model = PortfolioLog
 
@@ -60,7 +58,6 @@ def delete(user_id):
     return render_template('welcome.html')
 
 @app.route('/register', methods=['POST', 'GET'])
-# @login_required
 def register():
     if request.method == 'POST':
         data = list(request.form.to_dict().keys())[0]
@@ -93,9 +90,7 @@ def login():
         else:
             user_schema = UserSchema()
             output = user_schema.dump(user).data
-            # returns json object of registered User
             return jsonify({'user': output})
-            # return render_template('home.html')
     return render_template('login.html')
 
 
@@ -150,7 +145,6 @@ def stock(user_id, portfolio_id):
         num = data_dict['quantity']['data']
         bought_price = data_dict['price']['data']
         save_log(portfolio_id, code, num, bought_price)
-        # return jsonify({'result': 'successful'})
     # else:
     # get existing stocks
     logs = get_logs(portfolio_id)
@@ -367,12 +361,3 @@ def logout():
 @login_manager.user_loader
 def load_user(user_id):
     return find_user(user_id)
-
-# this is just for testing
-
-@app.route('/allusers', methods=['GET'])
-def all_users():
-    users = get_all_users()
-    user_schema = UserSchema(many=True)
-    output = user_schema.dump(users).data
-    return jsonify({'users' : output})
