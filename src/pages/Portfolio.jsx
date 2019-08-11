@@ -151,19 +151,6 @@ export class PurePortfolio extends React.Component {
       });
   };
 
-  getCurrentDate = () => {
-    const current_date = new Date().toLocaleDateString().split("/");
-
-    var month = current_date[0];
-    if (month < 10) month = ("0" + month).slice(-2);
-
-    var date = current_date[1];
-    if (date < 10) date = ("0" + date).slice(-2);
-
-    const year = current_date[2];
-    return year + "-" + month + "-" + date;
-  };
-
   render() {
     const { classes } = this.props;
     const {

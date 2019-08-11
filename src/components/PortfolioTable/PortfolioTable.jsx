@@ -93,7 +93,7 @@ class PurePortfolioTable extends React.Component {
     this.setState({
       processingPrediction: true
     })
-    const date = this.getCurrentDate();
+    const date = this.getStartingDate();
     this.apiClient
       .getPredictionGraph(row.company, date)
       .then(data => {
@@ -158,17 +158,22 @@ class PurePortfolioTable extends React.Component {
     });
   };
 
-  getCurrentDate = () => {
+  getStartingDate = () => {
     const current_date = new Date().toLocaleDateString().split("/");
-    var month = parseInt(current_date[0]);
-    if (month < 10) month = ("0" + month).slice(-2);
-
-    var date = parseInt(current_date[1]);
+    var date = parseInt(current_date[0]);
     if (date < 10) date = ("0" + date).slice(-2);
+    
+    const month = parseInt(current_date[1]);
+    var year = parseInt(current_date[2]);
 
-    const year = current_date[2];
+    var start_month = month - 2;
+    if (start_month < 0) {
+      start_month = start_month + 12
+      year = year - 1
+    }
+    if (start_month < 10) start_month = ("0" + start_month).slice(-2);
 
-    return year + "-" + month + "-" + date;
+    return year + "-" + start_month + "-" + date;
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -405,7 +410,7 @@ class PurePortfolioTable extends React.Component {
                   <Typography variant="body1">Predicted Price in 20 days = ${this.state.prediction.price.toFixed(2)}</Typography>
                   {this.state.prediction.price < selectedStock.closing ? 
                       <Typography variant="body1" style={{color: "red"}}>
-                        Predicted Loss = -${(selectedStock.closing - this.state.prediction).toFixed(2)}
+                        Predicted Loss = -${(selectedStock.closing - this.state.prediction.price).toFixed(2)}
                       </Typography>
                     :
                       <Typography variant="body1" style={{color: "green"}}>
