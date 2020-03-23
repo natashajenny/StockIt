@@ -23,11 +23,11 @@ Out stock portfolio management system consists of three main components:
 
 
 ## Contributors
-zID | Team Member | E-mail | Role
------------- | ------------ | ------------ | -------------
-z5097492 | Alina Sari | a.sari@unsw.edu.au | SCRUM Master, Front-end Developer
-z5124648 | Ian Ethan Wong | ianwwl@gmail.com | Front-end Developer
-z5141492 | Natasha Jenny | n.jenny@student.unsw.edu.au | Back-end Developer
-z3152502 | Yaroslav Akimov | y.akimov@student.unsw.edu.au | Data Scientist, Back-end Developer
+Team Member | E-mail | Role
+------------ | ------------ | -------------
+Alina Sari | a.sari@unsw.edu.au | SCRUM Master, Front-end Developer
+Ian Ethan Wong | ianwwl@gmail.com | Front-end Developer
+Natasha Jenny | n.jenny@student.unsw.edu.au | Back-end Developer
+Yaroslav Akimov | y.akimov@student.unsw.edu.au | Data Scientist, Back-end Developer
 
 
